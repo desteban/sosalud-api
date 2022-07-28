@@ -18,4 +18,4 @@ Route::get('/', function () {
     return view('formulario');
 });
 
-Route::post('/archivos', [formularioController::class, 'store'])->name('archivos.store');
+Route::post('/archivos', [formularioController::class, 'guardarArchivo'])->name('archivos.store');

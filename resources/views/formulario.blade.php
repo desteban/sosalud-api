@@ -16,24 +16,31 @@
             display: block;
             margin: 10px 2rem
         }
+
+        .error {
+            margin: 10px 5px;
+            padding: 1rem;
+            background-color: lightcoral
+        }
     </style>
 
 </head>
 
 <body>
-
-    <form action="{{ route('archivos.store') }}" method="POST">
+    {{-- enctype="multipart/form-data" para poder enviar archivos --}}
+    <form action="{{ route('archivos.store') }}" method="POST" enctype="multipart/form-data">
+        @csrf
 
         @if ($errors->any())
-            <div>
-                Algo ha salido mal
+            <div class="error">
+                <p><strong>Algo ha salido mal</strong></p>
                 @foreach ($errors->all() as $error)
-                    -- { $error } -- <br>
+                    <p> -- {{ $error }} -- </p>
                 @endforeach
             </div>
         @endif
 
-        <input type="file" name="archivo" id="archivo">
+        <input type="file" name="archivo" id="archivo" accept=".rar,.zip">
 
         <button>Enviar</button>
     </form>

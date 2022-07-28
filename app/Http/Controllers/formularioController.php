@@ -3,31 +3,39 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 
 class formularioController extends Controller
 {
 
-    protected $respuesta = array(
+    protected $respuesta = [
         'status'    =>  'succes',
         'code'      =>  200,
         'message'   =>  'Todo ha salido bien',
         'data'      =>  []
-    );
+    ];
 
     public function store(Request $request)
     {
+        $validador = Validator::make($request->all(), [
+            'archivo' => ['required']
+        ]);
 
-        // $validator = Validator::make($request->all(), [
-        //     ['archivo' => 'required|mimes:rar,zip']
-        // ]);
+        if ($validador->fails()) {
+            $this->respuesta['code'] = 400;
+            $this->respuesta['data'] = $validador;
+        }
 
-        // if ($validator->fails()) {
+        return response()->json($this->respuesta, $this->respuesta['code']);
+    }
 
-        //     return Redirect::to('/')->withErrors($validator);
-        // }
-        return response()->json($this->respuesta, 200);
+    public function guardarArchivo(Request $request)
+    {
+        //en max es el peso en kilobytes 1Mb = 1024kb
+        $request->validate([
+            'archivo'   =>  ['required', 'mimes:rar,zip', 'max:5120']
+        ]);
+
+        return response()->json($this->respuesta, $this->respuesta['code']);
     }
 }
