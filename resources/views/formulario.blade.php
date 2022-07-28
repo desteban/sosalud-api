@@ -14,13 +14,17 @@
 
         button {
             display: block;
-            margin: 10px 2rem
+            margin: 2rem 2rem
         }
 
         .error {
             margin: 10px 5px;
             padding: 1rem;
             background-color: lightcoral
+        }
+
+        label {
+            display: block;
         }
     </style>
 
@@ -40,6 +44,7 @@
             </div>
         @endif
 
+        <label for="archivo">el archivo a subir no debe pesar mas de 5 megabytes(MB) </label>
         <input type="file" name="archivo" id="archivo" accept=".rar,.zip">
 
         <button>Enviar</button>
