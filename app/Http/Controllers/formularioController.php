@@ -33,7 +33,7 @@ class formularioController extends Controller
     {
         //en max es el peso en kilobytes 1Mb = 1024kb
         $request->validate([
-            'archivo'   =>  ['required', 'mimes:rar,zip', 'max:5120']
+            'archivo'   =>  ['required', 'mimes:rar,zip', 'max:1024']
         ]);
 
         return response()->json($this->respuesta, $this->respuesta['code']);
