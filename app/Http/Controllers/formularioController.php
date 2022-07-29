@@ -56,24 +56,24 @@ class formularioController extends Controller
 
     public function extraerZip($archivo, $nombreArchivo): array
     {
-        $respuesta = [
+        $respuestaZip = [
             'code'  =>  201,
             'status' => 'Created'
         ];
-
         $zip = new ZipArchive;
+        $rutaGuardar = 'TMPs\\' . $nombreArchivo;
 
         if ($zip->open($archivo)) {
-            $archivoDescomprimido = $zip->extractTo('TMPs\\' . $nombreArchivo);
-            echo $archivoDescomprimido;
+            //descomprimir archivo y guardar los datos en la ruta especifica
+            $archivoDescomprimido = $zip->extractTo($rutaGuardar);
             $zip->close();
         }
 
         if (!$zip->open($archivo)) {
-            $respuesta['code'] = 400;
-            $respuesta['status'] = 'Error';
+            $respuestaZip['code'] = 400;
+            $respuestaZip['status'] = 'Error';
         }
 
-        return $respuesta;
+        return $respuestaZip;
     }
 }
