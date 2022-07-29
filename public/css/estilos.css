@@ -1,0 +1,24 @@
+body {
+    background-color: #f1eeee;
+}
+
+form {
+    margin: 5rem 2rem;
+    padding: 1rem 2rem;
+    background-color: #fefefe;
+}
+
+button {
+    display: block;
+    margin: 2rem 2rem;
+}
+
+.error {
+    margin: 10px 5px;
+    padding: 1rem;
+    background-color: lightcoral;
+}
+
+label {
+    display: block;
+}

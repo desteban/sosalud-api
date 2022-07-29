@@ -7,30 +7,13 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Formulario</title>
 
-    <style>
-        form {
-            margin: 5rem 10rem
-        }
-
-        button {
-            display: block;
-            margin: 2rem 2rem
-        }
-
-        .error {
-            margin: 10px 5px;
-            padding: 1rem;
-            background-color: lightcoral
-        }
-
-        label {
-            display: block;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/normalize.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/estilos.css') }}">
 
 </head>
 
 <body>
+    <h1>Formulario</h1>
     {{-- enctype="multipart/form-data" para poder enviar archivos --}}
     <form action="{{ route('archivos.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
