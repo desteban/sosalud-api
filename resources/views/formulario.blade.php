@@ -13,7 +13,7 @@
 </head>
 
 <body>
-    <h1>Formulario</h1>
+    <h1 class="titulo">Formulario</h1>
     {{-- enctype="multipart/form-data" para poder enviar archivos --}}
     <form action="{{ route('archivos.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
@@ -28,7 +28,7 @@
         @endif
 
         <label for="archivo">el archivo a subir no debe pesar mas de 5 megabytes(MB) </label>
-        <input type="file" name="archivo" id="archivo" accept=".rar,.zip">
+        <input type="file" name="archivo" id="archivo" accept=".rar,.zip,.7z">
 
         <button>Enviar</button>
     </form>
