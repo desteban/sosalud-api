@@ -3,32 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use ZipArchive;
 
 class formularioController extends Controller
 {
-
+    private $rutaRIPS = __DIR__ . '/../../../public/TMPs/';
     protected $respuesta = [
         'status'    =>  'succes',
         'code'      =>  200,
         'message'   =>  'Todo ha salido bien',
         'data'      =>  []
     ];
-
-    public function store(Request $request)
-    {
-        $validador = Validator::make($request->all(), [
-            'archivo' => ['required']
-        ]);
-
-        if ($validador->fails()) {
-            $this->respuesta['code'] = 400;
-            $this->respuesta['data'] = $validador;
-        }
-
-        return response()->json($this->respuesta, $this->respuesta['code']);
-    }
 
     public function guardarArchivo(Request $request)
     {
@@ -44,36 +29,76 @@ class formularioController extends Controller
 
             //obtenermos el archivo enviado
             $archivo = $request->file('archivo');
-            //establecemos un nombre para guardar el archivo
-            $nombre = 'tmp_' . time();
 
-            $this->respuesta = $this->extraerZip($archivo, $nombre);
+            //dividir el nombre del archivo cuando se encuentre un punto (.)
+            $nombreArchivo = explode(".", $archivo->getClientOriginalName());
+
+            //establecemos un nombre para guardar el archivo
+            $nombre = 'tmp_' . $nombreArchivo[0] . '_' . time();
+
+            $extraer = $this->extraerZip($archivo, $nombre);
+
+            if ($extraer) {
+                $listaRIPS = $this->obtenerListaRIPS($nombre);
+                $this->leerRIPS($listaRIPS);
+            }
         }
 
         return response()->json($this->respuesta, $this->respuesta['code']);
     }
 
-    public function extraerZip($archivo, $nombreArchivo): array
+    public function extraerZip($archivo, $nombreArchivo)
     {
-        $respuestaZip = [
-            'code'  =>  201,
-            'status' => 'Created'
-        ];
-        $zip = new ZipArchive;
-        $rutaGuardar = 'TMPs\\' . $nombreArchivo;
+        $respuestaExtraer = false;
 
-        if ($zip->open($archivo, ZipArchive::CREATE)) {
+        $rutaGuardar = 'TMPs/' . $nombreArchivo;
 
-            //descomprimir archivo y guardar los datos en la ruta especifica
-            $archivoDescomprimido = $zip->extractTo($rutaGuardar);
-            $zip->close();
+        if ($archivo->guessExtension() == "zip") {
+
+            $zip = new ZipArchive;
+
+
+            if ($zip->open($archivo, ZipArchive::CREATE)) {
+
+                //descomprimir archivo y guardar los datos en la ruta especifica
+                $archivoDescomprimido = $zip->extractTo($rutaGuardar);
+
+                if ($archivoDescomprimido) {
+                    $respuestaExtraer = true;
+                }
+
+                $zip->close();
+            }
         }
 
-        if (!$zip->open($archivo)) {
-            $respuestaZip['code'] = 400;
-            $respuestaZip['status'] = 'Error';
+        return $respuestaExtraer;
+    }
+
+    function obtenerListaRIPS($rutaArchivo = 'TMPs/null'): array
+    {
+        $rutaLeer = $this->rutaRIPS . "$rutaArchivo";
+        $datos = [];
+
+        if (is_dir($rutaLeer)) {
+
+            $carpeta = opendir($rutaLeer);
+
+            while ($archivo = readdir($carpeta)) {
+                $txt = strpos($archivo, '.txt');
+
+                if ($txt) {
+                    array_push($datos, $archivo);
+                }
+            }
         }
 
-        return $respuestaZip;
+        return $datos;
+    }
+
+    function leerRIPS($listaRIPS = ['datos'])
+    {
+        if (sizeof($listaRIPS) > 0) {
+            dd(sizeof($listaRIPS));
+        }
     }
 }
