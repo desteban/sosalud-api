@@ -24,6 +24,7 @@ class formularioController extends Controller
         $request->validate([
             'archivo'   =>  ['required', 'mimes:rar,zip,7z', 'max:5158']
         ]);
+        $contenidoRIPS = [];
 
         if ($request->hasFile('archivo')) {
 
@@ -40,7 +41,9 @@ class formularioController extends Controller
 
             if ($extraer) {
                 $listaRIPS = $this->obtenerListaRIPS($nombre);
-                $this->leerRIPS($listaRIPS, $nombre);
+                $contenidoRIPS = $this->leerRIPS($listaRIPS, $nombre);
+
+                $this->respuesta['data'] = $contenidoRIPS;
             }
         }
 
@@ -94,7 +97,7 @@ class formularioController extends Controller
         return $datos;
     }
 
-    function leerRIPS($listaRIPS = [], $nombreCarpeta = '')
+    function leerRIPS($listaRIPS = [], $nombreCarpeta = ''): array
     {
         $rutaLeer = $this->rutaRIPS . "$nombreCarpeta";
         $arregloRIPS = [];
@@ -113,8 +116,9 @@ class formularioController extends Controller
 
                     $RIPS = file($ruta_RIPS);
                     foreach ($RIPS as $linea) {
-                        //contenido de los RIPS
-                        array_push($contenido, explode(',', $linea));
+                        //eliminar el salto de linea
+                        $registro = str_replace("\r\n", '', $linea);
+                        array_push($contenido, explode(',', $registro));
                     }
                 }
 
@@ -122,7 +126,6 @@ class formularioController extends Controller
                 $arregloRIPS["$tipoRIPS"] = $contenido;
             }
         }
-
-        dd($arregloRIPS);
+        return $arregloRIPS;
     }
 }
