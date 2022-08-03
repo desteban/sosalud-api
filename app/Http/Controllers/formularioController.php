@@ -50,7 +50,6 @@ class formularioController extends Controller
     public function extraerZip($archivo, $nombreArchivo)
     {
         $respuestaExtraer = false;
-
         $rutaGuardar = 'TMPs/' . $nombreArchivo;
 
         if ($archivo->guessExtension() == "zip") {
@@ -95,27 +94,35 @@ class formularioController extends Controller
         return $datos;
     }
 
-    function leerRIPS($listaRIPS = [], $nombreCarpeta)
+    function leerRIPS($listaRIPS = [], $nombreCarpeta = '')
     {
         $rutaLeer = $this->rutaRIPS . "$nombreCarpeta";
         $arregloRIPS = [];
 
         if (sizeof($listaRIPS) > 0 && is_dir($rutaLeer)) {
+
+            //recorrer los RIPS
             foreach ($listaRIPS as $nombreRIPS) {
 
                 $tipoRIPS = substr($nombreRIPS, 0, 2);
+                $ruta_RIPS = "$rutaLeer/$nombreRIPS";
+                $contenido = [];
 
-                $rutaRIPS = "$rutaLeer/$nombreRIPS";
+                // RIPS
+                if (is_file($ruta_RIPS)) {
 
-                if (is_file($rutaRIPS)) {
-
-                    $RIPS = file($rutaRIPS);
+                    $RIPS = file($ruta_RIPS);
                     foreach ($RIPS as $linea) {
-                        //lina de RIPS
-                        echo $linea . '<br>';
+                        //contenido de los RIPS
+                        array_push($contenido, explode(',', $linea));
                     }
                 }
+
+                //Agregar RIPS al arreglo que contiene la lista de los RIPS
+                $arregloRIPS["$tipoRIPS"] = $contenido;
             }
         }
+
+        dd($arregloRIPS);
     }
 }
