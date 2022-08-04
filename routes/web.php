@@ -19,3 +19,4 @@ Route::get('/', function () {
 });
 
 Route::post('/archivos', [formularioController::class, 'guardarArchivo'])->name('archivos.store');
+Route::get('fecha', [formularioController::class, 'validarFecha'])->name('fecha');

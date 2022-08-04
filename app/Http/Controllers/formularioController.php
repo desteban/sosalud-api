@@ -8,6 +8,7 @@ use ZipArchive;
 class formularioController extends Controller
 {
     private $rutaRIPS = __DIR__ . '/../../../public/TMPs/';
+    private $fechasRIPS = ['CT', 'AF', 'AC', 'AP', 'AU' . 'AH', 'AN', 'AT'];
     protected $respuesta = [
         'status'    =>  'succes',
         'code'      =>  200,
@@ -127,5 +128,26 @@ class formularioController extends Controller
             }
         }
         return $arregloRIPS;
+    }
+
+    public function validarFechaRips(array $RIPS = []): array
+    {
+        return $RIPS;
+    }
+
+    function cambiarFormatoFecha(string $fecha = null)
+    {
+        $buscarFecha = strpos($fecha, '/');
+        if ($fecha && $buscarFecha) {
+            return date_format(date_create_from_format('d/m/Y', $fecha), 'Y/m/d');
+        }
+
+        return null;
+    }
+
+    public function esFecha(string $fecha = null)
+    {
+        $fechaRegex = '/^([0-2][0-9]|3[0-1])(\/|-)(0[1-9]|1[0-2])\2(\d{4})$/';
+        return preg_match($fechaRegex, $fecha);
     }
 }
