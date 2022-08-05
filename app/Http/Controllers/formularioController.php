@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\TipoRIPS;
 use Illuminate\Http\Request;
 use ZipArchive;
 
 class formularioController extends Controller
 {
-    private $rutaRIPS = __DIR__ . '/../../../public/TMPs/';
+    private $rutaRIPS = __DIR__ . '\\..\\..\\..\\public\\TMPs\\';
     private $fechasRIPS = ['CT', 'AF', 'AC', 'AP', 'AU' . 'AH', 'AN', 'AT'];
     protected $respuesta = [
         'status'    =>  'succes',
@@ -27,7 +28,8 @@ class formularioController extends Controller
         ]);
         $contenidoRIPS = [];
 
-        if ($request->hasFile('archivo')) {
+        if ($request->hasFile('archivo'))
+        {
 
             //obtenermos el archivo enviado
             $archivo = $request->file('archivo');
@@ -40,33 +42,38 @@ class formularioController extends Controller
 
             $extraer = $this->extraerZip($archivo, $nombre);
 
-            if ($extraer) {
+            if ($extraer)
+            {
                 $listaRIPS = $this->obtenerListaRIPS($nombre);
                 $contenidoRIPS = $this->leerRIPS($listaRIPS, $nombre);
 
-                $this->respuesta['data'] = $contenidoRIPS;
+                // $this->respuesta['data'] = $contenidoRIPS;
+                $this->validarFechaRips($contenidoRIPS);
             }
         }
 
         return response()->json($this->respuesta, $this->respuesta['code']);
     }
 
-    public function extraerZip($archivo, $nombreArchivo)
+    public function extraerZip($archivo, $nombreArchivo): bool
     {
         $respuestaExtraer = false;
         $rutaGuardar = 'TMPs/' . $nombreArchivo;
 
-        if ($archivo->guessExtension() == "zip") {
+
+        if ($archivo->guessExtension() == "zip")
+        {
 
             $zip = new ZipArchive;
 
-
-            if ($zip->open($archivo, ZipArchive::CREATE)) {
+            if ($zip->open($archivo, ZipArchive::CREATE))
+            {
 
                 //descomprimir archivo y guardar los datos en la ruta especifica
                 $archivoDescomprimido = $zip->extractTo($rutaGuardar);
 
-                if ($archivoDescomprimido) {
+                if ($archivoDescomprimido)
+                {
                     $respuestaExtraer = true;
                 }
 
@@ -82,14 +89,17 @@ class formularioController extends Controller
         $rutaLeer = $this->rutaRIPS . "$rutaArchivo";
         $datos = [];
 
-        if (is_dir($rutaLeer)) {
+        if (is_dir($rutaLeer))
+        {
 
             $carpeta = opendir($rutaLeer);
 
-            while ($archivo = readdir($carpeta)) {
+            while ($archivo = readdir($carpeta))
+            {
                 $txt = strpos($archivo, '.txt');
 
-                if ($txt) {
+                if ($txt)
+                {
                     array_push($datos, $archivo);
                 }
             }
@@ -103,42 +113,57 @@ class formularioController extends Controller
         $rutaLeer = $this->rutaRIPS . "$nombreCarpeta";
         $arregloRIPS = [];
 
-        if (sizeof($listaRIPS) > 0 && is_dir($rutaLeer)) {
+        if (sizeof($listaRIPS) > 0 && is_dir($rutaLeer))
+        {
 
-            //recorrer los RIPS
-            foreach ($listaRIPS as $nombreRIPS) {
+            //recorrer RIPS
+            foreach ($listaRIPS as $nombreRIPS)
+            {
 
+                //obtener el tipo del RIPS
                 $tipoRIPS = substr($nombreRIPS, 0, 2);
-                $ruta_RIPS = "$rutaLeer/$nombreRIPS";
-                $contenido = [];
+                $ruta_RIPS = "$rutaLeer\\$nombreRIPS";
 
-                // RIPS
-                if (is_file($ruta_RIPS)) {
+
+                if (is_file($ruta_RIPS))
+                {
 
                     $RIPS = file($ruta_RIPS);
-                    foreach ($RIPS as $linea) {
-                        //eliminar el salto de linea
+                    foreach ($RIPS as $linea)
+                    {
+
+                        //eliminar saltos de linea y espacios
                         $registro = str_replace("\r\n", '', $linea);
-                        array_push($contenido, explode(',', $registro));
+                        $registro = str_replace(' ', '', $registro);
+                        $contenidoRIPS = new TipoRIPS($tipoRIPS, explode(',', $registro));
+                        array_push($arregloRIPS, $contenidoRIPS);
                     }
                 }
-
-                //Agregar RIPS al arreglo que contiene la lista de los RIPS
-                $arregloRIPS["$tipoRIPS"] = $contenido;
             }
         }
+
         return $arregloRIPS;
+    }
+
+    function contenidoRIPS(string $linea): array
+    {
+        dd($linea);
+        $arregloSalida = [];
+
+        return $arregloSalida;
     }
 
     public function validarFechaRips(array $RIPS = []): array
     {
+
         return $RIPS;
     }
 
     function cambiarFormatoFecha(string $fecha = null)
     {
         $buscarFecha = strpos($fecha, '/');
-        if ($fecha && $buscarFecha) {
+        if ($fecha && $buscarFecha)
+        {
             return date_format(date_create_from_format('d/m/Y', $fecha), 'Y/m/d');
         }
 
