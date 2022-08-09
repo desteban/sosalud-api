@@ -20,4 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request)
     return $request->user();
 });
 
-Route::post('/comprimidos', [comprimidosController::class, 'subirArchivoComprimido'])->name('comprimidos.guardar');
+Route::post('/comprimidos', [comprimidosController::class, 'crearRIPS'])->name('comprimidos.guardar');
