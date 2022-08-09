@@ -15,7 +15,7 @@
 <body>
     <h1 class="titulo">Formulario</h1>
     {{-- enctype="multipart/form-data" para poder enviar archivos --}}
-    <form action="{{ route('archivos.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('comprimidos.guardar') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         @if ($errors->any())

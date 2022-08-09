@@ -6,7 +6,7 @@ namespace App\Models;
 class TipoRIPS
 {
     private string $tipoRips;
-    private array $contenidoRips;
+    public array $contenidoRips;
 
     function __construct(string $tipoRips = "", array $contenidoRips = [])
     {
@@ -17,5 +17,10 @@ class TipoRIPS
     public function modificarContenido(callable $callback)
     {
         array_map($callback, $this->contenidoRips);
+    }
+
+    public function getTipoRips()
+    {
+        return $this->tipoRips;
     }
 }

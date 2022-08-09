@@ -48,7 +48,8 @@ class formularioController extends Controller
                 $contenidoRIPS = $this->leerRIPS($listaRIPS, $nombre);
 
                 // $this->respuesta['data'] = $contenidoRIPS;
-                $this->validarFechaRips($contenidoRIPS);
+                $cambiosFechaRIPS = $this->validarFechaRips($contenidoRIPS);
+                dd($cambiosFechaRIPS);
             }
         }
 
@@ -132,10 +133,8 @@ class formularioController extends Controller
                     foreach ($RIPS as $linea)
                     {
 
-                        //eliminar saltos de linea y espacios
-                        $registro = str_replace("\r\n", '', $linea);
-                        $registro = str_replace(' ', '', $registro);
-                        $contenidoRIPS = new TipoRIPS($tipoRIPS, explode(',', $registro));
+                        $registro = $this->obtenerRIPS($linea);
+                        $contenidoRIPS = new TipoRIPS($tipoRIPS, $registro);
                         array_push($arregloRIPS, $contenidoRIPS);
                     }
                 }
@@ -145,18 +144,35 @@ class formularioController extends Controller
         return $arregloRIPS;
     }
 
-    function contenidoRIPS(string $linea): array
-    {
-        dd($linea);
-        $arregloSalida = [];
-
-        return $arregloSalida;
-    }
-
     public function validarFechaRips(array $RIPS = []): array
     {
 
+        foreach ($RIPS as $item)
+        {
+            $contieneFecha = array_search($item->getTipoRips(), $this->fechasRIPS);
+
+            if ($contieneFecha)
+            {
+                $contenidoRIPS = $item->contenidoRips;
+
+                array_map(function ($contenido)
+                {
+                    if ($this->esFecha($contenido))
+                    {
+                        $fechaCambiada = $this->cambiarFormatoFecha($contenido);
+
+                        $contenido = $fechaCambiada;
+                    }
+                }, $contenidoRIPS);
+            }
+        }
+
         return $RIPS;
+    }
+
+    function comentar($data)
+    {
+        dd($data);
     }
 
     function cambiarFormatoFecha(string $fecha = null)
@@ -174,5 +190,13 @@ class formularioController extends Controller
     {
         $fechaRegex = '/^([0-2][0-9]|3[0-1])(\/|-)(0[1-9]|1[0-2])\2(\d{4})$/';
         return preg_match($fechaRegex, $fecha);
+    }
+
+    function obtenerRIPS(string $lineaRIPS): array
+    {
+        //eliminar saltos de linea y espacios
+        $registro = str_replace("\r\n", '', $lineaRIPS);
+        $registro = str_replace(' ', '', $registro);
+        return explode(',', $registro);
     }
 }
