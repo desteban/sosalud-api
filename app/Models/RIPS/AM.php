@@ -14,9 +14,9 @@ class AM implements RIPS
     public string $codigoIPS = '';
     public string $tipoIdentificacion = '';
     public string $identificacion = '';
-    public int $numeroAutorizacion = 0;
+    public $numeroAutorizacion = 0;
     public string $codigoMedicamento = '';
-    public int $tipoMedicamento = 0;
+    public $tipoMedicamento = 0;
     public string $nombreGenerico = '';
     public string $formaFarmaceutica = '';
     public string $concentracionMedicamento = '';
@@ -24,7 +24,7 @@ class AM implements RIPS
     public string $numeroUnidad = '';
     public string $valorUnitarios = '';
     public string $valorTotal = '';
-    private int $id;
+    protected int $id;
 
     public function subirDB()
     {
@@ -46,9 +46,22 @@ class AM implements RIPS
     public function agregarDatos(array $datos)
     {
 
-        foreach ($this as $clave => $valor)
+        $cantidadAtributos = 14;
+        if (sizeof($datos) == $cantidadAtributos)
         {
-            echo "$clave => $valor\n";
+
+            $obj = (array) $this;
+            $indice = 0;
+
+            foreach ($this as $clave => $valor)
+            {
+                if ($indice < $cantidadAtributos)
+                {
+                    $this->{$clave} = $datos[$indice];
+
+                    $indice++;
+                }
+            }
         }
     }
 }

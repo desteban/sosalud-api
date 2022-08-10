@@ -21,3 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request)
 });
 
 Route::post('/comprimidos', [comprimidosController::class, 'crearRIPS'])->name('comprimidos.guardar');
+Route::get('/comprimidos', [comprimidosController::class, 'manipularCarpetaRIPS'])->name('comprimidos.mostrarRIPS');

@@ -15,15 +15,15 @@ class AN implements RIPS
     public string $Identificacion = '';
     public string $fechaNacimiento = '';
     public string $horaNacimiento = '';
-    public int $edadGestacion = 0;
+    public $edadGestacion = 0;
     public string $controlPrenatal = '';
     public string $genero = '';
-    public int $peso = 0;
+    public $peso = 0;
     public string $diagnostico = '';
     public string $diagnosticoMuerte = '';
     public string $fechaMuerte = '';
     public string $horaMuerte = '';
-    private int $id;
+    protected int $id;
 
     public function subirDB()
     {
@@ -45,9 +45,22 @@ class AN implements RIPS
     public function agregarDatos(array $datos)
     {
 
-        foreach ($this as $clave => $valor)
+        $cantidadAtributos = 14;
+        if (sizeof($datos) == $cantidadAtributos)
         {
-            echo "$clave => $valor\n";
+
+            $obj = (array) $this;
+            $indice = 0;
+
+            foreach ($this as $clave => $valor)
+            {
+                if ($indice < $cantidadAtributos)
+                {
+                    $this->{$clave} = $datos[$indice];
+
+                    $indice++;
+                }
+            }
         }
     }
 }

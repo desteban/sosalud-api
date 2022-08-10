@@ -14,17 +14,17 @@ class AP implements RIPS
     public string $tipoIdentificacion = '';
     public string $identificacion = '';
     public string $fechaProcedimiento = '';
-    public int $numeroAutorizacion = 0;
+    public $numeroAutorizacion = 0;
     public string $codigoProcedimiento = '';
-    public int $ambitoProcedimiento = 0;
-    public int $finalidadProcedimiento = 0;
-    public string $persolanlAtiende = '';
+    public $ambitoProcedimiento = 0;
+    public $finalidadProcedimiento = 0;
+    public string $personalAtiende = '';
     public string $diagnostico = '';
     public string $diagnostico1 = '';
     public string $diagnosticoComplicacion = '';
-    public int $actoQuirurgico = 0;
-    public float $valorProcedimiento;
-    private int $id;
+    public $actoQuirurgico = 0;
+    public $valorProcedimiento;
+    protected int $id;
 
     public function subirDB()
     {
@@ -46,9 +46,22 @@ class AP implements RIPS
     public function agregarDatos(array $datos)
     {
 
-        foreach ($this as $clave => $valor)
+        $cantidadAtributos = 15;
+        if (sizeof($datos) == $cantidadAtributos)
         {
-            echo "$clave => $valor\n";
+
+            $obj = (array) $this;
+            $indice = 0;
+
+            foreach ($this as $clave => $valor)
+            {
+                if ($indice < $cantidadAtributos)
+                {
+                    $this->{$clave} = $datos[$indice];
+
+                    $indice++;
+                }
+            }
         }
     }
 }

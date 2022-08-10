@@ -13,14 +13,14 @@ class AT implements RIPS
     public string $codigoIPS = '';
     public string $tipoIdentificacion = '';
     public string $identificacion = '';
-    public int $numeroAutorizacion = 0;
-    public int $tipoServicio = 0;
+    public $numeroAutorizacion = 0;
+    public $tipoServicio = 0;
     public string $codigoServicio = '';
     public string $nombreServicio = '';
     public string $cantidad = '';
-    public float $valorUnitario = 0;
-    public float $valorTotal = 0;
-    private int $id;
+    public $valorUnitario = 0;
+    public $valorTotal = 0;
+    protected int $id;
 
     public function subirDB()
     {
@@ -42,9 +42,22 @@ class AT implements RIPS
     public function agregarDatos(array $datos)
     {
 
-        foreach ($this as $clave => $valor)
+        $cantidadAtributos = 11;
+        if (sizeof($datos) == $cantidadAtributos)
         {
-            echo "$clave => $valor\n";
+
+            $obj = (array) $this;
+            $indice = 0;
+
+            foreach ($this as $clave => $valor)
+            {
+                if ($indice < $cantidadAtributos)
+                {
+                    $this->{$clave} = $datos[$indice];
+
+                    $indice++;
+                }
+            }
         }
     }
 }

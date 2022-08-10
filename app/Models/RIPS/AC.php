@@ -8,12 +8,12 @@ namespace App\Models\RIPS;
 
 class AC implements RIPS
 {
-
     public string $numeoFactura = '';
     public string $codigoIPS = '';
     public string $tipoIdentificacion = '';
+    public string $identificacion = '';
     public string $fechaConsulta = '';
-    public int $numeoAutorizacion = 0;
+    public $numeoAutorizacion = 0;
     public string $codigoConsulta = '';
     public string $finalidadConsulta = '';
     public string $codigoCausaExterna = '';
@@ -25,7 +25,7 @@ class AC implements RIPS
     public string $valorConsulta = '';
     public string $copago = '';
     public string $valorNeto = '';
-    private int $id;
+    protected int $id = 0;
 
     public function subirDB()
     {
@@ -47,9 +47,22 @@ class AC implements RIPS
     public function agregarDatos(array $datos)
     {
 
-        foreach ($this as $clave => $valor)
+        $cantidadAtributos = 17;
+        if (sizeof($datos) == $cantidadAtributos)
         {
-            echo "$clave => $valor\n";
+
+            $obj = (array) $this;
+            $indice = 0;
+
+            foreach ($this as $clave => $valor)
+            {
+                if ($indice < $cantidadAtributos)
+                {
+                    $this->{$clave} = $datos[$indice];
+
+                    $indice++;
+                }
+            }
         }
     }
 }

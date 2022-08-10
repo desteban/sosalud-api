@@ -13,6 +13,7 @@ class AF implements RIPS
     public string $nombreIPS = '';
     public string $tipoIdentificacion = '';
     public string $identificacion = '';
+    public string $numeroFactura = '';
     public string $fechaFactura = '';
     public string $fechaInicio = '';
     public string $fechaFinal = '';
@@ -21,11 +22,11 @@ class AF implements RIPS
     public string $numeroContrato = '';
     public string $planBeneficios = '';
     public string $numeroPoliza = '';
-    public float $copago = 0;
-    public float $valorComision = 0;
-    public float $valorDescuento = 0;
-    public float $valorFactura = 0;
-    private int $id;
+    public $copago = 0;
+    public $valorComision = 0;
+    public $valorDescuento = 0;
+    public $valorFactura = 0;
+    protected int $id;
 
     public function subirDB()
     {
@@ -47,9 +48,22 @@ class AF implements RIPS
     public function agregarDatos(array $datos)
     {
 
-        foreach ($this as $clave => $valor)
+        $cantidadAtributos = 17;
+        if (sizeof($datos) == $cantidadAtributos)
         {
-            echo "$clave => $valor\n";
+
+            $obj = (array) $this;
+            $indice = 0;
+
+            foreach ($this as $clave => $valor)
+            {
+                if ($indice < $cantidadAtributos)
+                {
+                    $this->{$clave} = $datos[$indice];
+
+                    $indice++;
+                }
+            }
         }
     }
 }

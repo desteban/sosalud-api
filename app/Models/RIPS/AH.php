@@ -16,19 +16,19 @@ class AH implements RIPS
     public string $codigoViaIngreso = '';
     public string $fechaIngreso = '';
     public string $horaIngreso = '';
-    public int $numeroAutorizacion = 0;
+    public $numeroAutorizacion = 0;
     public string $codigoCausaExterna = '';
     public string $diagnoticoIngreso = '';
     public string $diagnosticoEgreso = '';
     public string $diagnostico1 = '';
     public string $diagnostico2 = '';
     public string $diagnostico3 = '';
-    public string $codigoCompicacion = '';
+    public string $codigoComplicacion = '';
     public string $estadoSalida = '';
     public string $causaMuerte = '';
     public string $fechaEgreso = '';
     public string $horaEgreso = '';
-    private int $id;
+    protected int $id;
 
     public function subirDB()
     {
@@ -50,9 +50,22 @@ class AH implements RIPS
     public function agregarDatos(array $datos)
     {
 
-        foreach ($this as $clave => $valor)
+        $cantidadAtributos = 19;
+        if (sizeof($datos) == $cantidadAtributos)
         {
-            echo "$clave => $valor\n";
+
+            $obj = (array) $this;
+            $indice = 0;
+
+            foreach ($this as $clave => $valor)
+            {
+                if ($indice < $cantidadAtributos)
+                {
+                    $this->{$clave} = $datos[$indice];
+
+                    $indice++;
+                }
+            }
         }
     }
 }

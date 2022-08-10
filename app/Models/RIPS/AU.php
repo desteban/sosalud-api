@@ -21,12 +21,12 @@ class AU implements RIPS
     public string $diagnostico1 = '';
     public string $diagnostico2 = '';
     public string $diagnostico3 = '';
-    public int $referencia = 0;
+    public $referencia = 0;
     public string $estadoSalida = '';
     public string $CausaMuerte = '';
     public string $fechaSalida = '';
     public string $HoraSalida = '';
-    private int $id;
+    protected int $id;
 
     public function subirDB()
     {
@@ -48,9 +48,22 @@ class AU implements RIPS
     public function agregarDatos(array $datos)
     {
 
-        foreach ($this as $clave => $valor)
+        $cantidadAtributos = 17;
+        if (sizeof($datos) == $cantidadAtributos)
         {
-            echo "$clave => $valor\n";
+
+            $obj = (array) $this;
+            $indice = 0;
+
+            foreach ($this as $clave => $valor)
+            {
+                if ($indice < $cantidadAtributos)
+                {
+                    $this->{$clave} = $datos[$indice];
+
+                    $indice++;
+                }
+            }
         }
     }
 }

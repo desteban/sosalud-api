@@ -7,7 +7,7 @@ class Respuestas
     public string $estado;
     public int $codigoHttp;
     public string $mensaje;
-    public array $data;
+    public $data;
 
     public function __construct()
     {
@@ -15,10 +15,9 @@ class Respuestas
         $this->estado = 'succes';
         $this->codigoHttp = 200;
         $this->mensaje = 'Todo ha salido bien';
-        $this->data = [];
     }
 
-    public function cambiarRespuesta(string $estado, int $codigoHttp, string $mensaje, array $data)
+    public function cambiarRespuesta(int $codigoHttp, string $estado, string $mensaje = '', $data = [])
     {
 
         $this->estado = $estado;
