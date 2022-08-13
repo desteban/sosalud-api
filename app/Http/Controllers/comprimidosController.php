@@ -11,7 +11,7 @@ use function App\Models\RIPS\detectarRIPS;
 
 class comprimidosController extends Controller
 {
-    protected $rutaRIPS = __DIR__ . '\\..\\..\\..\\public\\TMPs\\';
+    protected $rutaRIPS = __DIR__ . "/../../../public/TMPs/";
     protected $fechasRIPS = ['CT', 'AF', 'AC', 'AP', 'AU' . 'AH', 'AN', 'AT'];
 
     public function crearRIPS(Request $request)
@@ -30,7 +30,6 @@ class comprimidosController extends Controller
 
             $respuesta = $this->manipularArchivoComprimido($request);
         }
-
         //validar que se ha descomprimido el archivo
         if ($respuesta->codigoHttp == 201)
         {
@@ -102,8 +101,6 @@ class comprimidosController extends Controller
         $listadoRIPS = $this->obtenerListaRIPS($nombreCarpeta);
         $RIPS = $this->leerRIPS($listadoRIPS, $nombreCarpeta);
 
-        dd($RIPS);
-
         return $RIPS;
     }
 
@@ -115,9 +112,7 @@ class comprimidosController extends Controller
         if (is_dir($rutaLeer))
         {
 
-
             $carpeta = opendir($rutaLeer);
-
             while ($archivo = readdir($carpeta))
             {
                 $txt = strpos($archivo, '.txt');
@@ -147,7 +142,7 @@ class comprimidosController extends Controller
 
                 //obtener el tipo del RIPS
                 $tipoRIPS = substr($nombreDocumentoRIPS, 0, 2);
-                $ruta_RIPS = "$rutaLeer\\$nombreDocumentoRIPS";
+                $ruta_RIPS = "$rutaLeer/$nombreDocumentoRIPS";
 
                 if (is_file($ruta_RIPS))
                 {
