@@ -3,10 +3,10 @@
 namespace App\Models\RIPS;
 
 /**
- * . Archivo de transacciones
+ *  Archivo de transacciones
  */
 
-class AF implements RIPS
+class AF implements IRips
 {
 
     public string $codigoIPS = '';
@@ -65,5 +65,10 @@ class AF implements RIPS
                 }
             }
         }
+    }
+
+    public function tipoRIPS(): string
+    {
+        return 'AF';
     }
 }

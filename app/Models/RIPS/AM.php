@@ -7,7 +7,7 @@ namespace App\Models\RIPS;
  * Archivo de medicamentos
  */
 
-class AM implements RIPS
+class AM implements IRips
 {
 
     public string $numeroFactura = '';
@@ -63,5 +63,10 @@ class AM implements RIPS
                 }
             }
         }
+    }
+
+    public function tipoRIPS(): string
+    {
+        return 'AM';
     }
 }

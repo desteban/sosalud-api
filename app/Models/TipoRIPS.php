@@ -19,8 +19,6 @@ class TipoRIPS
 
     function __construct($tipoRips = "", array $contenidoRips = [])
     {
-        // $this->tipoRips = $tipoRips;
-        // $this->contenidoRips = $contenidoRips;
 
         $detectarTipoRIPS = [
             'AC' => new AC(),

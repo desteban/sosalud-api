@@ -6,7 +6,7 @@ namespace App\Models\RIPS;
  * Archivo de urgencia con observación
  */
 
-class AU implements RIPS
+class AU implements IRips
 {
 
     public string $numeroFactura = '';
@@ -65,5 +65,10 @@ class AU implements RIPS
                 }
             }
         }
+    }
+
+    public function tipoRIPS(): string
+    {
+        return 'AU';
     }
 }

@@ -6,7 +6,7 @@ namespace App\Models\RIPS;
  * Archivo de usuarios
  */
 
-class US implements RIPS
+class US implements IRips
 {
 
     public string $tipoIdentificacion = '';
@@ -62,5 +62,10 @@ class US implements RIPS
                 }
             }
         }
+    }
+
+    public function tipoRIPS(): string
+    {
+        return 'US';
     }
 }

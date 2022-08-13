@@ -100,6 +100,7 @@ class comprimidosController extends Controller
 
         $listadoRIPS = $this->obtenerListaRIPS($nombreCarpeta);
         $RIPS = $this->leerRIPS($listadoRIPS, $nombreCarpeta);
+        dd($RIPS);
 
         return $RIPS;
     }

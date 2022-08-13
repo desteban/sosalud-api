@@ -6,7 +6,7 @@ namespace App\Models\RIPS;
  * Archivo de recién nacidos
  */
 
-class AN implements RIPS
+class AN implements IRips
 {
 
     public string $numeroFactura = '';
@@ -62,5 +62,10 @@ class AN implements RIPS
                 }
             }
         }
+    }
+
+    public function tipoRIPS(): string
+    {
+        return 'AN';
     }
 }

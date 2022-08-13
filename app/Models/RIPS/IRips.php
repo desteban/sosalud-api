@@ -2,12 +2,13 @@
 
 namespace App\Models\RIPS;
 
-interface RIPS
+interface IRips
 {
-
     public function subirDB();
 
     public function obtenerDatos(): array;
 
     public function agregarDatos(array $datos);
+
+    public function tipoRIPS(): string;
 }

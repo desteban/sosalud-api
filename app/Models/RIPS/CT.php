@@ -6,14 +6,14 @@ namespace App\Models\RIPS;
  * Archivo de control
  */
 
-class CT implements RIPS
+class CT implements IRips
 {
 
     public string $codIPS = '';
     public string $fechaRemision = '';
     public string $codigoArchivo = '';
     public string $totalRegistros = '';
-    private int $id;
+    private int $id = 0;
 
     public function subirDB()
     {
@@ -52,5 +52,10 @@ class CT implements RIPS
                 }
             }
         }
+    }
+
+    public function tipoRIPS(): string
+    {
+        return 'CT';
     }
 }

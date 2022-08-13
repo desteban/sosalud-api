@@ -6,7 +6,7 @@ namespace App\Models\RIPS;
  * Archivo de consulta
  */
 
-class AC implements RIPS
+class AC implements IRips
 {
     public string $numeoFactura = '';
     public string $codigoIPS = '';
@@ -26,6 +26,7 @@ class AC implements RIPS
     public string $copago = '';
     public string $valorNeto = '';
     protected int $id = 0;
+
 
     public function subirDB()
     {
@@ -64,5 +65,10 @@ class AC implements RIPS
                 }
             }
         }
+    }
+
+    public function tipoRIPS(): string
+    {
+        return 'AC';
     }
 }

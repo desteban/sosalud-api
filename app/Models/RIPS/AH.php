@@ -6,7 +6,7 @@ namespace App\Models\RIPS;
  * Archivo de hospitalización
  */
 
-class AH implements RIPS
+class AH implements IRips
 {
 
     public string $numeroFactura = '';
@@ -67,5 +67,10 @@ class AH implements RIPS
                 }
             }
         }
+    }
+
+    public function tipoRIPS(): string
+    {
+        return 'AH';
     }
 }

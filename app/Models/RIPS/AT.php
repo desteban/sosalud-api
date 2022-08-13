@@ -6,7 +6,7 @@ namespace App\Models\RIPS;
  * Archivo de otros servicios
  */
 
-class AT implements RIPS
+class AT implements IRips
 {
 
     public string $numeroFactura = '';
@@ -59,5 +59,10 @@ class AT implements RIPS
                 }
             }
         }
+    }
+
+    public function tipoRIPS(): string
+    {
+        return 'AT';
     }
 }
