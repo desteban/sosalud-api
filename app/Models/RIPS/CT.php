@@ -6,20 +6,14 @@ namespace App\Models\RIPS;
  * Archivo de control
  */
 
-class CT implements IRips
+class CT extends RIPS implements IRips
 {
 
     public string $codIPS = '';
     public string $fechaRemision = '';
     public string $codigoArchivo = '';
     public string $totalRegistros = '';
-    private int $id = 0;
-
-    public function subirDB(array $datos)
-    {
-        //codigo para subir rips a la db
-        echo 'Subiendo a db...' . $datos[0]->tipoRIPS() . "\n";
-    }
+    protected int $id = 0;
 
     public function obtenerDatos(): array
     {

@@ -6,7 +6,7 @@ namespace App\Models\RIPS;
  * Archivo de procedimientos
  */
 
-class AP implements IRips
+class AP extends RIPS implements IRips
 {
 
     public string $numeroFactura = '';
@@ -25,12 +25,6 @@ class AP implements IRips
     public $actoQuirurgico = 0;
     public $valorProcedimiento;
     protected int $id;
-
-    public function subirDB(array $datos)
-    {
-        //codigo para subir rips a la db
-        echo 'Subiendo a db...' . $datos[0]->tipoRIPS() . "\n";
-    }
 
     public function obtenerDatos(): array
     {

@@ -6,7 +6,7 @@ namespace App\Models\RIPS;
  * Archivo de hospitalización
  */
 
-class AH implements IRips
+class AH extends RIPS implements IRips
 {
 
     public string $numeroFactura = '';
@@ -29,12 +29,6 @@ class AH implements IRips
     public string $fechaEgreso = '';
     public string $horaEgreso = '';
     protected int $id;
-
-    public function subirDB(array $datos)
-    {
-        //codigo para subir rips a la db
-        echo 'Subiendo a db...' . $datos[0]->tipoRIPS() . "\n";
-    }
 
     public function obtenerDatos(): array
     {

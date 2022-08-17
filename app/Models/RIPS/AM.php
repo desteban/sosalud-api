@@ -7,7 +7,7 @@ namespace App\Models\RIPS;
  * Archivo de medicamentos
  */
 
-class AM implements IRips
+class AM extends RIPS implements IRips
 {
 
     public string $numeroFactura = '';
@@ -25,12 +25,6 @@ class AM implements IRips
     public string $valorUnitarios = '';
     public string $valorTotal = '';
     protected int $id;
-
-    public function subirDB(array $datos)
-    {
-        //codigo para subir rips a la db
-        echo 'Subiendo a db...' . $datos[0]->tipoRIPS() . "\n";
-    }
 
     public function obtenerDatos(): array
     {

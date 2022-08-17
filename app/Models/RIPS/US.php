@@ -6,7 +6,7 @@ namespace App\Models\RIPS;
  * Archivo de usuarios
  */
 
-class US implements IRips
+class US extends RIPS implements IRips
 {
 
     public string $tipoIdentificacion = '';
@@ -24,12 +24,6 @@ class US implements IRips
     public string $codigoMunicipio = '';
     public string $zona = '';
     protected int $id;
-
-    public function subirDB(array $datos)
-    {
-        //codigo para subir rips a la db
-        echo 'Subiendo a db...' . $datos[0]->tipoRIPS() . "\n";
-    }
 
     public function obtenerDatos(): array
     {

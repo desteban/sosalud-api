@@ -6,7 +6,7 @@ namespace App\Models\RIPS;
  * Archivo de otros servicios
  */
 
-class AT implements IRips
+class AT extends RIPS implements IRips
 {
 
     public string $numeroFactura = '';
@@ -21,12 +21,6 @@ class AT implements IRips
     public $valorUnitario = 0;
     public $valorTotal = 0;
     protected int $id;
-
-    public function subirDB(array $datos)
-    {
-        //codigo para subir rips a la db
-        echo 'Subiendo a db...' . $datos[0]->tipoRIPS() . "\n";
-    }
 
     public function obtenerDatos(): array
     {

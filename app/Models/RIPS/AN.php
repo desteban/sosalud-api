@@ -6,7 +6,7 @@ namespace App\Models\RIPS;
  * Archivo de recién nacidos
  */
 
-class AN implements IRips
+class AN extends RIPS implements IRips
 {
 
     public string $numeroFactura = '';
@@ -24,12 +24,6 @@ class AN implements IRips
     public string $fechaMuerte = '';
     public string $horaMuerte = '';
     protected int $id;
-
-    public function subirDB(array $datos)
-    {
-        //codigo para subir rips a la db
-        echo 'Subiendo a db...' . $datos[0]->tipoRIPS() . "\n";
-    }
 
     public function obtenerDatos(): array
     {

@@ -6,7 +6,7 @@ namespace App\Models\RIPS;
  * Archivo de consulta
  */
 
-class AC implements IRips
+class AC extends RIPS implements IRips
 {
     public string $numeoFactura = '';
     public string $codigoIPS = '';
@@ -26,13 +26,6 @@ class AC implements IRips
     public string $copago = '';
     public string $valorNeto = '';
     protected int $id = 0;
-
-
-    public function subirDB(array $datos)
-    {
-        //codigo para subir rips a la db
-        echo 'Subiendo a db...' . $datos[0]->tipoRIPS() . "\n";
-    }
 
     public function obtenerDatos(): array
     {

@@ -6,7 +6,7 @@ namespace App\Models\RIPS;
  * Archivo de urgencia con observación
  */
 
-class AU implements IRips
+class AU extends RIPS implements IRips
 {
 
     public string $numeroFactura = '';
@@ -27,12 +27,6 @@ class AU implements IRips
     public string $fechaSalida = '';
     public string $HoraSalida = '';
     protected int $id;
-
-    public function subirDB(array $datos)
-    {
-        //codigo para subir rips a la db
-        echo 'Subiendo a db...' . $datos[0]->tipoRIPS() . "\n";
-    }
 
     public function obtenerDatos(): array
     {

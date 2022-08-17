@@ -6,7 +6,7 @@ namespace App\Models\RIPS;
  *  Archivo de transacciones
  */
 
-class AF implements IRips
+class AF extends RIPS implements IRips
 {
 
     public string $codigoIPS = '';
@@ -27,12 +27,6 @@ class AF implements IRips
     public $valorDescuento = 0;
     public $valorFactura = 0;
     protected int $id;
-
-    public function subirDB(array $datos)
-    {
-        //codigo para subir rips a la db
-        echo 'Subiendo a db...' . $datos[0]->tipoRIPS() . "\n";
-    }
 
     public function obtenerDatos(): array
     {
@@ -69,6 +63,6 @@ class AF implements IRips
 
     public function tipoRIPS(): string
     {
-        return 'AC';
+        return 'AF';
     }
 }
