@@ -15,9 +15,10 @@ class CT implements IRips
     public string $totalRegistros = '';
     private int $id = 0;
 
-    public function subirDB()
+    public function subirDB(array $datos)
     {
         //codigo para subir rips a la db
+        echo 'Subiendo a db...' . $datos[0]->tipoRIPS() . "\n";
     }
 
     public function obtenerDatos(): array
@@ -39,7 +40,6 @@ class CT implements IRips
         if (sizeof($datos) == $cantidadAtributos)
         {
 
-            $obj = (array) $this;
             $indice = 0;
 
             foreach ($this as $clave => $valor)

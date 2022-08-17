@@ -28,9 +28,10 @@ class AU implements IRips
     public string $HoraSalida = '';
     protected int $id;
 
-    public function subirDB()
+    public function subirDB(array $datos)
     {
         //codigo para subir rips a la db
+        echo 'Subiendo a db...' . $datos[0]->tipoRIPS() . "\n";
     }
 
     public function obtenerDatos(): array
@@ -52,7 +53,6 @@ class AU implements IRips
         if (sizeof($datos) == $cantidadAtributos)
         {
 
-            $obj = (array) $this;
             $indice = 0;
 
             foreach ($this as $clave => $valor)

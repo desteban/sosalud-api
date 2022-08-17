@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Respuestas;
+use App\Models\RIPS\AC;
+use App\Models\RIPS\IRips;
 use App\Models\TipoRIPS;
 use Illuminate\Http\Request;
 use ZipArchive;
@@ -94,13 +96,12 @@ class comprimidosController extends Controller
         return $respuestaExtraer;
     }
 
-    function manipularCarpetaRIPS($nombreCarpeta = 'tmp_CT000221_1660013324'): array
+    function manipularCarpetaRIPS($nombreCarpeta = 'tmp_CT000221_1660013324')
     {
         $RIPS = [];
 
         $listadoRIPS = $this->obtenerListaRIPS($nombreCarpeta);
-        $RIPS = $this->leerRIPS($listadoRIPS, $nombreCarpeta);
-        dd($RIPS);
+        $this->leerRIPS($listadoRIPS, $nombreCarpeta);
 
         return $RIPS;
     }
@@ -116,6 +117,7 @@ class comprimidosController extends Controller
             $carpeta = opendir($rutaLeer);
             while ($archivo = readdir($carpeta))
             {
+                //obtener todos los archivos con extencion .txt
                 $txt = strpos($archivo, '.txt');
 
                 if ($txt)
@@ -128,10 +130,9 @@ class comprimidosController extends Controller
         return $datos;
     }
 
-    function leerRIPS($listaRIPS = [], $nombreCarpeta = ''): array
+    function leerRIPS($listaRIPS = [], $nombreCarpeta = '')
     {
         $rutaLeer = $this->rutaRIPS . "$nombreCarpeta";
-        $arregloRIPS = [];
 
         //validar que la carpeta cuente con RIPS
         if (sizeof($listaRIPS) > 0)
@@ -145,22 +146,10 @@ class comprimidosController extends Controller
                 $tipoRIPS = substr($nombreDocumentoRIPS, 0, 2);
                 $ruta_RIPS = "$rutaLeer/$nombreDocumentoRIPS";
 
-                if (is_file($ruta_RIPS))
-                {
-
-                    $documentoRIPS = file($ruta_RIPS);
-                    foreach ($documentoRIPS as $linea)
-                    {
-
-                        $registroRIPS = $this->limpiarRIPS($linea);
-                        $tipo_RIPS = new TipoRIPS($tipoRIPS, $registroRIPS);
-                        array_push($arregloRIPS, $tipo_RIPS->getTipoRips());
-                    }
-                }
+                //obtener el contenido del documento
+                $RIPS = $this->obtenerRips($ruta_RIPS, $tipoRIPS);
             }
         }
-
-        return $arregloRIPS;
     }
 
     function limpiarRIPS(string $lineaRIPS): array
@@ -169,5 +158,28 @@ class comprimidosController extends Controller
         $registro = str_replace("\r\n", '', $lineaRIPS);
         $registro = str_replace(' ', '', $registro);
         return explode(',', $registro);
+    }
+
+    function obtenerRips(string $rutaRIPS, string $tipoRIPS): array
+    {
+        $RIPS = array();
+
+        if (is_file($rutaRIPS))
+        {
+
+            $documentoRIPS = file($rutaRIPS);
+            foreach ($documentoRIPS as $linea)
+            {
+
+                $registroRIPS = $this->limpiarRIPS($linea);
+                $tipo_RIPS = new TipoRIPS($tipoRIPS, $registroRIPS);
+                array_push($RIPS, $tipo_RIPS->getTipoRips());
+            }
+        }
+
+        //subir datos a db
+        $RIPS[0]->subirDB($RIPS);
+
+        return $RIPS;
     }
 }
