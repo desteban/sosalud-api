@@ -16,10 +16,11 @@ use App\Models\RIPS\US;
 class TipoRIPS
 {
     private $Rips;
+    private $RipsContieneFecha = array('CT', 'AF', 'AC', 'AP', 'AU', 'AH', 'AN', 'AT');
 
     function __construct($tipoRips = "", array $contenidoRips = [])
     {
-
+        $contenido = $contenidoRips;
         $detectarTipoRIPS = [
             'AC' => new AC(),
             'AF' => new AF(),
@@ -33,9 +34,27 @@ class TipoRIPS
             'US' => new US()
         ];
 
+        //buscar si el RIP tiene fechas en su interior
+        $indicesFechas = array_filter($contenidoRips, function ($registro)
+        {
+
+            return $this->esFecha($registro);
+        });
+
+        //verificar que el RIPS cuente con fechas
+        if (count($indicesFechas))
+        {
+
+            foreach ($indicesFechas as $key => $value)
+            {
+                $contenido[$key] = $this->cambiarFormatoFecha($value);
+            }
+        }
+
+        //escojer el tipo de RIPS adecuado
         $tipoRips = $detectarTipoRIPS["$tipoRips"];
 
-        $tipoRips->agregarDatos($contenidoRips);
+        $tipoRips->agregarDatos($contenido);
 
         $this->Rips = $tipoRips;
     }
@@ -43,5 +62,22 @@ class TipoRIPS
     public function getTipoRips()
     {
         return $this->Rips;
+    }
+
+    function cambiarFormatoFecha(string $fecha = null)
+    {
+        $buscarFecha = strpos($fecha, '/');
+        if ($fecha && $buscarFecha)
+        {
+            return date_format(date_create_from_format('d/m/Y', $fecha), 'Y/m/d');
+        }
+
+        return null;
+    }
+
+    public function esFecha(string $fecha = null)
+    {
+        $fechaRegex = '/^([0-2][0-9]|3[0-1])(\/|-)(0[1-9]|1[0-2])\2(\d{4})$/';
+        return preg_match($fechaRegex, $fecha);
     }
 }
