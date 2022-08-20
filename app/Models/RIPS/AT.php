@@ -59,4 +59,19 @@ class AT extends RIPS implements IRips
     {
         return 'AT';
     }
+
+    public static function obtenerColumnasDB(): string
+    {
+        return 'numeroFactura,' .
+            'codigoIps,' .
+            'tipoIdentificacion,' .
+            'identificacion,' .
+            'numeroAutorizacion,' .
+            'tipoServicio,' .
+            'codigoServicio,' .
+            'nombreServicio,' .
+            'cantidad,' .
+            'valorUnitario,' .
+            'valorTotal';
+    }
 }

@@ -65,4 +65,25 @@ class AU extends RIPS implements IRips
     {
         return 'AU';
     }
+
+    public static function obtenerColumnasDB(): string
+    {
+        return 'numeroFactura,' .
+            'codigoIps,' .
+            'tipoIdentificacion,' .
+            'identificacion,' .
+            'fechaIngreso,' .
+            'horaIngreso,' .
+            'numeroAutorizacion,' .
+            'causaExterna,' .
+            'giagnostico,' .
+            'diagnostico1,' .
+            'diagnostico2,' .
+            'diagnostico3,' .
+            'referencia,' .
+            'estadoSalida,' .
+            'causaMuerte,' .
+            'fechaSalida,' .
+            'horaSalida';
+    }
 }

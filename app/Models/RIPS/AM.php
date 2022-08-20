@@ -63,4 +63,22 @@ class AM extends RIPS implements IRips
     {
         return 'AM';
     }
+
+    public static function obtenerColumnasDB(): string
+    {
+        return 'numeroFactura,' .
+            'codigoIps,' .
+            'tipoIdentificacion,' .
+            'identificacion,' .
+            'numeroAutorizacion,' .
+            'codigoMedicamento,' .
+            'tipoMedicamento,' .
+            'nombreGenerico,' .
+            'formaFarmaceutica,' .
+            'concentracionMedicamento,' .
+            'unidadMedida,' .
+            'numeroUnidad,' .
+            'valorUnitario,' .
+            'valorTotal';
+    }
 }

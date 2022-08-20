@@ -62,4 +62,22 @@ class US extends RIPS implements IRips
     {
         return 'US';
     }
+
+    public static function obtenerColumnasDB(): string
+    {
+        return 'tipoIdentificacion,' .
+            'identificacion,' .
+            'codigoEapb,' .
+            'tipoUsuario,' .
+            'primerApellido,' .
+            'segundoApellido,' .
+            'primerNombre,' .
+            'segundoNombre,' .
+            'edad,' .
+            'medidaEdad,' .
+            'genero,' .
+            'codigoDepartamento,' .
+            'codigoMunicipio,' .
+            'zona';
+    }
 }

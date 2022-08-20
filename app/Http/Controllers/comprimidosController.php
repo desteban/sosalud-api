@@ -151,7 +151,7 @@ class comprimidosController extends Controller
                 array_push($RIPS_total, $RIPS);
 
                 //subir datos a db
-                $RIPS[0]->subirDB($RIPS);
+                $RIPS[0]->subirDB($RIPS, $tipoRIPS);
             }
         }
     }

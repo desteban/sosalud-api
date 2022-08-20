@@ -2,29 +2,47 @@
 
 namespace App\Models\RIPS;
 
+use Illuminate\Support\Facades\DB;
+
 class RIPS
 {
-    public function subirDB(array $datos)
+
+    public function subirDB(array $datos, string $tipoRIPS)
     {
         //codigo para subir rips a la db
-        echo 'Subiendo a db...' . $datos[0]->tipoRIPS() . "\n";
+        $columnas = $this->columnasTablas($tipoRIPS) . '';
+        $tabla = "tmp_$tipoRIPS";
+
+        if ($columnas)
+        {
+            dd($datos);
+
+            DB::insert("INSERT INTO $tabla ($columnas) VALUES (?)", $datos);
+        }
     }
 
-    private function seleccionarTablaDB(string $tipoRIPS): string
+    private function columnasTablas(string $tipoRIPS): string
     {
         $tablas = array(
-            'AC' => 'tmp_AC',
-            'AF' => 'tmp_AF',
-            'AH' => 'tmp_AH',
-            'AM' => 'tmp_AM',
-            'AN' => 'tmp_AN',
-            'AP' => 'tmp_AP',
-            'AT' => 'tmp_AT',
-            'AU' => 'tmp_AU',
-            'CT' => 'tmp_CT',
-            'US' => 'tmp_US',
+            'AC' => AC::obtenerColumnasDB(),
+            'AF' => AF::obtenerColumnasDB(),
+            'AH' => AH::obtenerColumnasDB(),
+            'AM' => AM::obtenerColumnasDB(),
+            'AN' => AN::obtenerColumnasDB(),
+            'AP' => AP::obtenerColumnasDB(),
+            'AT' => AT::obtenerColumnasDB(),
+            'AU' => AU::obtenerColumnasDB(),
+            'CT' => CT::obtenerColumnasDB(),
+            'US' => US::obtenerColumnasDB(),
         );
 
-        return $tablas[$tipoRIPS];
+        $encontrado = array_key_exists($tipoRIPS, $tablas);
+
+        if ($encontrado)
+        {
+            return $tablas[$tipoRIPS];
+        }
+
+        return null;
     }
 }

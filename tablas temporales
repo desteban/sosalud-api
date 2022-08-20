@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS tmp_AC (
   `codigoIps` varchar(20) NOT NULL DEFAULT '',
   `tipoIdentificacion` char(2) NOT NULL DEFAULT '',
   `identificacion` varchar(20) NOT NULL DEFAULT '',
-  `fechaConsulta` date NOT NULL DEFAULT '0000-00-00',
+  `fechaConsulta` date NOT NULL DEFAULT '0000-01-01',
   `numeroAutorizacion` int NOT NULL,
   `codigoConsulta` varchar(8) NOT NULL DEFAULT '',
   `finalidadConsulta` char(2) NOT NULL DEFAULT '',
@@ -16,19 +16,9 @@ CREATE TABLE IF NOT EXISTS tmp_AC (
   `valorConsulta` varchar(12) NOT NULL DEFAULT '',
   `copago` varchar(12) NOT NULL DEFAULT '',
   `valorNeto` varchar(12) NOT NULL DEFAULT '',
-  `id` int unsigned NOT NULL,
-  KEY `nF` (`numeroFactura`),
-  KEY `nFcI` (`numeroFactura`,`codigoIps`),
-  KEY `id` (`id`),
-  KEY `codPro` (`diagnosticoPrincipal`),
-  KEY `identi` (`tipoIdentificacion`,`identificacion`),
-  KEY `cod` (`codigoIps`),
-  KEY `pyp` (`codigoConsulta`,`finalidadConsulta`,`codigoCausaExterna`,`diagnosticoPrincipal`),
-  KEY `fecha` (`fechaConsulta`),
-  KEY `idnf` (`numeroFactura`,`id`),
-  KEY `numeroAutorizacion` (`numeroAutorizacion`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
+  `nr` integer  NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (nr, numeroFactura)
+);
 
 CREATE TABLE IF NOT EXISTS tmp_AD (
   `numeroFactura` varchar(20) NOT NULL DEFAULT '',
@@ -37,12 +27,9 @@ CREATE TABLE IF NOT EXISTS tmp_AD (
   `cantidad` int NOT NULL DEFAULT '0',
   `valorUnitario` double(15,2) NOT NULL DEFAULT '0.00',
   `totalConcepto` double(15,2) NOT NULL DEFAULT '0.00',
-  `id` int unsigned NOT NULL,
-  KEY `nF` (`numeroFactura`),
-  KEY `nFcI` (`numeroFactura`,`codigoIps`),
-  KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
+  `nr` integer  NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (nr, numeroFactura)
+);
 
 CREATE TABLE IF NOT EXISTS tmp_AF (
   `codigoIps` varchar(20) NOT NULL DEFAULT '',
@@ -50,9 +37,9 @@ CREATE TABLE IF NOT EXISTS tmp_AF (
   `tipoIdentificacion` char(2) NOT NULL DEFAULT '',
   `identificacion` varchar(20) NOT NULL DEFAULT '',
   `numeroFactura` varchar(20) NOT NULL DEFAULT '',
-  `fechaFactura` date NOT NULL DEFAULT '0000-00-00',
-  `fechaInicio` date NOT NULL DEFAULT '0000-00-00',
-  `fechaFinal` date NOT NULL DEFAULT '0000-00-00',
+  `fechaFactura` date NOT NULL DEFAULT '0000-01-01',
+  `fechaInicio` date NOT NULL DEFAULT '0000-01-01',
+  `fechaFinal` date NOT NULL DEFAULT '0000-01-01',
   `codigoEapb` varchar(6) NOT NULL DEFAULT '',
   `nombreEapb` varchar(30) NOT NULL DEFAULT '',
   `numeroContrato` varchar(15) NOT NULL DEFAULT '',
@@ -62,14 +49,9 @@ CREATE TABLE IF NOT EXISTS tmp_AF (
   `valorComision` double(15,2) NOT NULL DEFAULT '0.00',
   `valorDescuentos` double(15,2) NOT NULL DEFAULT '0.00',
   `valorFactura` double(15,2) NOT NULL DEFAULT '0.00',
-  `id` int unsigned NOT NULL,
-  PRIMARY KEY (`codigoIps`,`numeroFactura`),
-  KEY `nF` (`numeroFactura`),
-  KEY `id` (`id`),
-  KEY `numdoc` (`tipoIdentificacion`,`identificacion`),
-  KEY `nCont` (`codigoIps`,`numeroContrato`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
+  `nr` integer  NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (nr)
+);
 
 CREATE TABLE IF NOT EXISTS tmp_AH (
   `numeroFactura` varchar(20) NOT NULL DEFAULT '',
@@ -77,7 +59,7 @@ CREATE TABLE IF NOT EXISTS tmp_AH (
   `tipoIdentificacion` char(2) NOT NULL DEFAULT '',
   `identificacion` varchar(24) NOT NULL DEFAULT '',
   `codigoViaIngreso` char(1) NOT NULL DEFAULT '',
-  `fechaIngreso` date NOT NULL DEFAULT '0000-00-00',
+  `fechaIngreso` date NOT NULL DEFAULT '0000-01-01',
   `horaIngreso` time NOT NULL DEFAULT '00:00:00',
   `numeroAutorizacion` int DEFAULT NULL,
   `codigoCausaExterna` char(2) NOT NULL DEFAULT '',
@@ -89,16 +71,11 @@ CREATE TABLE IF NOT EXISTS tmp_AH (
   `codigoComplicacion` varchar(4) DEFAULT NULL,
   `estadoSalida` enum('1','2') NOT NULL DEFAULT '1',
   `causaMuerte` varchar(4) DEFAULT NULL,
-  `fechaEgreso` date NOT NULL DEFAULT '0000-00-00',
+  `fechaEgreso` date NOT NULL DEFAULT '0000-01-01',
   `horaEgreso` time NOT NULL DEFAULT '00:00:00',
-  `id` int unsigned NOT NULL,
-  KEY `nFcI` (`numeroFactura`,`codigoIps`),
-  KEY `id` (`id`),
-  KEY `ti` (`tipoIdentificacion`,`identificacion`),
-  KEY `cod` (`codigoIps`),
-  KEY `Dx` (`diagnosticoIngreso`),
-  KEY `numeroAutorizacion` (`numeroAutorizacion`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `nr` integer  NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (nr)
+);
 
 
 CREATE TABLE IF NOT EXISTS tmp_AM (
@@ -116,22 +93,16 @@ CREATE TABLE IF NOT EXISTS tmp_AM (
   `numeroUnidad` varchar(5) NOT NULL DEFAULT '',
   `valorUnitario` varchar(15) NOT NULL,
   `valorTotal` varchar(15) NOT NULL,
-  `id` int unsigned NOT NULL,
-  KEY `nF` (`numeroFactura`),
-  KEY `nFcI` (`numeroFactura`,`codigoIps`),
-  KEY `id` (`id`),
-  KEY `codMed` (`codigoMedicamento`),
-  KEY `ident` (`tipoIdentificacion`,`identificacion`),
-  KEY `numeroAutorizacion` (`numeroAutorizacion`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
+  `nr` integer  NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (nr)
+);
 
 CREATE TABLE IF NOT EXISTS tmp_AN (
   `numeroFactura` varchar(20) NOT NULL DEFAULT '',
   `codigoIps` varchar(20) NOT NULL DEFAULT '',
   `tipoIdentificacion` char(2) NOT NULL DEFAULT '',
   `identificacion` varchar(20) NOT NULL DEFAULT '',
-  `fechaNacimiento` date NOT NULL DEFAULT '0000-00-00',
+  `fechaNacimiento` date NOT NULL DEFAULT '0000-01-01',
   `horaNacimiento` time NOT NULL DEFAULT '00:00:00',
   `edadGestacion` tinyint NOT NULL DEFAULT '0',
   `controlPrenatal` enum('1','2') NOT NULL DEFAULT '1',
@@ -141,20 +112,16 @@ CREATE TABLE IF NOT EXISTS tmp_AN (
   `diagnosticoMuerte` varchar(4) DEFAULT NULL,
   `fechaMuerte` date DEFAULT NULL,
   `horaMuerte` time DEFAULT NULL,
-  `id` int unsigned NOT NULL,
-  KEY `nF` (`numeroFactura`),
-  KEY `nFcI` (`numeroFactura`,`codigoIps`),
-  KEY `id` (`id`),
-  KEY `ti` (`tipoIdentificacion`,`identificacion`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
+  `nr` integer  NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (nr)
+);
 
 CREATE TABLE IF NOT EXISTS tmp_AP (
   `numeroFactura` varchar(20) NOT NULL DEFAULT '',
   `codigoIps` varchar(20) NOT NULL DEFAULT '',
   `tipoIdentificacion` char(2) NOT NULL DEFAULT '',
   `identificacion` varchar(20) NOT NULL DEFAULT '',
-  `fechaProcedimiento` date NOT NULL DEFAULT '0000-00-00',
+  `fechaProcedimiento` date NOT NULL DEFAULT '0000-01-01',
   `numeroAutorizacion` int NOT NULL,
   `codigoProcedimiento` varchar(8) NOT NULL DEFAULT '',
   `ambitoProcedimiento` tinyint(1) NOT NULL DEFAULT '0',
@@ -165,21 +132,9 @@ CREATE TABLE IF NOT EXISTS tmp_AP (
   `diagnosticoComplicacion` varchar(4) NOT NULL,
   `actoQuirurgico` tinyint(1) NOT NULL,
   `valorProcedimiento` double(15,2) NOT NULL,
-  `id` int NOT NULL,
-  KEY `nF` (`numeroFactura`),
-  KEY `nFcI` (`numeroFactura`,`codigoIps`),
-  KEY `id` (`id`),
-  KEY `numdoc` (`tipoIdentificacion`,`identificacion`),
-  KEY `codigoSer` (`codigoProcedimiento`),
-  KEY `fecha` (`fechaProcedimiento`),
-  KEY `cod` (`codigoIps`),
-  KEY `pyp` (`codigoProcedimiento`,`ambitoProcedimiento`,`finalidadProcedimiento`),
-  KEY `ive` (`diagnostico`,`codigoProcedimiento`),
-  KEY `Dx` (`diagnostico`),
-  KEY `idnf` (`numeroFactura`,`id`),
-  KEY `numeroAutorizacion` (`numeroAutorizacion`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
+  `nr` integer  NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (nr)
+);
 
 CREATE TABLE IF NOT EXISTS tmp_AT (
   `numeroFactura` varchar(20) NOT NULL DEFAULT '',
@@ -193,14 +148,9 @@ CREATE TABLE IF NOT EXISTS tmp_AT (
   `cantidad` varchar(5) NOT NULL DEFAULT '',
   `valorUnitario` double(15,2) NOT NULL,
   `valorTotal` double(15,2) NOT NULL,
-  `id` int unsigned NOT NULL,
-  KEY `nF` (`numeroFactura`),
-  KEY `nFcI` (`numeroFactura`,`codigoIps`),
-  KEY `id` (`id`),
-  KEY `codSer` (`codigoServicio`),
-  KEY `ti` (`tipoIdentificacion`,`identificacion`),
-  KEY `numeroAutorizacion` (`numeroAutorizacion`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `nr` integer  NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (nr)
+);
 
 
 CREATE TABLE IF NOT EXISTS tmp_AU (
@@ -208,7 +158,7 @@ CREATE TABLE IF NOT EXISTS tmp_AU (
   `codigoIps` varchar(20) NOT NULL DEFAULT '',
   `tipoIdentificacion` char(2) NOT NULL DEFAULT '',
   `identificacion` varchar(20) NOT NULL DEFAULT '',
-  `fechaIngreso` date NOT NULL DEFAULT '0000-00-00',
+  `fechaIngreso` date NOT NULL DEFAULT '0000-01-01',
   `horaIngreso` time NOT NULL DEFAULT '00:00:00',
   `numeroAutorizacion` varchar(15) NOT NULL DEFAULT '',
   `causaExterna` char(2) NOT NULL DEFAULT '',
@@ -221,23 +171,19 @@ CREATE TABLE IF NOT EXISTS tmp_AU (
   `causaMuerte` varchar(4) DEFAULT NULL,
   `fechaSalida` date DEFAULT NULL,
   `horaSalida` time DEFAULT NULL,
-  `id` int unsigned NOT NULL,
-  KEY `nF` (`numeroFactura`),
-  KEY `nFcI` (`numeroFactura`,`codigoIps`),
-  KEY `id` (`id`),
-  KEY `ti` (`tipoIdentificacion`,`identificacion`),
-  KEY `Dx` (`diagnostico`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `nr` integer  NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (nr)
+);
 
 
 CREATE TABLE IF NOT EXISTS tmp_CT (
   `codigoIps` varchar(20) NOT NULL DEFAULT '',
-  `fechaRemision` date NOT NULL DEFAULT '0000-00-00',
+  `fechaRemision` date NOT NULL DEFAULT '0000-01-01',
   `codigoArchivo` varchar(8) NOT NULL DEFAULT '',
   `totalRegistros` int NOT NULL DEFAULT '0',
-  `id` varchar(9) NOT NULL DEFAULT '',
-  KEY `codCod` (`codigoIps`,`codigoArchivo`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `nr` integer  NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (nr)
+);
 
 
 CREATE TABLE IF NOT EXISTS tmp_US (
@@ -255,7 +201,6 @@ CREATE TABLE IF NOT EXISTS tmp_US (
   `codigoDepartamento` char(2) NOT NULL DEFAULT '',
   `codigoMunicipio` char(3) NOT NULL DEFAULT '',
   `zona` enum('U','R') NOT NULL DEFAULT 'U',
-  `id` int unsigned DEFAULT NULL,
-  PRIMARY KEY (`tipoIdentificacion`,`identificacion`),
-  KEY `id` (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+  `nr` integer  NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (nr)
+);

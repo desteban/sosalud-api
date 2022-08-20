@@ -9,7 +9,7 @@ namespace App\Models\RIPS;
 class AC extends RIPS implements IRips
 {
     public string $numeoFactura = '';
-    public string $codigoIPS = '';
+    public string $codigoIps = '';
     public string $tipoIdentificacion = '';
     public string $identificacion = '';
     public string $fechaConsulta = '';
@@ -30,12 +30,14 @@ class AC extends RIPS implements IRips
     public function obtenerDatos(): array
     {
         $datos = [];
+        $columnas = '';
 
         foreach ($this as $clave => $valor)
         {
             array_push($datos, $valor);
+            $columnas .= "$clave,";
         }
-
+        dd($columnas);
         return $datos;
     }
 
@@ -63,5 +65,26 @@ class AC extends RIPS implements IRips
     public function tipoRIPS(): string
     {
         return 'AC';
+    }
+
+    public static function obtenerColumnasDB(): string
+    {
+        return 'numeroFactura,' .
+            'codigoIps,' .
+            'tipoIdentificacion,' .
+            'iddentificacion,' .
+            'fechaConsulta,' .
+            'numeroAutorizacion,' .
+            'codigoConsulta,' .
+            'finalidadConsulta,' .
+            'codigoCausaExterna,' .
+            'diagnosticoPrincipal' .
+            'diagnostico1,' .
+            'diagnostico2,' .
+            'diagnostico3,' .
+            'tipoDiagnosticoPrincipal,' .
+            'valorConsulta,' .
+            'copago,' .
+            'valorNeto';
     }
 }

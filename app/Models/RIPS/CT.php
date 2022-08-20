@@ -52,4 +52,12 @@ class CT extends RIPS implements IRips
     {
         return 'CT';
     }
+
+    public static function obtenerColumnasDB(): string
+    {
+        return 'codigoIps,' .
+            'fechaRemision,' .
+            'codigoArchivo,' .
+            'totalRegistros';
+    }
 }

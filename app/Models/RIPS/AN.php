@@ -62,4 +62,22 @@ class AN extends RIPS implements IRips
     {
         return 'AN';
     }
+
+    public static function obtenerColumnasDB(): string
+    {
+        return 'numeroFactura,' .
+            'codigoIps,' .
+            'tipoIdentificacion,' .
+            'identificacion,' .
+            'fechaNacimiento,' .
+            'horaNacimiento,' .
+            'edadGestacion,' .
+            'controlPrenatal,' .
+            'genero,' .
+            'peso,' .
+            'diagnostico,' .
+            'diagnosticoMuerte,' .
+            'fechaMuerte,' .
+            'horaMuerte';
+    }
 }

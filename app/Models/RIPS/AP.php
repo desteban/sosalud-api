@@ -63,4 +63,23 @@ class AP extends RIPS implements IRips
     {
         return 'AP';
     }
+
+    public static function obtenerColumnasDB(): string
+    {
+        return 'numeroFactura,' .
+            'codigoIps,' .
+            'tipoIdentificacion,' .
+            'identificacion,' .
+            'fechaProcedimiento,' .
+            'numeroAutorizacion,' .
+            'codigoProcedimiento,' .
+            'ambitoProcedimiento,' .
+            'finalidadProcedimiento,' .
+            'personalAtiendte,' .
+            'diagnostico,' .
+            'diagnostico1,' .
+            'diagnosticoComplicacion,' .
+            'actoQuirurgico,' .
+            'valorProcedimiento';
+    }
 }

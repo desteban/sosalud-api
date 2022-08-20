@@ -67,4 +67,27 @@ class AH extends RIPS implements IRips
     {
         return 'AH';
     }
+
+    public static function obtenerColumnasDB(): string
+    {
+        return 'numeroFactura,' .
+            'codigoIps,' .
+            'tipoIdentificacion,' .
+            'identificacion,' .
+            'codigoViaIngreso,' .
+            'fechaIngreso,' .
+            'horaIngreso,' .
+            'numeroAutorizacion,' .
+            'codigoCausaExterna,' .
+            'diagnosticoIngreso,' .
+            'diagnosticoEgreso,' .
+            'diagnostico1,' .
+            'diagnostico2,' .
+            'diagnostico3,' .
+            'codigoComplicacion,' .
+            'estadoSalida,' .
+            'causaMuerte,' .
+            'fechaEgreso,' .
+            'horaEgreso';
+    }
 }

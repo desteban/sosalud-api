@@ -9,8 +9,8 @@ namespace App\Models\RIPS;
 class AF extends RIPS implements IRips
 {
 
-    public string $codigoIPS = '';
-    public string $nombreIPS = '';
+    public string $codigoIps = '';
+    public string $nombreIps = '';
     public string $tipoIdentificacion = '';
     public string $identificacion = '';
     public string $numeroFactura = '';
@@ -64,5 +64,26 @@ class AF extends RIPS implements IRips
     public function tipoRIPS(): string
     {
         return 'AF';
+    }
+
+    public static function obtenerColumnasDB(): string
+    {
+        return 'codigoIps,' .
+            'nombreIps, ' .
+            'tipoIdentificacion,' .
+            'identificacion,' .
+            'numeroFactura,' .
+            'fechaFactura,' .
+            'fechaInicio,' .
+            'fechaFinal,' .
+            'codigoEapb,' .
+            'nombreEapb,' .
+            'numeroContrato,' .
+            'planBeneficios,' .
+            'numeroPoliza,' .
+            'copago,' .
+            'valorComision,' .
+            'valorDescuentos,' .
+            'valorFactura';
     }
 }
