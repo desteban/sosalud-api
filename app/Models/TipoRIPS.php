@@ -68,7 +68,7 @@ class TipoRIPS
         $buscarFecha = strpos($fecha, '/');
         if ($fecha && $buscarFecha)
         {
-            return date_format(date_create_from_format('d/m/Y', $fecha), 'Y/m/d');
+            return date_format(date_create_from_format('d/m/Y', $fecha), 'Y-m-d');
         }
 
         return null;

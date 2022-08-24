@@ -6,9 +6,8 @@ use App\Models\Respuestas;
 use App\Models\RIPS\RIPS;
 use App\Models\TipoRIPS;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use ZipArchive;
-
-use function App\Models\RIPS\detectarRIPS;
 
 class comprimidosController extends Controller
 {
@@ -148,9 +147,13 @@ class comprimidosController extends Controller
                 //obtener el contenido del documento
                 $contenidoRips = $this->obtenerRips($ruta_RIPS, $tipoRIPS);
 
-                //subir datos a db
-                $RIPS = new RIPS();
-                $RIPS->subirDB($contenidoRips, $tipoRIPS);
+                //subir datos a la base de datos
+                array_map(function ($rips)
+                {
+                    $rips->subirDB();
+                }, $contenidoRips);
+
+                dd('Subiendo ...');
             }
         }
     }
@@ -176,7 +179,7 @@ class comprimidosController extends Controller
 
                 $registroRIPS = $this->limpiarRIPS($linea);
                 $tipo_RIPS = new TipoRIPS($tipoRIPS, $registroRIPS);
-                array_push($RIPS, $tipo_RIPS->RipsToString());
+                array_push($RIPS, $tipo_RIPS->getTipoRips());
             }
         }
 

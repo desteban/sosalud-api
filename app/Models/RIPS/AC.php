@@ -2,6 +2,8 @@
 
 namespace App\Models\RIPS;
 
+use Illuminate\Support\Facades\DB;
+
 /**
  * Archivo de consulta
  */

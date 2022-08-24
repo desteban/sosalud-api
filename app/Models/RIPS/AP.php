@@ -2,6 +2,8 @@
 
 namespace App\Models\RIPS;
 
+use Illuminate\Support\Facades\DB;
+
 /**
  * Archivo de procedimientos
  */
@@ -37,7 +39,6 @@ class AP extends RIPS implements IRips
         }
 
         $datos = rtrim($datos, ',');
-        dd($datos);
         return $datos;
     }
 
@@ -85,5 +86,17 @@ class AP extends RIPS implements IRips
             'diagnosticoComplicacion,' .
             'actoQuirurgico,' .
             'valorProcedimiento';
+    }
+
+    public function subirDB()
+    {
+        //codigo para subir rips a la db
+        $columnas = $this->obtenerColumnasDB();
+        $explode = explode(',', $this->obtenerDatos());
+
+        if ($columnas)
+        {
+            DB::insert("INSERT INTO tmp_AP ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);", $explode);
+        }
     }
 }

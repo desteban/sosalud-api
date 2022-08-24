@@ -7,18 +7,6 @@ use Illuminate\Support\Facades\DB;
 class RIPS
 {
 
-    public function subirDB(array $datos, string $tipoRIPS)
-    {
-        //codigo para subir rips a la db
-        $columnas = $this->columnasTablas($tipoRIPS) . '';
-        $tabla = "tmp_$tipoRIPS";
-
-        if ($columnas)
-        {
-            DB::insert("INSERT INTO $tabla ($columnas) VALUES (?);", $datos);
-        }
-    }
-
     private function columnasTablas(string $tipoRIPS): string
     {
         $tablas = array(
@@ -60,10 +48,10 @@ class RIPS
     {
 
         $tiposDatos = array(
-            'boolean' => $dato ? 'TRUE' : 'FALSE',
+            'boolean' => $dato ? '1' : '0',
             'integer' => $dato,
             'double' => $dato,
-            'string' => "'$dato'"
+            'string' => "$dato"
         );
 
         return $tiposDatos[$tipoDato];
