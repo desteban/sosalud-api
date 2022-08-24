@@ -13,7 +13,7 @@ class AC extends RIPS implements IRips
     public string $tipoIdentificacion = '';
     public string $identificacion = '';
     public string $fechaConsulta = '';
-    public $numeoAutorizacion = 0;
+    public int $numeoAutorizacion = 0;
     public string $codigoConsulta = '';
     public string $finalidadConsulta = '';
     public string $codigoCausaExterna = '';
@@ -27,17 +27,17 @@ class AC extends RIPS implements IRips
     public string $valorNeto = '';
     protected int $id = 0;
 
-    public function obtenerDatos(): array
+    public function obtenerDatos(): string
     {
-        $datos = [];
-        $columnas = '';
+        $datos = '';
 
         foreach ($this as $clave => $valor)
         {
-            array_push($datos, $valor);
-            $columnas .= "$clave,";
+            $type = gettype($this->{$clave});
+            $datos .= $this->typeToString($type, $valor) . ',';
         }
-        dd($columnas);
+
+        $datos = rtrim($datos, ',');
         return $datos;
     }
 

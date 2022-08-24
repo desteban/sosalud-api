@@ -15,15 +15,17 @@ class CT extends RIPS implements IRips
     public string $totalRegistros = '';
     protected int $id = 0;
 
-    public function obtenerDatos(): array
+    public function obtenerDatos(): string
     {
-        $datos = [];
+        $datos = '';
 
         foreach ($this as $clave => $valor)
         {
-            array_push($datos, $valor);
+            $type = gettype($this->{$clave});
+            $datos .= $this->typeToString($type, $valor) . ',';
         }
 
+        $datos = rtrim($datos, ',');
         return $datos;
     }
 

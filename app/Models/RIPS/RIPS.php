@@ -15,9 +15,7 @@ class RIPS
 
         if ($columnas)
         {
-            dd($datos);
-
-            DB::insert("INSERT INTO $tabla ($columnas) VALUES (?)", $datos);
+            DB::insert("INSERT INTO $tabla ($columnas) VALUES (?);", $datos);
         }
     }
 
@@ -44,5 +42,30 @@ class RIPS
         }
 
         return null;
+    }
+
+    protected function parceItem(string $tipoDato, $dato)
+    {
+        $tiposDatos = array(
+            'boolean' => strlen($dato) > 0 ? true : false,
+            'integer' => intval($dato),
+            'double' => floatval($dato),
+            'string' => $dato
+        );
+
+        return $tiposDatos[$tipoDato];
+    }
+
+    protected function typeToString(string $tipoDato, $dato)
+    {
+
+        $tiposDatos = array(
+            'boolean' => $dato ? 'TRUE' : 'FALSE',
+            'integer' => $dato,
+            'double' => $dato,
+            'string' => "'$dato'"
+        );
+
+        return $tiposDatos[$tipoDato];
     }
 }

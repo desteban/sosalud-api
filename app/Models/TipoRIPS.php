@@ -16,7 +16,6 @@ use App\Models\RIPS\US;
 class TipoRIPS
 {
     private $Rips;
-    private $RipsContieneFecha = array('CT', 'AF', 'AC', 'AP', 'AU', 'AH', 'AN', 'AT');
 
     function __construct($tipoRips = "", array $contenidoRips = [])
     {
@@ -79,5 +78,10 @@ class TipoRIPS
     {
         $fechaRegex = '/^([0-2][0-9]|3[0-1])(\/|-)(0[1-9]|1[0-2])\2(\d{4})$/';
         return preg_match($fechaRegex, $fecha);
+    }
+
+    public function RipsToString(): string
+    {
+        return $this->Rips->obtenerDatos();
     }
 }

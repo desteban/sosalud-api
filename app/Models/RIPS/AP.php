@@ -14,27 +14,30 @@ class AP extends RIPS implements IRips
     public string $tipoIdentificacion = '';
     public string $identificacion = '';
     public string $fechaProcedimiento = '';
-    public $numeroAutorizacion = 0;
+    public int $numeroAutorizacion = 0;
     public string $codigoProcedimiento = '';
-    public $ambitoProcedimiento = 0;
-    public $finalidadProcedimiento = 0;
+    public int $ambitoProcedimiento = 0;
+    public int $finalidadProcedimiento = 0;
     public string $personalAtiende = '';
     public string $diagnostico = '';
     public string $diagnostico1 = '';
     public string $diagnosticoComplicacion = '';
-    public $actoQuirurgico = 0;
-    public $valorProcedimiento;
+    public bool $actoQuirurgico = false;
+    public float $valorProcedimiento = 0;
     protected int $id;
 
-    public function obtenerDatos(): array
+    public function obtenerDatos(): string
     {
-        $datos = [];
+        $datos = '';
 
         foreach ($this as $clave => $valor)
         {
-            array_push($datos, $valor);
+            $type = gettype($this->{$clave});
+            $datos .= $this->typeToString($type, $valor) . ',';
         }
 
+        $datos = rtrim($datos, ',');
+        dd($datos);
         return $datos;
     }
 
@@ -51,7 +54,7 @@ class AP extends RIPS implements IRips
             {
                 if ($indice < $cantidadAtributos)
                 {
-                    $this->{$clave} = $datos[$indice];
+                    $this->{$clave} = $this->parceItem(gettype($this->{$clave}), $datos[$indice]);
 
                     $indice++;
                 }
@@ -66,6 +69,7 @@ class AP extends RIPS implements IRips
 
     public static function obtenerColumnasDB(): string
     {
+
         return 'numeroFactura,' .
             'codigoIps,' .
             'tipoIdentificacion,' .
@@ -75,7 +79,7 @@ class AP extends RIPS implements IRips
             'codigoProcedimiento,' .
             'ambitoProcedimiento,' .
             'finalidadProcedimiento,' .
-            'personalAtiendte,' .
+            'personalAtiende,' .
             'diagnostico,' .
             'diagnostico1,' .
             'diagnosticoComplicacion,' .

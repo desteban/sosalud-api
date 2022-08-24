@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Respuestas;
+use App\Models\RIPS\RIPS;
 use App\Models\TipoRIPS;
 use Illuminate\Http\Request;
 use ZipArchive;
@@ -130,7 +131,6 @@ class comprimidosController extends Controller
 
     function leerRIPS($listaRIPS = [], $nombreCarpeta = '')
     {
-        $RIPS_total = [];
         $rutaLeer = $this->rutaRIPS . "$nombreCarpeta";
 
         //validar que la carpeta cuente con RIPS
@@ -146,12 +146,11 @@ class comprimidosController extends Controller
                 $ruta_RIPS = "$rutaLeer/$nombreDocumentoRIPS";
 
                 //obtener el contenido del documento
-                $RIPS = $this->obtenerRips($ruta_RIPS, $tipoRIPS);
-
-                array_push($RIPS_total, $RIPS);
+                $contenidoRips = $this->obtenerRips($ruta_RIPS, $tipoRIPS);
 
                 //subir datos a db
-                $RIPS[0]->subirDB($RIPS, $tipoRIPS);
+                $RIPS = new RIPS();
+                $RIPS->subirDB($contenidoRips, $tipoRIPS);
             }
         }
     }
@@ -177,7 +176,7 @@ class comprimidosController extends Controller
 
                 $registroRIPS = $this->limpiarRIPS($linea);
                 $tipo_RIPS = new TipoRIPS($tipoRIPS, $registroRIPS);
-                array_push($RIPS, $tipo_RIPS->getTipoRips());
+                array_push($RIPS, $tipo_RIPS->RipsToString());
             }
         }
 

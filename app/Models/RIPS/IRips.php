@@ -6,7 +6,7 @@ interface IRips
 {
     public function subirDB(array $datos, string $tipoRips);
 
-    public function obtenerDatos(): array;
+    public function obtenerDatos(): string;
 
     public function agregarDatos(array $datos);
 
