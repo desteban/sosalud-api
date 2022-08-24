@@ -20,11 +20,18 @@ class CT extends RIPS implements IRips
     public function obtenerDatos(): string
     {
         $datos = '';
+        $indice = 0;
 
         foreach ($this as $clave => $valor)
         {
-            $type = gettype($this->{$clave});
-            $datos .= $this->typeToString($type, $valor) . ',';
+            if ($indice < 4)
+            {
+
+                $type = gettype($this->{$clave});
+                $datos .= $this->typeToString($type, $valor) . ',';
+            }
+
+            $indice++;
         }
 
         $datos = rtrim($datos, ',');
@@ -44,7 +51,7 @@ class CT extends RIPS implements IRips
             {
                 if ($indice < $cantidadAtributos)
                 {
-                    $$this->{$clave} = $this->parceItem(gettype($this->{$clave}), $datos[$indice]);
+                    $this->{$clave} = $this->parceItem(gettype($this->{$clave}), $datos[$indice]);
 
                     $indice++;
                 }

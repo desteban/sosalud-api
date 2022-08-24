@@ -32,11 +32,17 @@ class AC extends RIPS implements IRips
     public function obtenerDatos(): string
     {
         $datos = '';
+        $indice = 0;
 
         foreach ($this as $clave => $valor)
         {
-            $type = gettype($this->{$clave});
-            $datos .= $this->typeToString($type, $valor) . ',';
+            if ($indice < 17)
+            {
+
+                $type = gettype($this->{$clave});
+                $datos .= $this->typeToString($type, $valor) . ',';
+                $indice++;
+            }
         }
 
         $datos = rtrim($datos, ',');
@@ -97,6 +103,8 @@ class AC extends RIPS implements IRips
         $datos = $this->obtenerDatos();
         $explode = explode(',', $datos);
 
+        // dd($explode);
+        // dd($this);
         if ($columnas)
         {
             DB::insert("INSERT INTO tmp_AC ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", $explode);
