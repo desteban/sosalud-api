@@ -2,6 +2,8 @@
 
 namespace App\Models\RIPS;
 
+use Illuminate\Support\Facades\DB;
+
 /**
  * Archivo de control
  */
@@ -42,7 +44,7 @@ class CT extends RIPS implements IRips
             {
                 if ($indice < $cantidadAtributos)
                 {
-                    $this->{$clave} = $datos[$indice];
+                    $$this->{$clave} = $this->parceItem(gettype($this->{$clave}), $datos[$indice]);
 
                     $indice++;
                 }
@@ -61,5 +63,17 @@ class CT extends RIPS implements IRips
             'fechaRemision,' .
             'codigoArchivo,' .
             'totalRegistros';
+    }
+
+    public function subirDB()
+    {
+
+        $columnas = $this->obtenerColumnasDB();
+        $explode = explode(',', $this->obtenerDatos());
+
+        if ($columnas)
+        {
+            DB::insert("INSERT INTO tmp_CT ($columnas) VALUES (?,?,?,?);", $explode);
+        }
     }
 }

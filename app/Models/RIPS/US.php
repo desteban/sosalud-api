@@ -2,6 +2,8 @@
 
 namespace App\Models\RIPS;
 
+use Illuminate\Support\Facades\DB;
+
 /**
  * Archivo de usuarios
  */
@@ -12,12 +14,12 @@ class US extends RIPS implements IRips
     public string $tipoIdentificacion = '';
     public string $identificacion = '';
     public string $codigoEntidadAdministradora = '';
-    public $tipoUsuario = 0;
+    public int $tipoUsuario = 0;
     public string $primerApellido = '';
     public string $segundoApellido = '';
     public string $primerNombre = '';
     public string $segundoNombre = '';
-    public $edad = 0;
+    public int $edad = 0;
     public string $medidaEdad = '';
     public string $genero = '';
     public string $codigoDepartamento = '';
@@ -52,7 +54,7 @@ class US extends RIPS implements IRips
             {
                 if ($indice < $cantidadAtributos)
                 {
-                    $this->{$clave} = $datos[$indice];
+                    $this->{$clave} = $this->parceItem(gettype($this->{$clave}), $datos[$indice]);
 
                     $indice++;
                 }
@@ -81,5 +83,17 @@ class US extends RIPS implements IRips
             'codigoDepartamento,' .
             'codigoMunicipio,' .
             'zona';
+    }
+
+    public function subirDB()
+    {
+
+        $columnas = $this->obtenerColumnasDB();
+        $explode = explode(',', $this->obtenerDatos());
+
+        if ($columnas)
+        {
+            DB::insert("INSERT INTO tmp_US ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);", $explode);
+        }
     }
 }

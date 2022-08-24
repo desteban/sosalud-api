@@ -2,6 +2,8 @@
 
 namespace App\Models\RIPS;
 
+use Illuminate\Support\Facades\DB;
+
 /**
  * Archivo de urgencia con observación
  */
@@ -21,7 +23,7 @@ class AU extends RIPS implements IRips
     public string $diagnostico1 = '';
     public string $diagnostico2 = '';
     public string $diagnostico3 = '';
-    public $referencia = 0;
+    public int $referencia = 0;
     public string $estadoSalida = '';
     public string $CausaMuerte = '';
     public string $fechaSalida = '';
@@ -55,7 +57,7 @@ class AU extends RIPS implements IRips
             {
                 if ($indice < $cantidadAtributos)
                 {
-                    $this->{$clave} = $datos[$indice];
+                    $this->{$clave} = $this->parceItem(gettype($this->{$clave}), $datos[$indice]);
 
                     $indice++;
                 }
@@ -87,5 +89,17 @@ class AU extends RIPS implements IRips
             'causaMuerte,' .
             'fechaSalida,' .
             'horaSalida';
+    }
+
+    public function subirDB()
+    {
+
+        $columnas = $this->obtenerColumnasDB();
+        $explode = explode(',', $this->obtenerDatos());
+
+        if ($columnas)
+        {
+            DB::insert("INSERT INTO tmp_AU ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);", $explode);
+        }
     }
 }

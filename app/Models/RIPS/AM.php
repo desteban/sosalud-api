@@ -16,9 +16,9 @@ class AM extends RIPS implements IRips
     public string $codigoIPS = '';
     public string $tipoIdentificacion = '';
     public string $identificacion = '';
-    public $numeroAutorizacion = 0;
+    public int $numeroAutorizacion = 0;
     public string $codigoMedicamento = '';
-    public $tipoMedicamento = 0;
+    public string $tipoMedicamento = '0';
     public string $nombreGenerico = '';
     public string $formaFarmaceutica = '';
     public string $concentracionMedicamento = '';
@@ -55,7 +55,7 @@ class AM extends RIPS implements IRips
             {
                 if ($indice < $cantidadAtributos)
                 {
-                    $this->{$clave} = $datos[$indice];
+                    $this->{$clave} = $this->parceItem(gettype($this->{$clave}), $datos[$indice]);
 
                     $indice++;
                 }
@@ -84,5 +84,17 @@ class AM extends RIPS implements IRips
             'numeroUnidad,' .
             'valorUnitario,' .
             'valorTotal';
+    }
+
+    public function subirDB()
+    {
+
+        $columnas = $this->obtenerColumnasDB();
+        $explode = explode(',', $this->obtenerDatos());
+
+        if ($columnas)
+        {
+            DB::insert("INSERT INTO tmp_AM ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);", $explode);
+        }
     }
 }

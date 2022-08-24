@@ -24,10 +24,10 @@ class AF extends RIPS implements IRips
     public string $numeroContrato = '';
     public string $planBeneficios = '';
     public string $numeroPoliza = '';
-    public $copago = 0;
-    public $valorComision = 0;
-    public $valorDescuento = 0;
-    public $valorFactura = 0;
+    public float $copago = 0;
+    public float $valorComision = 0;
+    public float $valorDescuento = 0;
+    public float $valorFactura = 0;
     protected int $id;
 
     public function obtenerDatos(): string
@@ -57,7 +57,7 @@ class AF extends RIPS implements IRips
             {
                 if ($indice < $cantidadAtributos)
                 {
-                    $this->{$clave} = $datos[$indice];
+                    $this->{$clave} = $this->parceItem(gettype($this->{$clave}), $datos[$indice]);
 
                     $indice++;
                 }
@@ -89,5 +89,17 @@ class AF extends RIPS implements IRips
             'valorComision,' .
             'valorDescuentos,' .
             'valorFactura';
+    }
+
+    public function subirDB()
+    {
+        //codigo para subir rips a la db
+        $columnas = $this->obtenerColumnasDB();
+        $explode = explode(',', $this->obtenerDatos());
+
+        if ($columnas)
+        {
+            DB::insert("INSERT INTO tmp_AF ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);", $explode);
+        }
     }
 }

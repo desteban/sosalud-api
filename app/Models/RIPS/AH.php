@@ -18,7 +18,7 @@ class AH extends RIPS implements IRips
     public string $codigoViaIngreso = '';
     public string $fechaIngreso = '';
     public string $horaIngreso = '';
-    public $numeroAutorizacion = 0;
+    public int $numeroAutorizacion = 0;
     public string $codigoCausaExterna = '';
     public string $diagnoticoIngreso = '';
     public string $diagnosticoEgreso = '';
@@ -59,7 +59,7 @@ class AH extends RIPS implements IRips
             {
                 if ($indice < $cantidadAtributos)
                 {
-                    $this->{$clave} = $datos[$indice];
+                    $this->{$clave} = $this->parceItem(gettype($this->{$clave}), $datos[$indice]);
 
                     $indice++;
                 }
@@ -93,5 +93,17 @@ class AH extends RIPS implements IRips
             'causaMuerte,' .
             'fechaEgreso,' .
             'horaEgreso';
+    }
+
+    public function subirDB()
+    {
+
+        $columnas = $this->obtenerColumnasDB();
+        $explode = explode(',', $this->obtenerDatos());
+
+        if ($columnas)
+        {
+            DB::insert("INSERT INTO tmp_AH ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);", $explode);
+        }
     }
 }

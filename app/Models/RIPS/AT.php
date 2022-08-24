@@ -2,6 +2,8 @@
 
 namespace App\Models\RIPS;
 
+use Illuminate\Support\Facades\DB;
+
 /**
  * Archivo de otros servicios
  */
@@ -13,13 +15,13 @@ class AT extends RIPS implements IRips
     public string $codigoIPS = '';
     public string $tipoIdentificacion = '';
     public string $identificacion = '';
-    public $numeroAutorizacion = 0;
-    public $tipoServicio = 0;
+    public int $numeroAutorizacion = 0;
+    public int $tipoServicio = 0;
     public string $codigoServicio = '';
     public string $nombreServicio = '';
     public string $cantidad = '';
-    public $valorUnitario = 0;
-    public $valorTotal = 0;
+    public float $valorUnitario = 0;
+    public float $valorTotal = 0;
     protected int $id;
 
     public function obtenerDatos(): string
@@ -49,7 +51,7 @@ class AT extends RIPS implements IRips
             {
                 if ($indice < $cantidadAtributos)
                 {
-                    $this->{$clave} = $datos[$indice];
+                    $this->{$clave} = $this->parceItem(gettype($this->{$clave}), $datos[$indice]);
 
                     $indice++;
                 }
@@ -75,5 +77,17 @@ class AT extends RIPS implements IRips
             'cantidad,' .
             'valorUnitario,' .
             'valorTotal';
+    }
+
+    public function subirDB()
+    {
+
+        $columnas = $this->obtenerColumnasDB();
+        $explode = explode(',', $this->obtenerDatos());
+
+        if ($columnas)
+        {
+            DB::insert("INSERT INTO tmp_AT ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?);", $explode);
+        }
     }
 }

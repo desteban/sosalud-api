@@ -4,7 +4,7 @@ namespace App\Models\RIPS;
 
 interface IRips
 {
-    // public function subirDB();
+    public function subirDB();
 
     public function obtenerDatos(): string;
 

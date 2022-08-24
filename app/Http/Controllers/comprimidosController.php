@@ -130,6 +130,7 @@ class comprimidosController extends Controller
 
     function leerRIPS($listaRIPS = [], $nombreCarpeta = '')
     {
+        $respuesta = new Respuestas();
         $rutaLeer = $this->rutaRIPS . "$nombreCarpeta";
 
         //validar que la carpeta cuente con RIPS
@@ -152,9 +153,18 @@ class comprimidosController extends Controller
                 {
                     $rips->subirDB();
                 }, $contenidoRips);
-
-                dd('Subiendo ...');
             }
+
+            return $respuesta;
+        }
+
+        if (sizeof($listaRIPS) <= 0)
+        {
+            $respuesta->codigoHttp = 400;
+            $respuesta->estado = 'Mala petición';
+            $respuesta->mensaje = 'La carpeta está vacia';
+
+            return $respuesta;
         }
     }
 

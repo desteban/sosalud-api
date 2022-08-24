@@ -56,7 +56,7 @@ class AC extends RIPS implements IRips
             {
                 if ($indice < $cantidadAtributos)
                 {
-                    $this->{$clave} = $datos[$indice];
+                    $this->{$clave} = $this->parceItem(gettype($this->{$clave}), $datos[$indice]);
 
                     $indice++;
                 }
@@ -74,13 +74,13 @@ class AC extends RIPS implements IRips
         return 'numeroFactura,' .
             'codigoIps,' .
             'tipoIdentificacion,' .
-            'iddentificacion,' .
+            'identificacion,' .
             'fechaConsulta,' .
             'numeroAutorizacion,' .
             'codigoConsulta,' .
             'finalidadConsulta,' .
             'codigoCausaExterna,' .
-            'diagnosticoPrincipal' .
+            'diagnosticoPrincipal, ' .
             'diagnostico1,' .
             'diagnostico2,' .
             'diagnostico3,' .
@@ -88,5 +88,18 @@ class AC extends RIPS implements IRips
             'valorConsulta,' .
             'copago,' .
             'valorNeto';
+    }
+
+    public function subirDB()
+    {
+        //codigo para subir rips a la db
+        $columnas = $this->obtenerColumnasDB();
+        $datos = $this->obtenerDatos();
+        $explode = explode(',', $datos);
+
+        if ($columnas)
+        {
+            DB::insert("INSERT INTO tmp_AC ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", $explode);
+        }
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Models\RIPS;
 
+use Illuminate\Support\Facades\DB;
+
 /**
  * Archivo de recién nacidos
  */
@@ -15,10 +17,10 @@ class AN extends RIPS implements IRips
     public string $Identificacion = '';
     public string $fechaNacimiento = '';
     public string $horaNacimiento = '';
-    public $edadGestacion = 0;
+    public int $edadGestacion = 0;
     public string $controlPrenatal = '';
     public string $genero = '';
-    public $peso = 0;
+    public int $peso = 0;
     public string $diagnostico = '';
     public string $diagnosticoMuerte = '';
     public string $fechaMuerte = '';
@@ -52,7 +54,7 @@ class AN extends RIPS implements IRips
             {
                 if ($indice < $cantidadAtributos)
                 {
-                    $this->{$clave} = $datos[$indice];
+                    $this->{$clave} = $this->parceItem(gettype($this->{$clave}), $datos[$indice]);
 
                     $indice++;
                 }
@@ -81,5 +83,17 @@ class AN extends RIPS implements IRips
             'diagnosticoMuerte,' .
             'fechaMuerte,' .
             'horaMuerte';
+    }
+
+    public function subirDB()
+    {
+
+        $columnas = $this->obtenerColumnasDB();
+        $explode = explode(',', $this->obtenerDatos());
+
+        if ($columnas)
+        {
+            DB::insert("INSERT INTO tmp_AN ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);", $explode);
+        }
     }
 }
