@@ -98,11 +98,19 @@ class comprimidosController extends Controller
     {
         $respuesta = new Respuestas(400, 'Bad requesat', 'No se encontraron los archivos necesarios');
 
-        $listadoRIPS = $this->obtenerListaRIPS($nombreCarpeta);
-
-        if (sizeof($listadoRIPS) > 0)
+        try
         {
-            return $this->leerRIPS($listadoRIPS, $nombreCarpeta);
+
+            $listadoRIPS = $this->obtenerListaRIPS($nombreCarpeta);
+
+            if (sizeof($listadoRIPS) > 0)
+            {
+                return $this->leerRIPS($listadoRIPS, $nombreCarpeta);
+            }
+        }
+        catch (\Throwable $th)
+        {
+            $respuesta->cambiarRespuesta(500, 'Internal Server Error', 'Algo ha salido mal');
         }
 
         return $respuesta;
