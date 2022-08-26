@@ -103,8 +103,6 @@ class AC extends RIPS implements IRips
         $datos = $this->obtenerDatos();
         $explode = explode(',', $datos);
 
-        // dd($explode);
-        // dd($this);
         if ($columnas)
         {
             DB::insert("INSERT INTO tmp_AC ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", $explode);

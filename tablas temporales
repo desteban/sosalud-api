@@ -179,7 +179,7 @@ CREATE TABLE IF NOT EXISTS tmp_AU (
 CREATE TABLE IF NOT EXISTS tmp_CT (
   `codigoIps` varchar(20) NOT NULL DEFAULT '',
   `fechaRemision` date NOT NULL DEFAULT '0000-01-01',
-  `codigoArchivo` varchar(8) NOT NULL DEFAULT '',
+  `codigoArchivo` varchar(10) NOT NULL DEFAULT '',
   `totalRegistros` int NOT NULL DEFAULT '0',
   `nr` integer  NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (nr)
@@ -204,3 +204,20 @@ CREATE TABLE IF NOT EXISTS tmp_US (
   `nr` integer  NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (nr)
 );
+
+DELIMITER $$
+    CREATE PROCEDURE limpiarTablasTmpRips()
+    BEGIN
+        DELETE FROM tmp_AC;
+        DELETE FROM tmp_AD;
+        DELETE FROM tmp_AF;
+        DELETE FROM tmp_AH;
+        DELETE FROM tmp_AM;
+        DELETE FROM tmp_AN;
+        DELETE FROM tmp_AP;
+        DELETE FROM tmp_AT;
+        DELETE FROM tmp_AU;
+        DELETE FROM tmp_CT;
+        DELETE FROM tmp_US;
+    END $$
+DELIMITER

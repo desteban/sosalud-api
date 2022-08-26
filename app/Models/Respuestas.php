@@ -4,24 +4,22 @@ namespace App\Models;
 
 class Respuestas
 {
-    public string $estado;
+    public string $titulo;
     public int $codigoHttp;
     public string $mensaje;
     public $data;
 
-    public function __construct()
+    public function __construct(int $codigoHttp = 200, string $titulo = 'succes', string $mensaje = '', $data = [])
     {
 
-        $this->estado = 'succes';
-        $this->codigoHttp = 200;
-        $this->mensaje = 'Todo ha salido bien';
+        $this->cambiarRespuesta($codigoHttp, $titulo, $mensaje, $data);
     }
 
-    public function cambiarRespuesta(int $codigoHttp, string $estado, string $mensaje = '', $data = [])
+    public function cambiarRespuesta(int $codigoHttp, string $titulo, string $mensaje = '', $data = [])
     {
 
-        $this->estado = $estado;
         $this->codigoHttp = $codigoHttp;
+        $this->estado = $titulo;
         $this->mensaje = $mensaje;
         $this->data = $data;
     }

@@ -35,7 +35,7 @@ class comprimidosController extends Controller
         {
 
             $nombreCarpeta = $respuesta->data;
-            $RIPS = $this->manipularCarpetaRIPS($nombreCarpeta);
+            $respuesta = $this->manipularCarpetaRIPS($nombreCarpeta);
         }
 
 
@@ -44,7 +44,7 @@ class comprimidosController extends Controller
 
     public function manipularArchivoComprimido(Request $request): Respuestas
     {
-        $respuesta = new Respuestas;
+        $respuesta = new Respuestas();
 
         //obtenermos el archivo enviado
         $archivo = $request->file('archivo');
@@ -59,7 +59,7 @@ class comprimidosController extends Controller
 
         if ($extraerArchivo)
         {
-            $respuesta->cambiarRespuesta(201, 'Creado', 'El archivo se ha descomprimido con éxito', $nombre);
+            $respuesta->cambiarRespuesta(201, 'Creado', 'El archivo se ha descomprimido con exito', $nombre);
         }
 
         return $respuesta;
@@ -94,17 +94,21 @@ class comprimidosController extends Controller
         return $respuestaExtraer;
     }
 
-    function manipularCarpetaRIPS($nombreCarpeta = 'tmp_CT000221_1660013324')
+    function manipularCarpetaRIPS($nombreCarpeta): Respuestas
     {
-        $RIPS = [];
+        $respuesta = new Respuestas(400, 'Bad requesat', 'No se encontraron los archivos necesarios');
 
         $listadoRIPS = $this->obtenerListaRIPS($nombreCarpeta);
-        $this->leerRIPS($listadoRIPS, $nombreCarpeta);
 
-        return $RIPS;
+        if (sizeof($listadoRIPS) > 0)
+        {
+            return $this->leerRIPS($listadoRIPS, $nombreCarpeta);
+        }
+
+        return $respuesta;
     }
 
-    public function obtenerListaRIPS($rutaArchivo = 'tmp_CT000221_1660013324'): array
+    public function obtenerListaRIPS(string $rutaArchivo): array
     {
         $rutaLeer = $this->rutaRIPS . "$rutaArchivo";
         $datos = [];
@@ -128,9 +132,9 @@ class comprimidosController extends Controller
         return $datos;
     }
 
-    function leerRIPS($listaRIPS = [], $nombreCarpeta = '')
+    function leerRIPS($listaRIPS = [], $nombreCarpeta = ''): Respuestas
     {
-        $respuesta = new Respuestas();
+        $respuesta = new Respuestas(201, 'Created', 'Datos guardados exitosamente');
         $rutaLeer = $this->rutaRIPS . "$nombreCarpeta";
 
         //validar que la carpeta cuente con RIPS
@@ -149,10 +153,17 @@ class comprimidosController extends Controller
                 $contenidoRips = $this->obtenerRips($ruta_RIPS, $tipoRIPS);
 
                 //subir datos a la base de datos
-                array_map(function ($rips)
+                foreach ($contenidoRips as $rips)
                 {
-                    $rips->subirDB();
-                }, $contenidoRips);
+                    try
+                    {
+                        $rips->subirDB();
+                    }
+                    catch (\Throwable $th)
+                    {
+                        $respuesta->cambiarRespuesta(500, 'Internal Server Error', 'Algo ha salido mal al momento de subir el RIPS a la base de datos');
+                    }
+                }
             }
 
             return $respuesta;
@@ -160,9 +171,7 @@ class comprimidosController extends Controller
 
         if (sizeof($listaRIPS) <= 0)
         {
-            $respuesta->codigoHttp = 400;
-            $respuesta->estado = 'Mala petición';
-            $respuesta->mensaje = 'La carpeta está vacia';
+            $respuesta->cambiarRespuesta(400, 'Bad Request', 'La carpeta no cuenta con archivos dentro');
 
             return $respuesta;
         }
