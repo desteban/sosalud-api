@@ -4,16 +4,19 @@ namespace App\Http\Controllers;
 
 use ZipArchive;
 
+use function PHPUnit\Framework\isNull;
+
 class Archivos
 {
 
-    public static function extraerArchivosComprimidos($archivo, string $nombreArchivo = 'default'): bool
+    public static function extraerArchivosComprimidos($archivo, string $nombreArchivo = 'default', $rutaArchivo = null): bool
     {
 
         $respuestaExtraer = false;
         $rutaGuardar = 'TMPs/' . $nombreArchivo;
+        $extencion = $archivo->guessExtension();
 
-        if ($archivo->guessExtension() == "zip")
+        if ($extencion == "zip")
         {
 
             $zip = new ZipArchive;
@@ -31,6 +34,11 @@ class Archivos
 
                 $zip->close();
             }
+        }
+
+        if ($extencion == 'rar' && $rutaArchivo != null)
+        {
+            exec("unrar x /var/www/html/sosalud/storage/app/$rutaArchivo /var/www/html/sosalud/public/TMPs/$nombreArchivo/");
         }
 
         return $respuestaExtraer;

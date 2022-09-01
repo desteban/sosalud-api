@@ -57,7 +57,7 @@ class comprimidosController extends Controller
 
         $path = $request->file('archivo')->store('comprimidos');
 
-        $extraerArchivo = Archivos::extraerArchivosComprimidos($archivo, $nombre);
+        $extraerArchivo = Archivos::extraerArchivosComprimidos($archivo, $nombre, $path);
 
         if ($extraerArchivo)
         {
