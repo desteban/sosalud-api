@@ -55,7 +55,7 @@ class comprimidosController extends Controller
         //establecemos un nombre para guardar el archivo
         $nombre = 'tmp_' . $nombreArchivo[0] . '_' . time();
 
-        $extraerArchivo = $this->extraerZip($archivo, $nombre);
+        $extraerArchivo = Archivos::extraerArchivosComprimidos($archivo, $nombre);
 
         if ($extraerArchivo)
         {
@@ -63,35 +63,6 @@ class comprimidosController extends Controller
         }
 
         return $respuesta;
-    }
-
-    public function extraerZip($archivo, $nombreArchivo): bool
-    {
-        $respuestaExtraer = false;
-        $rutaGuardar = 'TMPs/' . $nombreArchivo;
-
-
-        if ($archivo->guessExtension() == "zip")
-        {
-
-            $zip = new ZipArchive;
-
-            if ($zip->open($archivo, ZipArchive::CREATE))
-            {
-
-                //descomprimir archivo y guardar los datos en la ruta especifica
-                $archivoDescomprimido = $zip->extractTo($rutaGuardar);
-
-                if ($archivoDescomprimido)
-                {
-                    $respuestaExtraer = true;
-                }
-
-                $zip->close();
-            }
-        }
-
-        return $respuestaExtraer;
     }
 
     function manipularCarpetaRIPS($nombreCarpeta): Respuestas
