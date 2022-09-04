@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Respuestas;
 use App\Models\RIPS\RIPS;
 use App\Models\TipoRIPS;
+use App\Validador\EstructuraRips;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use ZipArchive;
@@ -27,23 +28,36 @@ class comprimidosController extends Controller
         if ($request->hasFile('archivo'))
         {
 
-            $respuesta = $this->manipularArchivoComprimido($request);
+            $respuesta = $this->extraerArchivo($request);
         }
+
+
         //validar que se ha descomprimido el archivo
         if ($respuesta->codigoHttp == 201)
         {
 
             $nombreCarpeta = $respuesta->data;
-            $respuesta = $this->manipularCarpetaRIPS($nombreCarpeta);
+
+            $respuesta = $this->validarEstructura($respuesta->data);
+
+            if ($respuesta->codigoHttp == 200)
+            {
+
+                $respuesta = $this->manipularCarpetaRIPS($nombreCarpeta);
+            }
         }
 
 
         return response()->json($respuesta, $respuesta->codigoHttp);
     }
 
-    public function manipularArchivoComprimido(Request $request): Respuestas
+    public function extraerArchivo(Request $request): Respuestas
     {
-        $respuesta = new Respuestas(500, 'Internal Server Error', 'Algo ha salido al momento de manipular el archivo seleccionado');
+        $respuesta = new Respuestas(
+            500,
+            'cod-ex01',
+            'Algo ha salido al momento de manipular el archivo seleccionado'
+        );
 
         //obtenermos el archivo enviado
         $archivo = $request->file('archivo');
@@ -159,5 +173,27 @@ class comprimidosController extends Controller
         }
 
         return $RIPS;
+    }
+
+    // * retorna el estado de la validacion de la estructura del RIPS
+    function validarEstructura(string $nombreCarpetaTemporal): Respuestas
+    {
+        $respuesta = new Respuestas();
+        $direccionCarpetaTemporal = $this->rutaRIPS . $nombreCarpetaTemporal;
+        $contenidoCarpetaTemporal = Archivos::obtenerContenidoDirectorio($direccionCarpetaTemporal);
+
+        $estadoValidacion =  EstructuraRips::ValidarRips($contenidoCarpetaTemporal);
+
+        if (!empty($estadoValidacion))
+        {
+            $respuesta->cambiarRespuesta(
+                400,
+                'cod-VEs01',
+                'Se presentaron errores en la validacion del archivo',
+                $estadoValidacion
+            );
+        }
+
+        return $respuesta;
     }
 }

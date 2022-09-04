@@ -36,9 +36,9 @@ class EstructuraRips
                 //obtener los 2 primeros caracteres del nombre del archivo
                 $nombreRips = substr($rips, 0, 2);
 
-                if (!array_search($nombreRips, $listadoRips))
+                if (!in_array($nombreRips, $listadoRips))
                 {
-                    array_push($logErrores, "El archivo $rips no es un archivo valido");
+                    array_push($logErrores, "El archivo ($rips) no es un archivo valido");
                 }
             }
         }
