@@ -38,7 +38,7 @@ class EstructuraRips
 
                 if (!array_search($nombreRips, $listadoRips))
                 {
-                    array_push($logErrores, "Archivo $nombreRips no se encuentra");
+                    array_push($logErrores, "El archivo $rips no es un archivo valido");
                 }
             }
         }

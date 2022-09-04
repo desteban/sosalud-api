@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use ZipArchive;
 
+use function PHPUnit\Framework\isNull;
+
 class Archivos
 {
 
-    public static function extraerArchivosComprimidos($archivo, string $nombreArchivo = 'default', $rutaArchivo = null): bool
+    public static function extraerArchivosComprimidos($archivo, string $nombreArchivo = 'default'): bool
     {
 
         $respuestaExtraer = false;
@@ -34,9 +36,19 @@ class Archivos
             }
         }
 
-        if ($extencion == 'rar' && $rutaArchivo != null)
+        if ($extencion == 'rar')
         {
-            exec("unrar x /var/www/html/sosalud/storage/app/$rutaArchivo /var/www/html/sosalud/public/TMPs/$nombreArchivo/");
+            $rutaArchivo = Archivos::guardarArchivoServidor($archivo, 'comprimidos');
+            if (!empty($rutaArchivo))
+            {
+                exec("unrar x /var/www/html/sosalud/storage/app/$rutaArchivo /var/www/html/sosalud/public/TMPs/$nombreArchivo/");
+            }
+        }
+
+        // validar si se ha extraido el archivo exitosamente
+        if (is_dir("/var/www/html/sosalud/public/TMPs/$nombreArchivo/"))
+        {
+            $respuestaExtraer = true;
         }
 
         return $respuestaExtraer;
@@ -72,5 +84,21 @@ class Archivos
         }
 
         return $datos;
+    }
+
+    /**
+     * @param archivo 
+     * @param ubicacion la ruta donde se guardara el archivo (/storage/app)
+     */
+    public static function guardarArchivoServidor($archivo, string $ubicacion): string
+    {
+        try
+        {
+            return $archivo->store($ubicacion);
+        }
+        catch (\Throwable $th)
+        {
+            return '';
+        }
     }
 }

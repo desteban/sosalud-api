@@ -12,7 +12,6 @@ use ZipArchive;
 class comprimidosController extends Controller
 {
     protected $rutaRIPS = __DIR__ . "/../../../public/TMPs/";
-    protected $fechasRIPS = ['CT', 'AF', 'AC', 'AP', 'AU' . 'AH', 'AN', 'AT'];
 
     public function crearRIPS(Request $request)
     {
@@ -44,7 +43,7 @@ class comprimidosController extends Controller
 
     public function manipularArchivoComprimido(Request $request): Respuestas
     {
-        $respuesta = new Respuestas();
+        $respuesta = new Respuestas(500, 'Internal Server Error', 'Algo ha salido al momento de manipular el archivo seleccionado');
 
         //obtenermos el archivo enviado
         $archivo = $request->file('archivo');
@@ -55,9 +54,7 @@ class comprimidosController extends Controller
         //establecemos un nombre para guardar el archivo
         $nombre = 'tmp_' . $nombreArchivo[0] . '_' . time();
 
-        $path = $request->file('archivo')->store('comprimidos');
-
-        $extraerArchivo = Archivos::extraerArchivosComprimidos($archivo, $nombre, $path);
+        $extraerArchivo = Archivos::extraerArchivosComprimidos($archivo, $nombre);
 
         if ($extraerArchivo)
         {
