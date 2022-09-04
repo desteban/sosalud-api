@@ -44,7 +44,7 @@ class Archivos
 
     public static function eliminarArchivosTemporales()
     {
-        exec("rm -r -f /var/www/html/sosalud/public/TMPs/* & rm -r -f /var/www/html/sosalud/storage/app/comprimidos/*");
+        exec("rm -rf /var/www/html/sosalud/public/TMPs/* & rm -rf /var/www/html/sosalud/storage/app/comprimidos/*");
     }
 
     public static function obtenerContenidoDirectorio(string $direccionCarpeta, string $extencion = '.txt'): array
