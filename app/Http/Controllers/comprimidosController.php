@@ -73,8 +73,8 @@ class comprimidosController extends Controller
 
         try
         {
-
-            $listadoRIPS = $this->obtenerListaRIPS($nombreCarpeta);
+            $rutaLeer = $this->rutaRIPS . "$nombreCarpeta";
+            $listadoRIPS = Archivos::obtenerContenidoDirectorio($rutaLeer);
 
             if (sizeof($listadoRIPS) > 0)
             {
@@ -87,30 +87,6 @@ class comprimidosController extends Controller
         }
 
         return $respuesta;
-    }
-
-    public function obtenerListaRIPS(string $rutaArchivo): array
-    {
-        $rutaLeer = $this->rutaRIPS . "$rutaArchivo";
-        $datos = [];
-
-        if (is_dir($rutaLeer))
-        {
-
-            $carpeta = opendir($rutaLeer);
-            while ($archivo = readdir($carpeta))
-            {
-                //obtener todos los archivos con extencion .txt
-                $txt = strpos($archivo, '.txt');
-
-                if ($txt)
-                {
-                    array_push($datos, $archivo);
-                }
-            }
-        }
-
-        return $datos;
     }
 
     function leerRIPS($listaRIPS = [], $nombreCarpeta = ''): Respuestas

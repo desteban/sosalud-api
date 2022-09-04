@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use ZipArchive;
 
-use function PHPUnit\Framework\isNull;
-
 class Archivos
 {
 
@@ -42,5 +40,33 @@ class Archivos
         }
 
         return $respuestaExtraer;
+    }
+
+    public static function eliminarArchivosTemporales()
+    {
+        exec("rm -r -f /var/www/html/sosalud/public/TMPs/* & rm -r -f /var/www/html/sosalud/storage/app/comprimidos/*");
+    }
+
+    public static function obtenerContenidoDirectorio(string $direccionCarpeta, string $extencion = '.txt'): array
+    {
+
+        $datos = array();
+
+        if (is_dir($direccionCarpeta))
+        {
+
+            $carpeta = opendir($direccionCarpeta);
+            while ($archivo = readdir($carpeta))
+            {
+                //obtener todos los archivos con extencion .txt
+                $archivoFiltrado = strpos($archivo, $extencion);
+                if ($archivoFiltrado)
+                {
+                    array_push($datos, $archivo);
+                }
+            }
+        }
+
+        return $datos;
     }
 }
