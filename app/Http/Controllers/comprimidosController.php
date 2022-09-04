@@ -18,11 +18,11 @@ class comprimidosController extends Controller
     {
         $respuesta = new Respuestas;
         /**
-         * Validar la informacion
-         * max es el peso en kilobytes 1Mb = 1024kb
+         * Validar la informacion de la peticion
+         * * max es el peso en kilobytes 1Mb = 1024kb
          */
         $request->validate([
-            'archivo'   =>  ['required', 'mimes:rar,zip,7z', 'max:5158']
+            'archivo'   =>  ['required', 'mimes:rar,zip', 'max:5158']
         ]);
 
         if ($request->hasFile('archivo'))
@@ -134,6 +134,7 @@ class comprimidosController extends Controller
         }
     }
 
+    // *Esta funcion alimina los saltos de linea y espacio al momento de leer un RIPS
     function limpiarRIPS(string $lineaRIPS): array
     {
         //eliminar saltos de linea y espacios
@@ -142,6 +143,7 @@ class comprimidosController extends Controller
         return explode(',', $registro);
     }
 
+    // *retorna un arreglo con los objetos RIPS necesarios creados
     function obtenerRips(string $rutaRIPS, string $tipoRIPS): array
     {
         $RIPS = array();

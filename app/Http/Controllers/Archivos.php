@@ -47,6 +47,10 @@ class Archivos
         exec("rm -rf /var/www/html/sosalud/public/TMPs/* & rm -rf /var/www/html/sosalud/storage/app/comprimidos/*");
     }
 
+    /**
+     * @param direccionCarpeta ruta de la carpeta a buscar
+     * @param extencion para filtrar por extencion de archivos que desea retornar en la funcion
+     */
     public static function obtenerContenidoDirectorio(string $direccionCarpeta, string $extencion = '.txt'): array
     {
 

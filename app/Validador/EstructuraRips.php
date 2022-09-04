@@ -5,12 +5,15 @@ namespace App\Validador;
 class EstructuraRips
 {
 
-    public static function ValidarRips(array $datosValidar = [], string $nombreCarpeta = ''): array
+    /**
+     * * si llega a este punto ya se ha generado la carpeta temporal respectiva
+     * @param datosValidar arreglo con el contenido (.txt) de una carpeta
+     */
+    public static function ValidarRips(array $datosValidar = []): array
     {
-        $rutaLeer = '/var/www/html/sosalud/public/TMPs' . $nombreCarpeta;
         $logErrores = array();
 
-        if (!empty($datosValidar) && is_dir($rutaLeer))
+        if (!empty($datosValidar))
         {
 
             $listadoRips = array(
@@ -43,11 +46,6 @@ class EstructuraRips
         if (empty($datosValidar))
         {
             array_push($logErrores, "No se encontraron archivos validos dentro del archivo seleccionado");
-        }
-
-        if (!is_dir($rutaLeer))
-        {
-            array_push($logErrores, "No se ha encontrado el archivo");
         }
 
         return $logErrores;
