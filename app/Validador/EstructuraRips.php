@@ -58,17 +58,15 @@ class EstructuraRips
         return $logErrores;
     }
 
-    public static function filtrarCT(array $listado)
+    public static function filtrarCT(array $listado): array
     {
 
-        $salida = array_filter($listado, function ($item)
+        return array_filter($listado, function ($item)
         {
-            if (preg_match('/^CT[0-9]*.txt/', $item))
+            if (preg_match('/^CT\d*.txt/', $item))
             {
                 return $item;
             }
         });
-
-        return $salida;
     }
 }

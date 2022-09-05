@@ -56,7 +56,8 @@ class Archivos
 
     public static function eliminarArchivosTemporales()
     {
-        exec("rm -rf /var/www/html/sosalud/public/TMPs/* & rm -rf /var/www/html/sosalud/storage/app/comprimidos/*");
+        $direccionApp = env('APP_DIR');
+        exec("rm -rf $direccionApp/public/TMPs/* & rm -rf $direccionApp/storage/app/comprimidos/*");
     }
 
     /**
