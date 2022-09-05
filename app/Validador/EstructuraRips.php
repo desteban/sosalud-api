@@ -13,6 +13,13 @@ class EstructuraRips
     {
         $logErrores = array();
 
+        $filtoCT = EstructuraRips::filtrarCT($datosValidar);
+
+        if (empty($filtoCT))
+        {
+            array_push($logErrores, "No se ha encontrado el Archivo CT");
+        }
+
         if (!empty($datosValidar))
         {
 
@@ -49,5 +56,19 @@ class EstructuraRips
         }
 
         return $logErrores;
+    }
+
+    public static function filtrarCT(array $listado)
+    {
+
+        $salida = array_filter($listado, function ($item)
+        {
+            if (preg_match('/^CT[0-9]*.txt/', $item))
+            {
+                return $item;
+            }
+        });
+
+        return $salida;
     }
 }
