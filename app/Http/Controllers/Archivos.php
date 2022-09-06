@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use ZipArchive;
 
-use function PHPUnit\Framework\isNull;
-
 class Archivos
 {
 
@@ -13,8 +11,10 @@ class Archivos
     {
 
         $respuestaExtraer = false;
+        $direccionApp = env('APP_DIR');
         $rutaGuardar = 'TMPs/' . $nombreArchivo;
         $extencion = $archivo->guessExtension();
+        $rutaArchivo = '';
 
         if ($extencion == "zip")
         {
@@ -36,17 +36,28 @@ class Archivos
             }
         }
 
-        if ($extencion == 'rar')
+        if ($extencion != 'zip')
         {
             $rutaArchivo = Archivos::guardarArchivoServidor($archivo, 'comprimidos');
-            if (!empty($rutaArchivo))
-            {
-                exec("unrar x /var/www/html/sosalud/storage/app/$rutaArchivo /var/www/html/sosalud/public/TMPs/$nombreArchivo/");
-            }
         }
 
+        if ($extencion == 'rar' && !empty($rutaArchivo))
+        {
+            exec("unrar x $direccionApp/storage/app/$rutaArchivo $direccionApp/public/TMPs/$nombreArchivo/");
+        }
+
+        if ($extencion == '7z' && !empty($rutaArchivo))
+        {
+            exec("cd $direccionApp/public/TMPs; 7z -o$nombreArchivo e $direccionApp/storage/app/$rutaArchivo");
+        }
+
+        /**
+         * 7z
+         * cd ~; 7z -osapo e /home/desteban/Descargas/CT0072022.7z
+         */
+
         // validar si se ha extraido el archivo exitosamente
-        if (is_dir("/var/www/html/sosalud/public/TMPs/$nombreArchivo/"))
+        if (is_dir("$direccionApp/public/TMPs/$nombreArchivo/"))
         {
             $respuestaExtraer = true;
         }

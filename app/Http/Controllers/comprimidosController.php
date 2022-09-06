@@ -22,12 +22,11 @@ class comprimidosController extends Controller
          * * max es el peso en kilobytes 1Mb = 1024kb
          */
         $request->validate([
-            'archivo'   =>  ['required', 'mimes:rar,zip', 'max:5158']
+            'archivo'   =>  ['required', 'mimes:rar,zip,7z', 'max:5158']
         ]);
 
         if ($request->hasFile('archivo'))
         {
-
             $respuesta = $this->extraerArchivo($request);
         }
 
@@ -37,8 +36,7 @@ class comprimidosController extends Controller
         {
 
             $nombreCarpeta = $respuesta->data;
-
-            $respuesta = $this->validarEstructura($respuesta->data);
+            $respuesta = $this->validarEstructura($nombreCarpeta);
 
             if ($respuesta->codigoHttp == 200)
             {
@@ -182,13 +180,13 @@ class comprimidosController extends Controller
         $direccionCarpetaTemporal = $this->rutaRIPS . $nombreCarpetaTemporal;
         $contenidoCarpetaTemporal = Archivos::obtenerContenidoDirectorio($direccionCarpetaTemporal);
 
-        $estadoValidacion =  EstructuraRips::ValidarRips($contenidoCarpetaTemporal);
+        $estadoValidacion =  EstructuraRips::ValidarRips($nombreCarpetaTemporal, $contenidoCarpetaTemporal);
 
         if (!empty($estadoValidacion))
         {
             $respuesta->cambiarRespuesta(
                 400,
-                'cod-VEs01',
+                'cod-VEs',
                 'Se presentaron errores en la validacion del archivo',
                 $estadoValidacion
             );
