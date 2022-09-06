@@ -7,23 +7,38 @@ class EstructuraRips
 
     /**
      * * si llega a este punto ya se ha generado la carpeta temporal respectiva
-     * @param datosValidar arreglo con el contenido (.txt) de una carpeta
+     * @param datosValidar arreglo con el nombre de los archivos (.txt) de una carpeta
+     * @param nombreCarpeta nombre de la carpeta del archivo descomprimido
+     * @return array con el log de errores encontrados en la validadion de la estructura del RIPS
      */
-    public static function ValidarRips(array $datosValidar = []): array
+    public static function ValidarRips(string $nombreCarpeta, array $datosValidar = []): array
     {
         $logErrores = array();
+        $listadoRips = array();
 
-        $filtoCT = EstructuraRips::filtrarCT($datosValidar);
+        $filtroCT = EstructuraRips::filtrarCT($datosValidar);
 
-        if (empty($filtoCT))
+        // valida si se encuentra un archivo CT
+        if (empty($filtroCT))
         {
             array_push($logErrores, "No se ha encontrado el Archivo CT");
         }
 
-        if (!empty($datosValidar))
+        // valida si se encuentran varios archivos CT
+        if (sizeof($filtroCT) > 1)
+        {
+            array_push($logErrores, 'Se encontraron varios archivos CT ');
+        }
+
+        if (empty($datosValidar))
+        {
+            array_push($logErrores, "No se encontraron archivos validos dentro del archivo seleccionado");
+        }
+
+        if (!empty($datosValidar) && sizeof($filtroCT) == 1)
         {
 
-            $listadoRips = array(
+            $listadoRipsValidar = array(
                 'AC',
                 'AF',
                 'AH',
@@ -43,27 +58,38 @@ class EstructuraRips
                 //obtener los 2 primeros caracteres del nombre del archivo
                 $nombreRips = substr($rips, 0, 2);
 
-                if (!in_array($nombreRips, $listadoRips))
+                if (!in_array($nombreRips, $listadoRipsValidar))
                 {
+
                     array_push($logErrores, "El archivo ($rips) no es un archivo valido");
                 }
+                else
+                {
+                    //agregar nombre al listado de Rips para validar el archivo CT
+                    array_push($listadoRips, $nombreRips);
+                }
             }
-        }
 
-        if (empty($datosValidar))
-        {
-            array_push($logErrores, "No se encontraron archivos validos dentro del archivo seleccionado");
+            //validar informacion del archivo CT
+            $validarCT = new ValidadorCT($nombreCarpeta, $filtroCT[0], $listadoRips);
+            $erroresCT = $validarCT->validar();
+
+            $logErrores = array_merge($logErrores, $erroresCT);
         }
 
         return $logErrores;
     }
 
+    /**
+     * @param listado arreglo con todos los archivos (.txt) dentro de la carpeta descomprimida
+     * @return array arreglo con el nombre completo del archivo CT
+     */
     public static function filtrarCT(array $listado): array
     {
 
         return array_filter($listado, function ($item)
         {
-            if (preg_match('/^CT\d*.txt/', $item))
+            if (preg_match('/(CT)\w+.txt/', $item))
             {
                 return $item;
             }

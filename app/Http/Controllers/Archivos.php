@@ -38,6 +38,10 @@ class Archivos
 
         if ($extencion != 'zip')
         {
+            /**
+             * guardar en carpeta de archivos comprimidos
+             * /storage/app/comprimidos
+             */
             $rutaArchivo = Archivos::guardarArchivoServidor($archivo, 'comprimidos');
         }
 
@@ -69,6 +73,7 @@ class Archivos
     {
         $direccionApp = env('APP_DIR');
         exec("rm -rf $direccionApp/public/TMPs/* & rm -rf $direccionApp/storage/app/comprimidos/*");
+        //rm -rf /var/www/html/sosalud/public/TMPs/* & rm -rf /var/www/html/sosalud/storage/app/comprimidos/*
     }
 
     /**

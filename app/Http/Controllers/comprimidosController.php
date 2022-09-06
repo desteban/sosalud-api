@@ -22,7 +22,7 @@ class comprimidosController extends Controller
          * * max es el peso en kilobytes 1Mb = 1024kb
          */
         $request->validate([
-            'archivo'   =>  ['required', 'mimes:rar,zip,7z', 'max:5158']
+            'archivo'   =>  ['required', 'mimes:rar,zip', 'max:5158']
         ]);
 
         if ($request->hasFile('archivo'))
@@ -176,8 +176,9 @@ class comprimidosController extends Controller
     // * retorna el estado de la validacion de la estructura del RIPS
     function validarEstructura(string $nombreCarpetaTemporal): Respuestas
     {
+        $rutaAPP = env('APP_DIR');
         $respuesta = new Respuestas();
-        $direccionCarpetaTemporal = $this->rutaRIPS . $nombreCarpetaTemporal;
+        $direccionCarpetaTemporal = "$rutaAPP/public/TMPs/$nombreCarpetaTemporal";
         $contenidoCarpetaTemporal = Archivos::obtenerContenidoDirectorio($direccionCarpetaTemporal);
 
         $estadoValidacion =  EstructuraRips::ValidarRips($nombreCarpetaTemporal, $contenidoCarpetaTemporal);
