@@ -14,6 +14,10 @@ class comprimidosController extends Controller
 {
     protected $rutaRIPS = __DIR__ . "/../../../public/TMPs/";
 
+    /**
+     * *funcion invocada al subir un archivo comprimido al sistema
+     * @param Request
+     */
     public function crearRIPS(Request $request)
     {
         $respuesta = new Respuestas;
@@ -49,6 +53,11 @@ class comprimidosController extends Controller
         return response()->json($respuesta, $respuesta->codigoHttp);
     }
 
+
+    /**
+     * @param request
+     * @return Respuestas donde se especifica el estado de la tarea
+     */
     public function extraerArchivo(Request $request): Respuestas
     {
         $respuesta = new Respuestas(
@@ -76,6 +85,11 @@ class comprimidosController extends Controller
         return $respuesta;
     }
 
+    /**
+     * *obtiene el contenido de los RIPS para su lectura
+     * @param nombreCarpeta
+     * @return Respuesta estado de la tarea
+     */
     function manipularCarpetaRIPS($nombreCarpeta): Respuestas
     {
         $respuesta = new Respuestas(400, 'Bad requesat', 'No se encontraron los archivos necesarios');
@@ -98,6 +112,12 @@ class comprimidosController extends Controller
         return $respuesta;
     }
 
+    /**
+     * *leer el contenido de los RIPS para posteriormente subirlos a la base de datos
+     * @param listaRIPS array
+     * @param nombreCarpeta
+     * @return Respuestas con el estado de la tarea
+     */
     function leerRIPS($listaRIPS = [], $nombreCarpeta = ''): Respuestas
     {
         $respuesta = new Respuestas(201, 'Created', 'Datos guardados exitosamente');
@@ -143,16 +163,23 @@ class comprimidosController extends Controller
         }
     }
 
+    /**
+     * @param lineaRIPS string con la linea que deseamos limpiar
+     * @return array separando el string por comas (,)
+     */
     // *Esta funcion alimina los saltos de linea y espacio al momento de leer un RIPS
     function limpiarRIPS(string $lineaRIPS): array
     {
         //eliminar saltos de linea y espacios
-        $registro = str_replace("\r\n", '', $lineaRIPS);
-        $registro = str_replace(' ', '', $registro);
+        $registro = str_replace(array("\r\n", "\n", "\r", ' '), '', $lineaRIPS);
         return explode(',', $registro);
     }
 
-    // *retorna un arreglo con los objetos RIPS necesarios creados
+    /**
+     * @param rutaRIPS 
+     * @param tipoRIPS
+     * @return array con los objetos RIPS necesarios creados
+     */
     function obtenerRips(string $rutaRIPS, string $tipoRIPS): array
     {
         $RIPS = array();
@@ -173,7 +200,9 @@ class comprimidosController extends Controller
         return $RIPS;
     }
 
-    // * retorna el estado de la validacion de la estructura del RIPS
+    /**
+     * @return Respuestas donde data contiene el log de errores de la validacion de estructura
+     */
     function validarEstructura(string $nombreCarpetaTemporal): Respuestas
     {
         $rutaAPP = env('APP_DIR');
