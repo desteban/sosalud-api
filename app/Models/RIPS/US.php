@@ -96,4 +96,28 @@ class US extends RIPS implements IRips
             DB::insert("INSERT INTO tmp_US ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);", $explode);
         }
     }
+
+    public function crearTablas(string $nombreTabla)
+    {
+        $respuesta = DB::statement("CREATE TABLE IF NOT EXISTS tmp_US_$nombreTabla (
+            tipoIdentificacion char(2) NOT NULL DEFAULT '',
+            identificacion varchar(20) NOT NULL DEFAULT '',
+            codigoEapb varchar(6) NOT NULL DEFAULT '',
+            tipoUsuario tinyint(1) NOT NULL DEFAULT '2',
+            primerApellido varchar(30) NOT NULL DEFAULT '',
+            segundoApellido varchar(30) DEFAULT NULL,
+            primerNombre varchar(20) NOT NULL DEFAULT '',
+            segundoNombre varchar(20) DEFAULT NULL,
+            edad tinyint DEFAULT NULL,
+            medidaEdad enum('1','2','3') DEFAULT NULL,
+            genero enum('M','F') DEFAULT NULL,
+            codigoDepartamento char(2) NOT NULL DEFAULT '',
+            codigoMunicipio char(3) NOT NULL DEFAULT '',
+            zona enum('U','R') NOT NULL DEFAULT 'U',
+            nr integer  NOT NULL AUTO_INCREMENT,
+            PRIMARY KEY (nr)
+          );");
+
+        dd($respuesta);
+    }
 }

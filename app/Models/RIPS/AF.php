@@ -102,4 +102,31 @@ class AF extends RIPS implements IRips
             DB::insert("INSERT INTO tmp_AF ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);", $explode);
         }
     }
+
+    public function crearTablas(string $nombreTabla)
+    {
+        $respuesta = DB::statement("CREATE TABLE IF NOT EXISTS tmp_AF_$nombreTabla (
+            codigoIps varchar(20) NOT NULL DEFAULT '',
+            nombreIps varchar(60) NOT NULL DEFAULT '',
+            tipoIdentificacion char(2) NOT NULL DEFAULT '',
+            identificacion varchar(20) NOT NULL DEFAULT '',
+            numeroFactura varchar(20) NOT NULL DEFAULT '',
+            fechaFactura date NOT NULL DEFAULT '0000-01-01',
+            fechaInicio date NOT NULL DEFAULT '0000-01-01',
+            fechaFinal date NOT NULL DEFAULT '0000-01-01',
+            codigoEapb varchar(6) NOT NULL DEFAULT '',
+            nombreEapb varchar(30) NOT NULL DEFAULT '',
+            numeroContrato varchar(15) NOT NULL DEFAULT '',
+            planBeneficios varchar(30) NOT NULL DEFAULT '',
+            numeroPoliza varchar(10) NOT NULL DEFAULT '',
+            copago double(15,2) NOT NULL DEFAULT '0.00',
+            valorComision double(15,2) NOT NULL DEFAULT '0.00',
+            valorDescuentos double(15,2) NOT NULL DEFAULT '0.00',
+            valorFactura double(15,2) NOT NULL DEFAULT '0.00',
+            nr integer  NOT NULL AUTO_INCREMENT,
+            PRIMARY KEY (nr)
+          );");
+
+        dd($respuesta);
+    }
 }

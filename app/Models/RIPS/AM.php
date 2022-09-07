@@ -97,4 +97,28 @@ class AM extends RIPS implements IRips
             DB::insert("INSERT INTO tmp_AM ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);", $explode);
         }
     }
+
+    public function crearTablas(string $nombreTabla)
+    {
+        $respuesta = DB::statement("CREATE TABLE IF NOT EXISTS tmp_AM_$nombreTabla (
+            numeroFactura varchar(20) NOT NULL DEFAULT '',
+            codigoIps varchar(20) NOT NULL DEFAULT '',
+            tipoIdentificacion char(2) NOT NULL DEFAULT '',
+            identificacion varchar(20) NOT NULL DEFAULT '',
+            numeroAutorizacion int NOT NULL,
+            codigoMedicamento varchar(20) NOT NULL DEFAULT '',
+            tipoMedicamento enum('1','2') DEFAULT NULL,
+            nombreGenerico varchar(30) NOT NULL DEFAULT '',
+            formaFarmaceutica varchar(20) NOT NULL DEFAULT '',
+            concentracionMedicamento varchar(20) NOT NULL DEFAULT '',
+            unidadMedida varchar(20) NOT NULL DEFAULT '',
+            numeroUnidad varchar(5) NOT NULL DEFAULT '',
+            valorUnitario varchar(15) NOT NULL,
+            valorTotal varchar(15) NOT NULL,
+            nr integer  NOT NULL AUTO_INCREMENT,
+            PRIMARY KEY (nr)
+          );");
+
+        dd($respuesta);
+    }
 }

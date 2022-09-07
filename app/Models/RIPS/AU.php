@@ -102,4 +102,31 @@ class AU extends RIPS implements IRips
             DB::insert("INSERT INTO tmp_AU ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);", $explode);
         }
     }
+
+    public function crearTablas(string $nombreTabla)
+    {
+        $respuesta = DB::statement("CREATE TABLE IF NOT EXISTS tmp_AU_$nombreTabla (
+            numeroFactura varchar(20) NOT NULL DEFAULT '',
+            codigoIps varchar(20) NOT NULL DEFAULT '',
+            tipoIdentificacion char(2) NOT NULL DEFAULT '',
+            identificacion varchar(20) NOT NULL DEFAULT '',
+            fechaIngreso date NOT NULL DEFAULT '0000-01-01',
+            horaIngreso time NOT NULL DEFAULT '00:00:00',
+            numeroAutorizacion varchar(15) NOT NULL DEFAULT '',
+            causaExterna char(2) NOT NULL DEFAULT '',
+            diagnostico varchar(4) NOT NULL DEFAULT '',
+            diagnostico1 varchar(4) DEFAULT NULL,
+            diagnostico2 varchar(4) DEFAULT NULL,
+            diagnostico3 varchar(4) DEFAULT NULL,
+            referencia tinyint(1) NOT NULL DEFAULT '0',
+            estadoSalida enum('1','2') NOT NULL DEFAULT '1',
+            causaMuerte varchar(4) DEFAULT NULL,
+            fechaSalida date DEFAULT NULL,
+            horaSalida time DEFAULT NULL,
+            nr integer  NOT NULL AUTO_INCREMENT,
+            PRIMARY KEY (nr)
+          );");
+
+        dd($respuesta);
+    }
 }

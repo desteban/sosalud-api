@@ -13,4 +13,6 @@ interface IRips
     public function tipoRIPS(): string;
 
     public static function obtenerColumnasDB(): string;
+
+    public function crearTablas(string $nombreTabla);
 }

@@ -108,4 +108,31 @@ class AC extends RIPS implements IRips
             DB::insert("INSERT INTO tmp_AC ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", $explode);
         }
     }
+
+    public function crearTablas(string $nombreTabla)
+    {
+        $respuesta = DB::statement("CREATE TABLE IF NOT EXISTS tmp_AC_$nombreTabla (
+            numeroFactura varchar(20) NOT NULL DEFAULT '',
+            codigoIps varchar(20) NOT NULL DEFAULT '',
+            tipoIdentificacion char(2) NOT NULL DEFAULT '',
+            identificacion varchar(20) NOT NULL DEFAULT '',
+            fechaConsulta date NOT NULL DEFAULT '0000-01-01',
+            numeroAutorizacion int NOT NULL,
+            codigoConsulta varchar(8) NOT NULL DEFAULT '',
+            finalidadConsulta char(2) NOT NULL DEFAULT '',
+            codigoCausaExterna char(2) NOT NULL DEFAULT '',
+            diagnosticoPrincipal varchar(4) NOT NULL DEFAULT '',
+            diagnostico1 varchar(4) NOT NULL,
+            diagnostico2 varchar(4) NOT NULL,
+            diagnostico3 varchar(4) NOT NULL,
+            tipoDiagnosticoPrincipal char(1) NOT NULL DEFAULT '',
+            valorConsulta varchar(12) NOT NULL DEFAULT '',
+            copago varchar(12) NOT NULL DEFAULT '',
+            valorNeto varchar(12) NOT NULL DEFAULT '',
+            nr integer  NOT NULL AUTO_INCREMENT,
+            PRIMARY KEY (nr, numeroFactura)
+          );");
+
+        dd($respuesta);
+    }
 }

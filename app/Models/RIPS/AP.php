@@ -99,4 +99,29 @@ class AP extends RIPS implements IRips
             DB::insert("INSERT INTO tmp_AP ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);", $explode);
         }
     }
+
+    public function crearTablas(string $nombreTabla)
+    {
+        $respuesta = DB::statement("CREATE TABLE IF NOT EXISTS tmp_AP_$nombreTabla (
+            numeroFactura varchar(20) NOT NULL DEFAULT '',
+            codigoIps varchar(20) NOT NULL DEFAULT '',
+            tipoIdentificacion char(2) NOT NULL DEFAULT '',
+            identificacion varchar(20) NOT NULL DEFAULT '',
+            fechaProcedimiento date NOT NULL DEFAULT '0000-01-01',
+            numeroAutorizacion int NOT NULL,
+            codigoProcedimiento varchar(8) NOT NULL DEFAULT '',
+            ambitoProcedimiento tinyint(1) NOT NULL DEFAULT '0',
+            finalidadProcedimiento tinyint(1) NOT NULL DEFAULT '1',
+            personalAtiende char(1) NOT NULL,
+            diagnostico varchar(4) NOT NULL DEFAULT '0',
+            diagnostico1 varchar(4) NOT NULL,
+            diagnosticoComplicacion varchar(4) NOT NULL,
+            actoQuirurgico tinyint(1) NOT NULL,
+            valorProcedimiento double(15,2) NOT NULL,
+            nr integer  NOT NULL AUTO_INCREMENT,
+            PRIMARY KEY (nr)
+          );");
+
+        dd($respuesta);
+    }
 }

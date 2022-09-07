@@ -96,4 +96,28 @@ class AN extends RIPS implements IRips
             DB::insert("INSERT INTO tmp_AN ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);", $explode);
         }
     }
+
+    public function crearTablas(string $nombreTabla)
+    {
+        $respuesta = DB::statement("CREATE TABLE IF NOT EXISTS tmp_AN_$nombreTabla (
+            numeroFactura varchar(20) NOT NULL DEFAULT '',
+            codigoIps varchar(20) NOT NULL DEFAULT '',
+            tipoIdentificacion char(2) NOT NULL DEFAULT '',
+            identificacion varchar(20) NOT NULL DEFAULT '',
+            fechaNacimiento date NOT NULL DEFAULT '0000-01-01',
+            horaNacimiento time NOT NULL DEFAULT '00:00:00',
+            edadGestacion tinyint NOT NULL DEFAULT '0',
+            controlPrenatal enum('1','2') NOT NULL DEFAULT '1',
+            genero enum('M','F') NOT NULL DEFAULT 'M',
+            peso int NOT NULL DEFAULT '0',
+            diagnostico varchar(4) NOT NULL DEFAULT '',
+            diagnosticoMuerte varchar(4) DEFAULT NULL,
+            fechaMuerte date DEFAULT NULL,
+            horaMuerte time DEFAULT NULL,
+            nr integer  NOT NULL AUTO_INCREMENT,
+            PRIMARY KEY (nr)
+          );");
+
+        dd($respuesta);
+    }
 }

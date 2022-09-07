@@ -90,4 +90,26 @@ class AT extends RIPS implements IRips
             DB::insert("INSERT INTO tmp_AT ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?);", $explode);
         }
     }
+
+    public function crearTablas(string $nombreTabla)
+    {
+        $respuesta = DB::statement("CREATE TABLE IF NOT EXISTS tmp_AT_$nombreTabla (
+            numeroFactura varchar(20) NOT NULL DEFAULT '',
+            codigoIps varchar(20) NOT NULL DEFAULT '',
+            tipoIdentificacion char(2) NOT NULL DEFAULT '',
+            identificacion varchar(20) NOT NULL DEFAULT '',
+            numeroAutorizacion int NOT NULL,
+            tipoServicio tinyint(1) NOT NULL DEFAULT '0',
+            codigoServicio varchar(20) NOT NULL DEFAULT '',
+            nombreServicio varchar(60) NOT NULL DEFAULT '',
+            cantidad varchar(5) NOT NULL DEFAULT '',
+            valorUnitario double(15,2) NOT NULL,
+            valorTotal double(15,2) NOT NULL,
+            nr integer  NOT NULL AUTO_INCREMENT,
+            PRIMARY KEY (nr)
+          );
+          ");
+
+        dd($respuesta);
+    }
 }
