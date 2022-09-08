@@ -75,6 +75,7 @@ class CT extends RIPS implements IRips
     public function subirDB()
     {
 
+
         $columnas = $this->obtenerColumnasDB();
         $explode = explode(',', $this->obtenerDatos());
 
@@ -84,9 +85,9 @@ class CT extends RIPS implements IRips
         }
     }
 
-    public function crearTablas(string $nombreTabla)
+    public function crearTablas(string $nombreTabla = 'def')
     {
-        $respuesta = DB::statement("CREATE TABLE IF NOT EXISTS tmp_CT_$nombreTabla (
+        return DB::statement("CREATE TABLE IF NOT EXISTS tmp_CT_$nombreTabla (
             codigoIps varchar(20) NOT NULL DEFAULT '',
             fechaRemision date NOT NULL DEFAULT '0000-01-01',
             codigoArchivo varchar(10) NOT NULL DEFAULT '',
@@ -94,7 +95,5 @@ class CT extends RIPS implements IRips
             nr integer  NOT NULL AUTO_INCREMENT,
             PRIMARY KEY (nr)
           );");
-
-        dd($respuesta);
     }
 }

@@ -93,7 +93,7 @@ class AT extends RIPS implements IRips
 
     public function crearTablas(string $nombreTabla)
     {
-        $respuesta = DB::statement("CREATE TABLE IF NOT EXISTS tmp_AT_$nombreTabla (
+        return DB::statement("CREATE TABLE IF NOT EXISTS tmp_AT_$nombreTabla (
             numeroFactura varchar(20) NOT NULL DEFAULT '',
             codigoIps varchar(20) NOT NULL DEFAULT '',
             tipoIdentificacion char(2) NOT NULL DEFAULT '',
@@ -109,7 +109,5 @@ class AT extends RIPS implements IRips
             PRIMARY KEY (nr)
           );
           ");
-
-        dd($respuesta);
     }
 }

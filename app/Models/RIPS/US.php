@@ -99,7 +99,7 @@ class US extends RIPS implements IRips
 
     public function crearTablas(string $nombreTabla)
     {
-        $respuesta = DB::statement("CREATE TABLE IF NOT EXISTS tmp_US_$nombreTabla (
+        return DB::statement("CREATE TABLE IF NOT EXISTS tmp_US_$nombreTabla (
             tipoIdentificacion char(2) NOT NULL DEFAULT '',
             identificacion varchar(20) NOT NULL DEFAULT '',
             codigoEapb varchar(6) NOT NULL DEFAULT '',
@@ -117,7 +117,5 @@ class US extends RIPS implements IRips
             nr integer  NOT NULL AUTO_INCREMENT,
             PRIMARY KEY (nr)
           );");
-
-        dd($respuesta);
     }
 }

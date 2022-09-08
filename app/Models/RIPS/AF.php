@@ -105,7 +105,7 @@ class AF extends RIPS implements IRips
 
     public function crearTablas(string $nombreTabla)
     {
-        $respuesta = DB::statement("CREATE TABLE IF NOT EXISTS tmp_AF_$nombreTabla (
+        return DB::statement("CREATE TABLE IF NOT EXISTS tmp_AF_$nombreTabla (
             codigoIps varchar(20) NOT NULL DEFAULT '',
             nombreIps varchar(60) NOT NULL DEFAULT '',
             tipoIdentificacion char(2) NOT NULL DEFAULT '',
@@ -126,7 +126,5 @@ class AF extends RIPS implements IRips
             nr integer  NOT NULL AUTO_INCREMENT,
             PRIMARY KEY (nr)
           );");
-
-        dd($respuesta);
     }
 }
