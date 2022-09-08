@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS tmp_AC (
   copago varchar(12) NOT NULL DEFAULT '',
   valorNeto varchar(12) NOT NULL DEFAULT '',
   nr integer  NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (nr, numeroFactura)
+  PRIMARY KEY (nr)
 );
 
 CREATE TABLE IF NOT EXISTS tmp_AD (
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS tmp_AD (
   valorUnitario double(15,2) NOT NULL DEFAULT '0.00',
   totalConcepto double(15,2) NOT NULL DEFAULT '0.00',
   nr integer  NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (nr, numeroFactura)
+  PRIMARY KEY (nr)
 );
 
 CREATE TABLE IF NOT EXISTS tmp_AF (
@@ -202,22 +202,34 @@ CREATE TABLE IF NOT EXISTS tmp_US (
   codigoMunicipio char(3) NOT NULL DEFAULT '',
   zona enum('U','R') NOT NULL DEFAULT 'U',
   nr integer  NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (nr)
+  PRIMARY KEY(nr)
+);
+
+CREATE TABLE IF NOT EXISTS tablasTemporales(
+  nombreTabla varchar(25)
 );
 
 DELIMITER $$
-    CREATE PROCEDURE limpiarTablasTmpRips()
+    CREATE PROCEDURE IF NOT EXISTS limpiarTablasTemporales()
     BEGIN
-        DELETE FROM tmp_AC;
-        DELETE FROM tmp_AD;
-        DELETE FROM tmp_AF;
-        DELETE FROM tmp_AH;
-        DELETE FROM tmp_AM;
-        DELETE FROM tmp_AN;
-        DELETE FROM tmp_AP;
-        DELETE FROM tmp_AT;
-        DELETE FROM tmp_AU;
-        DELETE FROM tmp_CT;
-        DELETE FROM tmp_US;
+        -- set table schema and pattern matching for tables
+      SET @schema = 'cta_medica';
+      SET @pattern = 'tmp%';
+
+        -- build dynamic sql (DROP TABLE tbl1, tbl2...;)
+        SELECT CONCAT('DROP TABLE ',GROUP_CONCAT(CONCAT(@schema,'.',table_name)),';')
+        INTO @droplike
+        FROM information_schema.tables
+        WHERE @schema = database()
+        AND table_name LIKE @pattern;
+
+        -- display the dynamic sql statement
+        SELECT @droplike;
+
+        -- execute dynamic sql
+        PREPARE stmt FROM @droplike;
+        EXECUTE stmt;
+        DEALLOCATE PREPARE stmt;
+
     END $$
 DELIMITER
