@@ -44,8 +44,8 @@ class comprimidosController extends Controller
 
             if ($respuesta->codigoHttp == 200)
             {
-
-                $respuesta = $this->manipularCarpetaRIPS($nombreCarpeta);
+                $this->guardarDB($nombreCarpeta);
+                // $respuesta = $this->manipularCarpetaRIPS($nombreCarpeta);
             }
         }
 
@@ -69,11 +69,8 @@ class comprimidosController extends Controller
         //obtenermos el archivo enviado
         $archivo = $request->file('archivo');
 
-        //dividir el nombre del archivo cuando se encuentre un punto (.)
-        $nombreArchivo = explode(".", $archivo->getClientOriginalName());
-
         //establecemos un nombre para guardar el archivo
-        $nombre = 'tmp_' . $nombreArchivo[0] . '_' . time();
+        $nombre = 'tmp_' . time();
 
         $extraerArchivo = Archivos::extraerArchivosComprimidos($archivo, $nombre);
 
@@ -112,6 +109,32 @@ class comprimidosController extends Controller
         return $respuesta;
     }
 
+    public function guardarDB(string $nombreCarpeta)
+    {
+        $rutaAPP = env('APP_DIR');
+        $contenidoCarpetaTemporal = Archivos::obtenerContenidoDirectorio("$rutaAPP/public/TMPs/$nombreCarpeta");
+
+        foreach ($contenidoCarpetaTemporal as $nombreArchivo)
+        {
+            $tipoRips = substr($nombreArchivo, 0, 2);
+            $rips = TipoRIPS::escojerRips($tipoRips);
+
+            if (!is_null($rips))
+            {
+
+                try
+                {
+                    $rips->crearTablas($nombreCarpeta);
+                    // $rips->guardarDB();
+                }
+                catch (\Throwable $th)
+                {
+                    //throw $th;
+                }
+            }
+        }
+    }
+
     /**
      * *leer el contenido de los RIPS para posteriormente subirlos a la base de datos
      * @param listaRIPS array
@@ -143,7 +166,8 @@ class comprimidosController extends Controller
                 {
                     try
                     {
-                        $rips->subirDB();
+                        $rips->crearTablas($nombreCarpeta);
+                        // $rips->subirDB();
                     }
                     catch (\Throwable $th)
                     {

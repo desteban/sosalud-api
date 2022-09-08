@@ -11,11 +11,35 @@ use App\Models\RIPS\AP;
 use App\Models\RIPS\AT;
 use App\Models\RIPS\AU;
 use App\Models\RIPS\CT;
+use App\Models\RIPS\IRips;
 use App\Models\RIPS\US;
 
 class TipoRIPS
 {
-    private $Rips;
+    private IRips $Rips;
+
+    public static function escojerRips(string $tipoRips): IRips | null
+    {
+        $detectarTipoRIPS = [
+            'AC' => new AC(),
+            'AF' => new AF(),
+            'AH' => new AH(),
+            'AM' => new AM(),
+            'AN' => new AN(),
+            'AP' => new AP(),
+            'AT' => new AT(),
+            'AU' => new AU(),
+            'CT' => new CT(),
+            'US' => new US()
+        ];
+
+        if (array_key_exists($tipoRips, $detectarTipoRIPS))
+        {
+            return $detectarTipoRIPS[$tipoRips];
+        }
+
+        return null;
+    }
 
     function __construct($tipoRips = "", array $contenidoRips = [])
     {
@@ -58,7 +82,7 @@ class TipoRIPS
         $this->Rips = $tipoRips;
     }
 
-    public function getTipoRips()
+    public function getTipoRips(): IRips
     {
         return $this->Rips;
     }

@@ -7,6 +7,11 @@ use ZipArchive;
 class Archivos
 {
 
+    /**
+     * @param archivo
+     * @param nombreArchivo
+     * @return bool true exito en la tarea false fallo en la tarea
+     */
     public static function extraerArchivosComprimidos($archivo, string $nombreArchivo = 'default'): bool
     {
 
