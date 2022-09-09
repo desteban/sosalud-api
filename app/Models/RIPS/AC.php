@@ -2,6 +2,7 @@
 
 namespace App\Models\RIPS;
 
+use App\Validador\Fechas;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -10,12 +11,12 @@ use Illuminate\Support\Facades\DB;
 
 class AC extends RIPS implements IRips
 {
-    public string $numeoFactura = '';
+    public string $numeroFactura = '';
     public string $codigoIps = '';
     public string $tipoIdentificacion = '';
     public string $identificacion = '';
     public string $fechaConsulta = '';
-    public int $numeoAutorizacion = 0;
+    public int $numeroAutorizacion = 0;
     public string $codigoConsulta = '';
     public string $finalidadConsulta = '';
     public string $codigoCausaExterna = '';
@@ -28,52 +29,6 @@ class AC extends RIPS implements IRips
     public string $copago = '';
     public string $valorNeto = '';
     protected int $id = 0;
-
-    public function obtenerDatos(): string
-    {
-        $datos = '';
-        $indice = 0;
-
-        foreach ($this as $clave => $valor)
-        {
-            if ($indice < 17)
-            {
-
-                $type = gettype($this->{$clave});
-                $datos .= $this->typeToString($type, $valor) . ',';
-                $indice++;
-            }
-        }
-
-        $datos = rtrim($datos, ',');
-        return $datos;
-    }
-
-    public function agregarDatos(array $datos)
-    {
-
-        $cantidadAtributos = 17;
-        if (sizeof($datos) == $cantidadAtributos)
-        {
-
-            $indice = 0;
-
-            foreach ($this as $clave => $valor)
-            {
-                if ($indice < $cantidadAtributos)
-                {
-                    $this->{$clave} = $this->parceItem(gettype($this->{$clave}), $datos[$indice]);
-
-                    $indice++;
-                }
-            }
-        }
-    }
-
-    public function tipoRIPS(): string
-    {
-        return 'AC';
-    }
 
     public static function obtenerColumnasDB(): string
     {
@@ -96,17 +51,49 @@ class AC extends RIPS implements IRips
             'valorNeto';
     }
 
-    public function subirDB()
+    public function tipoRIPS(): string
     {
-        //codigo para subir rips a la db
-        $columnas = $this->obtenerColumnasDB();
-        $datos = $this->obtenerDatos();
-        $explode = explode(',', $datos);
+        return 'AC';
+    }
 
-        if ($columnas)
+    public function agregarDatos(array $datos)
+    {
+        $atributos = explode(',', $this->obtenerColumnasDB());
+
+        if (sizeof($atributos) == sizeof($datos))
         {
-            DB::insert("INSERT INTO tmp_AC ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", $explode);
+            for ($i = 0; $i < sizeof($atributos); $i++)
+            {
+                $datoGuardar = $datos[$i];
+
+                if (Fechas::esFecha($datoGuardar))
+                {
+                    $datoGuardar = Fechas::cambiarFormatoFecha($datoGuardar);
+                }
+
+                $this->{"$atributos[$i]"} = $datoGuardar;
+            }
         }
+    }
+
+    public function obtenerDatos(): string
+    {
+        $datos = '';
+        $indice = 0;
+
+        foreach ($this as $clave => $valor)
+        {
+            if ($indice < 17)
+            {
+
+                $type = gettype($this->{$clave});
+                $datos .= $this->typeToString($type, $valor) . ',';
+                $indice++;
+            }
+        }
+
+        $datos = rtrim($datos, ',');
+        return $datos;
     }
 
     public function crearTablas(string $nombreTabla)
@@ -133,5 +120,18 @@ class AC extends RIPS implements IRips
             nr integer  NOT NULL AUTO_INCREMENT,
             PRIMARY KEY (nr, numeroFactura)
           );");
+    }
+
+    public function subirDB(array $datos = [])
+    {
+        //codigo para subir rips a la db
+        $columnas = $this->obtenerColumnasDB();
+        $datos = $this->obtenerDatos();
+        $explode = explode(',', $datos);
+
+        if ($columnas)
+        {
+            DB::insert("INSERT INTO tmp_AC ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", $explode);
+        }
     }
 }

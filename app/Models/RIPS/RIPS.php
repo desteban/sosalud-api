@@ -24,7 +24,7 @@ class RIPS
             'boolean' => $dato ? '1' : '0',
             'integer' => intval($dato),
             'double' => floatval($dato),
-            'string' => "$dato"
+            'string' => "'$dato'"
         );
 
         return $tiposDatos[$tipoDato];

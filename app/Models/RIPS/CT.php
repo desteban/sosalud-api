@@ -2,6 +2,7 @@
 
 namespace App\Models\RIPS;
 
+use App\Validador\Fechas;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -11,11 +12,45 @@ use Illuminate\Support\Facades\DB;
 class CT extends RIPS implements IRips
 {
 
-    public string $codIPS = '';
+    public string $codigoIps = '';
     public string $fechaRemision = '';
     public string $codigoArchivo = '';
-    public string $totalRegistros = '';
+    public int $totalRegistros = 0;
     protected int $id = 0;
+    protected string $nombreTabla = '';
+
+    public static function obtenerColumnasDB(): string
+    {
+        return 'codigoIps,' .
+            'fechaRemision,' .
+            'codigoArchivo,' .
+            'totalRegistros';
+    }
+
+    public function tipoRIPS(): string
+    {
+        return 'CT';
+    }
+
+    public function agregarDatos(array $datos)
+    {
+        $atributos = explode(',', $this->obtenerColumnasDB());
+
+        if (sizeof($atributos) == sizeof($datos))
+        {
+            for ($i = 0; $i < sizeof($atributos); $i++)
+            {
+                $datoGuardar = $datos[$i];
+
+                if (Fechas::esFecha($datoGuardar))
+                {
+                    $datoGuardar = Fechas::cambiarFormatoFecha($datoGuardar);
+                }
+
+                $this->{"$atributos[$i]"} = $datoGuardar;
+            }
+        }
+    }
 
     public function obtenerDatos(): string
     {
@@ -38,55 +73,10 @@ class CT extends RIPS implements IRips
         return $datos;
     }
 
-    public function agregarDatos(array $datos)
+    public function crearTablas(string $nombreTabla)
     {
+        $this->nombreTabla = $nombreTabla;
 
-        $cantidadAtributos = 4;
-        if (sizeof($datos) == $cantidadAtributos)
-        {
-
-            $indice = 0;
-
-            foreach ($this as $clave => $valor)
-            {
-                if ($indice < $cantidadAtributos)
-                {
-                    $this->{$clave} = $this->parceItem(gettype($this->{$clave}), $datos[$indice]);
-
-                    $indice++;
-                }
-            }
-        }
-    }
-
-    public function tipoRIPS(): string
-    {
-        return 'CT';
-    }
-
-    public static function obtenerColumnasDB(): string
-    {
-        return 'codigoIps,' .
-            'fechaRemision,' .
-            'codigoArchivo,' .
-            'totalRegistros';
-    }
-
-    public function subirDB()
-    {
-
-
-        $columnas = $this->obtenerColumnasDB();
-        $explode = explode(',', $this->obtenerDatos());
-
-        if ($columnas)
-        {
-            DB::insert("INSERT INTO tmp_CT ($columnas) VALUES (?,?,?,?);", $explode);
-        }
-    }
-
-    public function crearTablas(string $nombreTabla = 'def')
-    {
         return DB::statement("CREATE TABLE IF NOT EXISTS tmp_CT_$nombreTabla (
             codigoIps varchar(20) NOT NULL DEFAULT '',
             fechaRemision date NOT NULL DEFAULT '0000-01-01',
@@ -95,5 +85,33 @@ class CT extends RIPS implements IRips
             nr integer  NOT NULL AUTO_INCREMENT,
             PRIMARY KEY (nr)
           );");
+    }
+
+    public function subirDB(array $datos = []): bool
+    {
+
+        $columnas = $this->obtenerColumnasDB();
+        $values = '';
+
+        foreach ($datos as $linea)
+        {
+
+            $lineaLimpia = str_replace(array("\r\n", "\r", "\n", " "), "", $linea);
+            $datosArray = explode(',', $lineaLimpia);
+
+            $this->agregarDatos($datosArray);
+            $values .= '(' . $this->obtenerDatos() . '), ';
+        }
+
+        $values = rtrim($values, ', ');
+
+        try
+        {
+            return DB::insert("INSERT INTO tmp_CT_$this->nombreTabla ($columnas) VALUES $values");
+        }
+        catch (\Throwable $th)
+        {
+            return false;
+        }
     }
 }

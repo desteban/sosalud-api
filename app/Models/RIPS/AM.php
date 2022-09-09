@@ -13,7 +13,7 @@ class AM extends RIPS implements IRips
 {
 
     public string $numeroFactura = '';
-    public string $codigoIPS = '';
+    public string $codigoIps = '';
     public string $tipoIdentificacion = '';
     public string $identificacion = '';
     public int $numeroAutorizacion = 0;
@@ -27,46 +27,6 @@ class AM extends RIPS implements IRips
     public string $valorUnitarios = '';
     public string $valorTotal = '';
     protected int $id;
-
-    public function obtenerDatos(): string
-    {
-        $datos = '';
-
-        foreach ($this as $clave => $valor)
-        {
-            $type = gettype($this->{$clave});
-            $datos .= $this->typeToString($type, $valor) . ',';
-        }
-
-        $datos = rtrim($datos, ',');
-        return $datos;
-    }
-
-    public function agregarDatos(array $datos)
-    {
-
-        $cantidadAtributos = 14;
-        if (sizeof($datos) == $cantidadAtributos)
-        {
-
-            $indice = 0;
-
-            foreach ($this as $clave => $valor)
-            {
-                if ($indice < $cantidadAtributos)
-                {
-                    $this->{$clave} = $this->parceItem(gettype($this->{$clave}), $datos[$indice]);
-
-                    $indice++;
-                }
-            }
-        }
-    }
-
-    public function tipoRIPS(): string
-    {
-        return 'AM';
-    }
 
     public static function obtenerColumnasDB(): string
     {
@@ -86,16 +46,38 @@ class AM extends RIPS implements IRips
             'valorTotal';
     }
 
-    public function subirDB()
+    public function tipoRIPS(): string
     {
+        return 'AM';
+    }
 
-        $columnas = $this->obtenerColumnasDB();
-        $explode = explode(',', $this->obtenerDatos());
+    public function agregarDatos(array $datos)
+    {
+        $atributos = explode(',', $this->obtenerColumnasDB());
 
-        if ($columnas)
+        if (sizeof($atributos) == sizeof($datos))
         {
-            DB::insert("INSERT INTO tmp_AM ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);", $explode);
+            for ($i = 0; $i < sizeof($atributos); $i++)
+            {
+                $datoGuardar = $datos[$i];
+
+                $this->{"$atributos[$i]"} = $datoGuardar;
+            }
         }
+    }
+
+    public function obtenerDatos(): string
+    {
+        $datos = '';
+
+        foreach ($this as $clave => $valor)
+        {
+            $type = gettype($this->{$clave});
+            $datos .= $this->typeToString($type, $valor) . ',';
+        }
+
+        $datos = rtrim($datos, ',');
+        return $datos;
     }
 
     public function crearTablas(string $nombreTabla)
@@ -119,5 +101,17 @@ class AM extends RIPS implements IRips
             nr integer  NOT NULL AUTO_INCREMENT,
             PRIMARY KEY (nr)
           );");
+    }
+
+    public function subirDB(array $datos = [])
+    {
+
+        $columnas = $this->obtenerColumnasDB();
+        $explode = explode(',', $this->obtenerDatos());
+
+        if ($columnas)
+        {
+            DB::insert("INSERT INTO tmp_AM ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);", $explode);
+        }
     }
 }

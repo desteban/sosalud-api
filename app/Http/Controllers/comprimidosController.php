@@ -3,12 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Respuestas;
-use App\Models\RIPS\RIPS;
 use App\Models\TipoRIPS;
 use App\Validador\EstructuraRips;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use ZipArchive;
 
 class comprimidosController extends Controller
 {
@@ -121,16 +118,10 @@ class comprimidosController extends Controller
 
             if (!is_null($rips))
             {
+                $rips->crearTablas($nombreCarpeta);
 
-                try
-                {
-                    $rips->crearTablas($nombreCarpeta);
-                    // $rips->guardarDB();
-                }
-                catch (\Throwable $th)
-                {
-                    //throw $th;
-                }
+                $archivo = file("$rutaAPP/public/TMPs/$nombreCarpeta/$nombreArchivo");
+                $rips->subirDB($archivo);
             }
         }
     }

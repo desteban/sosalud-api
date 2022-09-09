@@ -2,6 +2,7 @@
 
 namespace App\Models\RIPS;
 
+use App\Validador\Fechas;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -12,7 +13,7 @@ class AP extends RIPS implements IRips
 {
 
     public string $numeroFactura = '';
-    public string $codigoIPS = '';
+    public string $codigoIps = '';
     public string $tipoIdentificacion = '';
     public string $identificacion = '';
     public string $fechaProcedimiento = '';
@@ -27,46 +28,6 @@ class AP extends RIPS implements IRips
     public bool $actoQuirurgico = false;
     public float $valorProcedimiento = 0;
     protected int $id;
-
-    public function obtenerDatos(): string
-    {
-        $datos = '';
-
-        foreach ($this as $clave => $valor)
-        {
-            $type = gettype($this->{$clave});
-            $datos .= $this->typeToString($type, $valor) . ',';
-        }
-
-        $datos = rtrim($datos, ',');
-        return $datos;
-    }
-
-    public function agregarDatos(array $datos)
-    {
-
-        $cantidadAtributos = 15;
-        if (sizeof($datos) == $cantidadAtributos)
-        {
-
-            $indice = 0;
-
-            foreach ($this as $clave => $valor)
-            {
-                if ($indice < $cantidadAtributos)
-                {
-                    $this->{$clave} = $this->parceItem(gettype($this->{$clave}), $datos[$indice]);
-
-                    $indice++;
-                }
-            }
-        }
-    }
-
-    public function tipoRIPS(): string
-    {
-        return 'AP';
-    }
 
     public static function obtenerColumnasDB(): string
     {
@@ -88,16 +49,43 @@ class AP extends RIPS implements IRips
             'valorProcedimiento';
     }
 
-    public function subirDB()
+    public function tipoRIPS(): string
     {
-        //codigo para subir rips a la db
-        $columnas = $this->obtenerColumnasDB();
-        $explode = explode(',', $this->obtenerDatos());
+        return 'AP';
+    }
 
-        if ($columnas)
+    public function agregarDatos(array $datos)
+    {
+        $atributos = explode(',', $this->obtenerColumnasDB());
+
+        if (sizeof($atributos) == sizeof($datos))
         {
-            DB::insert("INSERT INTO tmp_AP ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);", $explode);
+            for ($i = 0; $i < sizeof($atributos); $i++)
+            {
+                $datoGuardar = $datos[$i];
+
+                if (Fechas::esFecha($datoGuardar))
+                {
+                    $datoGuardar = Fechas::cambiarFormatoFecha($datoGuardar);
+                }
+
+                $this->{"$atributos[$i]"} = $datoGuardar;
+            }
         }
+    }
+
+    public function obtenerDatos(): string
+    {
+        $datos = '';
+
+        foreach ($this as $clave => $valor)
+        {
+            $type = gettype($this->{$clave});
+            $datos .= $this->typeToString($type, $valor) . ',';
+        }
+
+        $datos = rtrim($datos, ',');
+        return $datos;
     }
 
     public function crearTablas(string $nombreTabla)
@@ -121,5 +109,17 @@ class AP extends RIPS implements IRips
             nr integer  NOT NULL AUTO_INCREMENT,
             PRIMARY KEY (nr)
           );");
+    }
+
+    public function subirDB(array $datos = [])
+    {
+        //codigo para subir rips a la db
+        $columnas = $this->obtenerColumnasDB();
+        $explode = explode(',', $this->obtenerDatos());
+
+        if ($columnas)
+        {
+            DB::insert("INSERT INTO tmp_AP ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);", $explode);
+        }
     }
 }

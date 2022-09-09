@@ -2,6 +2,7 @@
 
 namespace App\Models\RIPS;
 
+use App\Validador\Fechas;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -12,7 +13,7 @@ class AH extends RIPS implements IRips
 {
 
     public string $numeroFactura = '';
-    public string $codigoIPS = '';
+    public string $codigoIps = '';
     public string $tipoIdentificacion = '';
     public string $identificacion = '';
     public string $codigoViaIngreso = '';
@@ -20,7 +21,7 @@ class AH extends RIPS implements IRips
     public string $horaIngreso = '';
     public int $numeroAutorizacion = 0;
     public string $codigoCausaExterna = '';
-    public string $diagnoticoIngreso = '';
+    public string $diagnosticoIngreso = '';
     public string $diagnosticoEgreso = '';
     public string $diagnostico1 = '';
     public string $diagnostico2 = '';
@@ -31,46 +32,6 @@ class AH extends RIPS implements IRips
     public string $fechaEgreso = '';
     public string $horaEgreso = '';
     protected int $id;
-
-    public function obtenerDatos(): string
-    {
-        $datos = '';
-
-        foreach ($this as $clave => $valor)
-        {
-            $type = gettype($this->{$clave});
-            $datos .= $this->typeToString($type, $valor) . ',';
-        }
-
-        $datos = rtrim($datos, ',');
-        return $datos;
-    }
-
-    public function agregarDatos(array $datos)
-    {
-
-        $cantidadAtributos = 19;
-        if (sizeof($datos) == $cantidadAtributos)
-        {
-
-            $indice = 0;
-
-            foreach ($this as $clave => $valor)
-            {
-                if ($indice < $cantidadAtributos)
-                {
-                    $this->{$clave} = $this->parceItem(gettype($this->{$clave}), $datos[$indice]);
-
-                    $indice++;
-                }
-            }
-        }
-    }
-
-    public function tipoRIPS(): string
-    {
-        return 'AH';
-    }
 
     public static function obtenerColumnasDB(): string
     {
@@ -95,16 +56,43 @@ class AH extends RIPS implements IRips
             'horaEgreso';
     }
 
-    public function subirDB()
+    public function tipoRIPS(): string
     {
+        return 'AH';
+    }
 
-        $columnas = $this->obtenerColumnasDB();
-        $explode = explode(',', $this->obtenerDatos());
+    public function agregarDatos(array $datos)
+    {
+        $atributos = explode(',', $this->obtenerColumnasDB());
 
-        if ($columnas)
+        if (sizeof($atributos) == sizeof($datos))
         {
-            DB::insert("INSERT INTO tmp_AH ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);", $explode);
+            for ($i = 0; $i < sizeof($atributos); $i++)
+            {
+                $datoGuardar = $datos[$i];
+
+                if (Fechas::esFecha($datoGuardar))
+                {
+                    $datoGuardar = Fechas::cambiarFormatoFecha($datoGuardar);
+                }
+
+                $this->{"$atributos[$i]"} = $datoGuardar;
+            }
         }
+    }
+
+    public function obtenerDatos(): string
+    {
+        $datos = '';
+
+        foreach ($this as $clave => $valor)
+        {
+            $type = gettype($this->{$clave});
+            $datos .= $this->typeToString($type, $valor) . ',';
+        }
+
+        $datos = rtrim($datos, ',');
+        return $datos;
     }
 
     public function crearTablas(string $nombreTabla)
@@ -133,5 +121,17 @@ class AH extends RIPS implements IRips
             nr integer  NOT NULL AUTO_INCREMENT,
             PRIMARY KEY (nr)
           );");
+    }
+
+    public function subirDB(array $datos = [])
+    {
+
+        $columnas = $this->obtenerColumnasDB();
+        $explode = explode(',', $this->obtenerDatos());
+
+        if ($columnas)
+        {
+            DB::insert("INSERT INTO tmp_AH ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);", $explode);
+        }
     }
 }
