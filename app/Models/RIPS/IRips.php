@@ -8,7 +8,7 @@ interface IRips
     /**
      * @return string con las colomnas de la tabla del rips
      */
-    public static function obtenerColumnasDB(): string;
+    public static function obtenerColumnasDB(bool $array = false): string | array;
 
     /**
      * @return string con las iniciales del tabla del rips (AC, AF, AM, ....)
@@ -24,7 +24,7 @@ interface IRips
     /**
      * @return string datos del objeto separados por comas
      */
-    public function obtenerDatos(): string;
+    public function obtenerDatos(): array;
 
     /**
      * crea la tabla temporal para vlaidar el archivo rips

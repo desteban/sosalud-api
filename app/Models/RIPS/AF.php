@@ -33,12 +33,12 @@ class AF extends RIPS implements IRips
     public float $valorDescuentos = 0;
     public float $valorFactura = 0;
     protected int $id;
+    protected string $nombreTabla = '';
 
-
-    public static function obtenerColumnasDB(): string
+    public static function obtenerColumnasDB(bool $array = false): string | array
     {
-        return 'codigoIps,' .
-            'nombreIps, ' .
+        $columnas = 'codigoIps,' .
+            'nombreIps,' .
             'tipoIdentificacion,' .
             'identificacion,' .
             'numeroFactura,' .
@@ -54,6 +54,13 @@ class AF extends RIPS implements IRips
             'valorComision,' .
             'valorDescuentos,' .
             'valorFactura';
+
+        if ($array)
+        {
+            return explode(',', $columnas);
+        }
+
+        return $columnas;
     }
 
     public function tipoRIPS(): string
@@ -63,7 +70,7 @@ class AF extends RIPS implements IRips
 
     public function agregarDatos(array $datos)
     {
-        $atributos = explode(',', $this->obtenerColumnasDB());
+        $atributos = $this->obtenerColumnasDB(true);
 
         if (sizeof($atributos) == sizeof($datos))
         {
@@ -81,22 +88,24 @@ class AF extends RIPS implements IRips
         }
     }
 
-    public function obtenerDatos(): string
+    public function obtenerDatos(): array
     {
-        $datos = '';
+        $atributos = $this->obtenerColumnasDB(true);
+        $salidaArray = array();
 
-        foreach ($this as $clave => $valor)
+        foreach ($atributos as $clave)
         {
-            $type = gettype($this->{$clave});
-            $datos .= $this->typeToString($type, $valor) . ',';
+            $dato = $this->typeToString(gettype($this->{"$clave"}), $this->{"$clave"});
+            $salidaArray["$clave"] = $dato;
         }
 
-        $datos = rtrim($datos, ',');
-        return $datos;
+        return $salidaArray;
     }
 
     public function crearTablas(string $nombreTabla)
     {
+        $this->nombreTabla = $nombreTabla;
+
         return DB::statement("CREATE TABLE IF NOT EXISTS tmp_AF_$nombreTabla (
             codigoIps varchar(20) NOT NULL DEFAULT '',
             nombreIps varchar(60) NOT NULL DEFAULT '',
@@ -120,15 +129,29 @@ class AF extends RIPS implements IRips
           );");
     }
 
-    public function subirDB(array $datos = [])
+    public function subirDB(array $datos = []): bool
     {
-        //codigo para subir rips a la db
-        $columnas = $this->obtenerColumnasDB();
-        $explode = explode(',', $this->obtenerDatos());
 
-        if ($columnas)
+        $values = array();
+
+        foreach ($datos as $linea)
         {
-            DB::insert("INSERT INTO tmp_AF ($columnas) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);", $explode);
+
+            $lineaLimpia = str_replace(array("\r\n", "\r", "\n", " "), "", $linea);
+            $datosArray = explode(',', $lineaLimpia);
+
+            $this->agregarDatos($datosArray);
+            array_push($values, $this->obtenerDatos(true));
+        }
+
+        try
+        {
+            return DB::table("tmp_AF_$this->nombreTabla")->insert($values);
+        }
+        catch (\Throwable $th)
+        {
+            dd($th);
+            return false;
         }
     }
 }

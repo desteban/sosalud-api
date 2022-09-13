@@ -19,12 +19,19 @@ class CT extends RIPS implements IRips
     protected int $id = 0;
     protected string $nombreTabla = '';
 
-    public static function obtenerColumnasDB(): string
+    public static function obtenerColumnasDB(bool $array = false): string | array
     {
-        return 'codigoIps,' .
+        $columnas = 'codigoIps,' .
             'fechaRemision,' .
             'codigoArchivo,' .
             'totalRegistros';
+
+        if ($array)
+        {
+            return explode(',', $columnas);
+        }
+
+        return $columnas;
     }
 
     public function tipoRIPS(): string
@@ -34,7 +41,7 @@ class CT extends RIPS implements IRips
 
     public function agregarDatos(array $datos)
     {
-        $atributos = explode(',', $this->obtenerColumnasDB());
+        $atributos = $this->obtenerColumnasDB(true);
 
         if (sizeof($atributos) == sizeof($datos))
         {
@@ -52,25 +59,17 @@ class CT extends RIPS implements IRips
         }
     }
 
-    public function obtenerDatos(): string
+    public function obtenerDatos(): array
     {
-        $datos = '';
-        $indice = 0;
+        $atributos = $this->obtenerColumnasDB(true);
+        $salidaArray = array();
 
-        foreach ($this as $clave => $valor)
+        foreach ($atributos as $clave)
         {
-            if ($indice < 4)
-            {
-
-                $type = gettype($this->{$clave});
-                $datos .= $this->typeToString($type, $valor) . ',';
-            }
-
-            $indice++;
+            $salidaArray["$clave"] = $this->{$clave};
         }
 
-        $datos = rtrim($datos, ',');
-        return $datos;
+        return $salidaArray;
     }
 
     public function crearTablas(string $nombreTabla)
@@ -90,8 +89,7 @@ class CT extends RIPS implements IRips
     public function subirDB(array $datos = []): bool
     {
 
-        $columnas = $this->obtenerColumnasDB();
-        $values = '';
+        $values = array();
 
         foreach ($datos as $linea)
         {
@@ -100,14 +98,12 @@ class CT extends RIPS implements IRips
             $datosArray = explode(',', $lineaLimpia);
 
             $this->agregarDatos($datosArray);
-            $values .= '(' . $this->obtenerDatos() . '), ';
+            array_push($values, $this->obtenerDatos(true));
         }
-
-        $values = rtrim($values, ', ');
 
         try
         {
-            return DB::insert("INSERT INTO tmp_CT_$this->nombreTabla ($columnas) VALUES $values");
+            return DB::table("tmp_CT_$this->nombreTabla")->insert($values);
         }
         catch (\Throwable $th)
         {
