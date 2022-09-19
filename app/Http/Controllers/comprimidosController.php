@@ -42,7 +42,6 @@ class comprimidosController extends Controller
             if ($respuesta->codigoHttp == 200)
             {
                 $this->guardarDB($nombreCarpeta);
-                // $respuesta = $this->manipularCarpetaRIPS($nombreCarpeta);
             }
         }
 
