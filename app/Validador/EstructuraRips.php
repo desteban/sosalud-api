@@ -87,12 +87,16 @@ class EstructuraRips
     public static function filtrarCT(array $listado): array
     {
 
-        return array_filter($listado, function ($item)
+        $filtroCT = array();
+
+        foreach ($listado as $value)
         {
-            if (preg_match('/(CT)\w+.txt/', $item))
+            if (preg_match('/(CT)\w+.txt/', $value))
             {
-                return $item;
+                array_push($filtroCT, $value);
             }
-        });
+        }
+
+        return $filtroCT;
     }
 }
