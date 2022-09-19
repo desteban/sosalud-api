@@ -97,6 +97,7 @@ class CT extends RIPS implements IRips
             $lineaLimpia = str_replace(array("\r\n", "\r", "\n", " "), "", $linea);
             $datosArray = explode(',', $lineaLimpia);
 
+            $this->datosDefecto();
             $this->agregarDatos($datosArray);
             array_push($values, $this->obtenerDatos(true));
         }
@@ -109,5 +110,16 @@ class CT extends RIPS implements IRips
         {
             return false;
         }
+    }
+
+    protected function datosDefecto(): void
+    {
+        $this->agregarDatos(array(
+            '',
+            '',
+            '',
+            '',
+            0,
+        ));
     }
 }
