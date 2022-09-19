@@ -97,7 +97,7 @@ class AF extends RIPS implements IRips
 
         foreach ($atributos as $clave)
         {
-            $dato = $this->typeToString(gettype($this->{"$clave"}), $this->{"$clave"});
+            $dato = $this->{"$clave"};
             $salidaArray["$clave"] = $dato;
         }
 
