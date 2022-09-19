@@ -42,7 +42,7 @@ class AC extends RIPS implements IRips
             'codigoConsulta,' .
             'finalidadConsulta,' .
             'codigoCausaExterna,' .
-            'diagnosticoPrincipal, ' .
+            'diagnosticoPrincipal,' .
             'diagnostico1,' .
             'diagnostico2,' .
             'diagnostico3,' .
