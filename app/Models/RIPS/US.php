@@ -69,7 +69,10 @@ class US extends RIPS implements IRips
             {
                 $datoGuardar = $datos[$i];
 
-                $this->{"$atributos[$i]"} = $datoGuardar;
+                if (!empty($datoGuardar))
+                {
+                    $this->{"$atributos[$i]"} = $datoGuardar;
+                }
             }
         }
     }

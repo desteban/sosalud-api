@@ -49,12 +49,15 @@ class CT extends RIPS implements IRips
             {
                 $datoGuardar = $datos[$i];
 
-                if (Fechas::esFecha($datoGuardar))
+                if (!empty($datoGuardar))
                 {
-                    $datoGuardar = Fechas::cambiarFormatoFecha($datoGuardar);
-                }
+                    if (Fechas::esFecha($datoGuardar))
+                    {
+                        $datoGuardar = Fechas::cambiarFormatoFecha($datoGuardar);
+                    }
 
-                $this->{"$atributos[$i]"} = $datoGuardar;
+                    $this->{"$atributos[$i]"} = $datoGuardar;
+                }
             }
         }
     }
