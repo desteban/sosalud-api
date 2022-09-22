@@ -77,9 +77,9 @@ class CT extends RIPS implements IRips
 
     public function crearTablas(string $nombreTabla)
     {
-        $this->nombreTabla = $nombreTabla;
+        $this->nombreTabla = 'tmp_CT_' . $nombreTabla;
 
-        return DB::statement("CREATE TABLE IF NOT EXISTS tmp_CT_$nombreTabla (
+        return DB::statement("CREATE TABLE IF NOT EXISTS $this->nombreTabla (
             codigoIps varchar(20) NOT NULL DEFAULT '',
             fechaRemision date NOT NULL DEFAULT '0000-01-01',
             codigoArchivo varchar(8) NOT NULL DEFAULT '',
@@ -107,7 +107,7 @@ class CT extends RIPS implements IRips
 
         try
         {
-            return DB::table("tmp_CT_$this->nombreTabla")->insert($values);
+            return DB::table($this->nombreTabla)->insert($values);
         }
         catch (\Throwable $th)
         {

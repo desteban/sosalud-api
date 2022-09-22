@@ -106,9 +106,9 @@ class AF extends RIPS implements IRips
 
     public function crearTablas(string $nombreTabla)
     {
-        $this->nombreTabla = $nombreTabla;
+        $this->nombreTabla = 'tmp_AF_' . $nombreTabla;
 
-        return DB::statement("CREATE TABLE IF NOT EXISTS tmp_AF_$nombreTabla (
+        return DB::statement("CREATE TABLE IF NOT EXISTS $this->nombreTabla (
             codigoIps varchar(20) NOT NULL DEFAULT '',
             nombreIps varchar(60) NOT NULL DEFAULT '',
             tipoIdentificacion char(2) NOT NULL DEFAULT '',
@@ -149,7 +149,7 @@ class AF extends RIPS implements IRips
 
         try
         {
-            return DB::table("tmp_AF_$this->nombreTabla")->insert($values);
+            return DB::table($this->nombreTabla)->insert($values);
         }
         catch (\Throwable $th)
         {

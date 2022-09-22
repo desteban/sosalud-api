@@ -93,9 +93,9 @@ class US extends RIPS implements IRips
     public function crearTablas(string $nombreTabla)
     {
 
-        $this->nombreTabla = $nombreTabla;
+        $this->nombreTabla = 'tmp_US_' . $nombreTabla;
 
-        return DB::statement("CREATE TABLE IF NOT EXISTS tmp_US_$nombreTabla (
+        return DB::statement("CREATE TABLE IF NOT EXISTS $this->nombreTabla (
             tipoIdentificacion char(2) NOT NULL DEFAULT '',
             identificacion varchar(20) NOT NULL DEFAULT '',
             codigoEapb varchar(6) NOT NULL DEFAULT '',
@@ -133,7 +133,7 @@ class US extends RIPS implements IRips
 
         try
         {
-            return DB::table("tmp_US_$this->nombreTabla")->insert($values);
+            return DB::table($this->nombreTabla)->insert($values);
         }
         catch (\Throwable $th)
         {
