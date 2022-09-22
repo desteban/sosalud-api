@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Respuestas;
 use App\Models\TipoRIPS;
+use App\Util\ArchivosUtil;
 use App\Validador\EstructuraRips;
 use Illuminate\Http\Request;
 
@@ -68,7 +69,7 @@ class comprimidosController extends Controller
         //establecemos un nombre para guardar el archivo
         $nombre = 'tmp_' . time();
 
-        $extraerArchivo = Archivos::extraerArchivosComprimidos($archivo, $nombre);
+        $extraerArchivo = ArchivosUtil::extraerArchivosComprimidos($archivo, $nombre);
 
         if ($extraerArchivo)
         {
@@ -81,7 +82,7 @@ class comprimidosController extends Controller
     protected function guardarDB(string $nombreCarpeta)
     {
         $rutaAPP = env('APP_DIR');
-        $contenidoCarpetaTemporal = Archivos::obtenerContenidoDirectorio("$rutaAPP/public/TMPs/$nombreCarpeta");
+        $contenidoCarpetaTemporal = ArchivosUtil::obtenerContenidoDirectorio("$rutaAPP/public/TMPs/$nombreCarpeta");
 
         foreach ($contenidoCarpetaTemporal as $nombreArchivo)
         {
@@ -143,7 +144,7 @@ class comprimidosController extends Controller
         $rutaAPP = env('APP_DIR');
         $respuesta = new Respuestas();
         $direccionCarpetaTemporal = "$rutaAPP/public/TMPs/$nombreCarpetaTemporal";
-        $contenidoCarpetaTemporal = Archivos::obtenerContenidoDirectorio($direccionCarpetaTemporal);
+        $contenidoCarpetaTemporal = ArchivosUtil::obtenerContenidoDirectorio($direccionCarpetaTemporal);
 
         $estadoValidacion =  EstructuraRips::ValidarRips($nombreCarpetaTemporal, $contenidoCarpetaTemporal);
 

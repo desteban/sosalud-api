@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Util;
 
 use ZipArchive;
 
-class Archivos
+class ArchivosUtil
 {
 
     /**
@@ -47,7 +47,7 @@ class Archivos
              * guardar en carpeta de archivos comprimidos
              * /storage/app/comprimidos
              */
-            $rutaArchivo = Archivos::guardarArchivoServidor($archivo, 'comprimidos');
+            $rutaArchivo = ArchivosUtil::guardarArchivoServidor($archivo, 'comprimidos');
         }
 
         if ($extencion == 'rar' && !empty($rutaArchivo))
