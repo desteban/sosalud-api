@@ -100,40 +100,15 @@ class comprimidosController extends Controller
     }
 
     /**
+     * *Esta funcion elimina los saltos de linea y espacio al momento de leer un RIPS
      * @param lineaRIPS string con la linea que deseamos limpiar
      * @return array separando el string por comas (,)
      */
-    // *Esta funcion alimina los saltos de linea y espacio al momento de leer un RIPS
     protected function limpiarRIPS(string $lineaRIPS): array
     {
         //eliminar saltos de linea y espacios
         $registro = str_replace(array("\r\n", "\n", "\r", ' '), '', $lineaRIPS);
         return explode(',', $registro);
-    }
-
-    /**
-     * @param rutaRIPS 
-     * @param tipoRIPS
-     * @return array con los objetos RIPS necesarios creados
-     */
-    protected function obtenerRips(string $rutaRIPS, string $tipoRIPS): array
-    {
-        $RIPS = array();
-
-        if (is_file($rutaRIPS))
-        {
-
-            $documentoRIPS = file($rutaRIPS);
-            foreach ($documentoRIPS as $linea)
-            {
-
-                $registroRIPS = $this->limpiarRIPS($linea);
-                $tipo_RIPS = new TipoRIPS($tipoRIPS, $registroRIPS);
-                array_push($RIPS, $tipo_RIPS->getTipoRips());
-            }
-        }
-
-        return $RIPS;
     }
 
     /**
