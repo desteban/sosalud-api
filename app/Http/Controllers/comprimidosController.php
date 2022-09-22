@@ -54,7 +54,7 @@ class comprimidosController extends Controller
      * @param request
      * @return Respuestas donde se especifica el estado de la tarea
      */
-    public function extraerArchivo(Request $request): Respuestas
+    protected function extraerArchivo(Request $request): Respuestas
     {
         $respuesta = new Respuestas(
             500,
@@ -78,34 +78,7 @@ class comprimidosController extends Controller
         return $respuesta;
     }
 
-    /**
-     * *obtiene el contenido de los RIPS para su lectura
-     * @param nombreCarpeta
-     * @return Respuesta estado de la tarea
-     */
-    function manipularCarpetaRIPS($nombreCarpeta): Respuestas
-    {
-        $respuesta = new Respuestas(400, 'Bad requesat', 'No se encontraron los archivos necesarios');
-
-        try
-        {
-            $rutaLeer = $this->rutaRIPS . "$nombreCarpeta";
-            $listadoRIPS = Archivos::obtenerContenidoDirectorio($rutaLeer);
-
-            if (sizeof($listadoRIPS) > 0)
-            {
-                return $this->leerRIPS($listadoRIPS, $nombreCarpeta);
-            }
-        }
-        catch (\Throwable $th)
-        {
-            $respuesta->cambiarRespuesta(500, 'Internal Server Error', 'Algo ha salido mal');
-        }
-
-        return $respuesta;
-    }
-
-    public function guardarDB(string $nombreCarpeta)
+    protected function guardarDB(string $nombreCarpeta)
     {
         $rutaAPP = env('APP_DIR');
         $contenidoCarpetaTemporal = Archivos::obtenerContenidoDirectorio("$rutaAPP/public/TMPs/$nombreCarpeta");
@@ -126,63 +99,11 @@ class comprimidosController extends Controller
     }
 
     /**
-     * *leer el contenido de los RIPS para posteriormente subirlos a la base de datos
-     * @param listaRIPS array
-     * @param nombreCarpeta
-     * @return Respuestas con el estado de la tarea
-     */
-    function leerRIPS($listaRIPS = [], $nombreCarpeta = ''): Respuestas
-    {
-        $respuesta = new Respuestas(201, 'Created', 'Datos guardados exitosamente');
-        $rutaLeer = $this->rutaRIPS . "$nombreCarpeta";
-
-        //validar que la carpeta cuente con RIPS
-        if (sizeof($listaRIPS) > 0)
-        {
-
-            //recorrer listado de RIPS
-            foreach ($listaRIPS as $nombreDocumentoRIPS)
-            {
-
-                //obtener el tipo del RIPS
-                $tipoRIPS = substr($nombreDocumentoRIPS, 0, 2);
-                $ruta_RIPS = "$rutaLeer/$nombreDocumentoRIPS";
-
-                //obtener el contenido del documento
-                $contenidoRips = $this->obtenerRips($ruta_RIPS, $tipoRIPS);
-
-                //subir datos a la base de datos
-                foreach ($contenidoRips as $rips)
-                {
-                    try
-                    {
-                        $rips->crearTablas($nombreCarpeta);
-                        // $rips->subirDB();
-                    }
-                    catch (\Throwable $th)
-                    {
-                        $respuesta->cambiarRespuesta(500, 'Internal Server Error', 'Algo ha salido mal al momento de subir el RIPS a la base de datos');
-                    }
-                }
-            }
-
-            return $respuesta;
-        }
-
-        if (sizeof($listaRIPS) <= 0)
-        {
-            $respuesta->cambiarRespuesta(400, 'Bad Request', 'La carpeta no cuenta con archivos dentro');
-
-            return $respuesta;
-        }
-    }
-
-    /**
      * @param lineaRIPS string con la linea que deseamos limpiar
      * @return array separando el string por comas (,)
      */
     // *Esta funcion alimina los saltos de linea y espacio al momento de leer un RIPS
-    function limpiarRIPS(string $lineaRIPS): array
+    protected function limpiarRIPS(string $lineaRIPS): array
     {
         //eliminar saltos de linea y espacios
         $registro = str_replace(array("\r\n", "\n", "\r", ' '), '', $lineaRIPS);
@@ -194,7 +115,7 @@ class comprimidosController extends Controller
      * @param tipoRIPS
      * @return array con los objetos RIPS necesarios creados
      */
-    function obtenerRips(string $rutaRIPS, string $tipoRIPS): array
+    protected function obtenerRips(string $rutaRIPS, string $tipoRIPS): array
     {
         $RIPS = array();
 
@@ -217,7 +138,7 @@ class comprimidosController extends Controller
     /**
      * @return Respuestas donde data contiene el log de errores de la validacion de estructura
      */
-    function validarEstructura(string $nombreCarpetaTemporal): Respuestas
+    protected function validarEstructura(string $nombreCarpetaTemporal): Respuestas
     {
         $rutaAPP = env('APP_DIR');
         $respuesta = new Respuestas();
