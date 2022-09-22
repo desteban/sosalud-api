@@ -179,7 +179,7 @@ CREATE TABLE IF NOT EXISTS tmp_AU (
 CREATE TABLE IF NOT EXISTS tmp_CT (
   codigoIps varchar(20) NOT NULL DEFAULT '',
   fechaRemision date NOT NULL DEFAULT '0000-01-01',
-  codigoArchivo varchar(10) NOT NULL DEFAULT '',
+  codigoArchivo varchar(8) NOT NULL DEFAULT '',
   totalRegistros int NOT NULL DEFAULT '0',
   nr integer  NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (nr)
@@ -203,10 +203,6 @@ CREATE TABLE IF NOT EXISTS tmp_US (
   zona enum('U','R') NOT NULL DEFAULT 'U',
   nr integer  NOT NULL AUTO_INCREMENT,
   PRIMARY KEY(nr)
-);
-
-CREATE TABLE IF NOT EXISTS tablasTemporales(
-  nombreTabla varchar(25)
 );
 
 DELIMITER $$
