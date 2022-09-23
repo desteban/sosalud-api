@@ -2,6 +2,8 @@
 
 namespace App\Validador;
 
+use App\Models\TipoRIPS;
+
 class EstructuraRips
 {
 
@@ -27,7 +29,7 @@ class EstructuraRips
         // valida si se encuentran varios archivos CT
         if (sizeof($filtroCT) > 1)
         {
-            array_push($logErrores, 'Se encontraron varios archivos CT ');
+            array_push($logErrores, 'Se encontraron varios archivos CT');
         }
 
         if (empty($datosValidar))
@@ -38,18 +40,7 @@ class EstructuraRips
         if (!empty($datosValidar) && sizeof($filtroCT) == 1)
         {
 
-            $listadoRipsValidar = array(
-                'AC',
-                'AF',
-                'AH',
-                'AM',
-                'AN',
-                'AP',
-                'AT',
-                'AU',
-                'CT',
-                'US'
-            );
+            $listadoRipsValidar = TipoRIPS::listadoRips(false);
 
             //recorrer el arreglo con los datos para validar que cuente con los archivos RIPS necesarios
             foreach ($datosValidar as $rips)

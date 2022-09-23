@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 class comprimidosController extends Controller
 {
     protected $rutaRIPS = __DIR__ . "/../../../public/TMPs/";
+    protected array $logErrores = [];
 
     /**
      * *funcion invocada al subir un archivo comprimido al sistema
