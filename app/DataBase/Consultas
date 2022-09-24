@@ -1,0 +1,98 @@
+/* VALIDACION DEL ARCHIVO DE RIPS AP */
+
+SELECT * FROM tmp_AP 
+LEFT JOIN tmp_af ON tmp_af.codigoIps = tmp_AP.codigoIps and tmp_af.numeroFactura=tmp_AP.numeroFactura
+WHERE tmp_af.codigoIps is NULL;
+
+SELECT * FROM tmp_AP
+LEFT JOIN tmp_us ON tmp_us.tipoIdentificacion=tmp_AP.tipoIdentificacion and tmp_us.identificacion=tmp_AP.identificacion
+WHERE tmp_us.identificacion is NULL;
+
+SELECT * FROM tmp_AP 
+LEFT JOIN tmp_af using(codigoIps,numeroFactura)
+WHERE !(tmp_af.fechaInicio <= tmp_AP.fechaProcedimiento and tmp_AP.fechaProcedimiento <= tmp_af.fechaFinal);
+
+
+/* VALIDACION DEL ARCHIVO DE RIPS AC */
+
+SELECT * FROM tmp_AC
+LEFT JOIN tmp_af ON tmp_af.codigoIps = tmp_AC.codigoIps and tmp_af.numeroFactura=tmp_AC.numeroFactura
+WHERE tmp_af.codigoIps is NULL;
+
+SELECT * FROM tmp_AC
+LEFT JOIN tmp_us ON tmp_us.tipoIdentificacion=tmp_AC.tipoIdentificacion and tmp_us.identificacion=tmp_AC.identificacion
+WHERE tmp_us.identificacion is NULL;
+
+SELECT * FROM tmp_AC 
+LEFT JOIN tmp_af using(codigoIps,numeroFactura)
+WHERE !(tmp_af.fechaInicio <= tmp_AC.fechaConsulta and tmp_AC.fechaConsulta <= tmp_af.fechaFinal);
+
+
+/* VALIDACION DEL ARCHIVO DE RIPS AH */
+
+SELECT * FROM tmp_AH 
+LEFT JOIN tmp_af ON tmp_af.codigoIps = tmp_AH.codigoIps and tmp_af.numeroFactura=tmp_AH.numeroFactura
+WHERE tmp_af.codigoIps is NULL;
+
+SELECT * FROM tmp_AH
+LEFT JOIN tmp_us ON tmp_us.tipoIdentificacion=tmp_AH.tipoIdentificacion and tmp_us.identificacion=tmp_AH.identificacion
+WHERE tmp_us.identificacion is NULL;
+
+SELECT * FROM tmp_AH 
+LEFT JOIN tmp_af using(codigoIps,numeroFactura)
+WHERE !(tmp_af.fechaInicio <= tmp_AH.fechaingreso and tmp_AH.fechaegreso <= tmp_af.fechaFinal);
+
+
+/* VALIDACION DEL ARCHIVO DE RIPS AM */
+
+SELECT * FROM tmp_AM
+LEFT JOIN tmp_af ON tmp_af.codigoIps = tmp_AM.codigoIps and tmp_af.numeroFactura=tmp_AM.numeroFactura
+WHERE tmp_af.codigoIps is NULL;
+
+SELECT * FROM tmp_AM
+LEFT JOIN tmp_us ON tmp_us.tipoIdentificacion=tmp_AM.tipoIdentificacion and tmp_us.identificacion=tmp_AM.identificacion
+WHERE tmp_us.identificacion is NULL;
+
+
+
+/* VALIDACION DEL ARCHIVO DE RIPS AN */
+
+SELECT * FROM tmp_AN 
+LEFT JOIN tmp_af ON tmp_af.codigoIps = tmp_AN.codigoIps and tmp_af.numeroFactura=tmp_AN.numeroFactura
+WHERE tmp_af.codigoIps is NULL;
+
+SELECT * FROM tmp_AN
+LEFT JOIN tmp_us ON tmp_us.tipoIdentificacion=tmp_AN.tipoIdentificacion and tmp_us.identificacion=tmp_AN.identificacion
+WHERE tmp_us.identificacion is NULL;
+
+SELECT * FROM tmp_AN 
+LEFT JOIN tmp_af using(codigoIps,numeroFactura)
+WHERE !(tmp_AN.fechaNacimiento < tmp_af.fechaFinal);
+
+
+
+/* VALIDACION DEL ARCHIVO DE RIPS AT */
+
+SELECT * FROM tmp_AT 
+LEFT JOIN tmp_af ON tmp_af.codigoIps = tmp_AT.codigoIps and tmp_af.numeroFactura=tmp_AT.numeroFactura
+WHERE tmp_af.codigoIps is NULL;
+
+SELECT * FROM tmp_AT
+LEFT JOIN tmp_us ON tmp_us.tipoIdentificacion=tmp_AT.tipoIdentificacion and tmp_us.identificacion=tmp_AT.identificacion
+WHERE tmp_us.identificacion is NULL;
+
+
+
+/* VALIDACION DEL ARCHIVO DE RIPS AU */
+
+SELECT * FROM tmp_AU 
+LEFT JOIN tmp_af ON tmp_af.codigoIps = tmp_AU.codigoIps and tmp_af.numeroFactura=tmp_AU.numeroFactura
+WHERE tmp_af.codigoIps is NULL;
+
+SELECT * FROM tmp_AU
+LEFT JOIN tmp_us ON tmp_us.tipoIdentificacion=tmp_AU.tipoIdentificacion and tmp_us.identificacion=tmp_AU.identificacion
+WHERE tmp_us.identificacion is NULL;
+
+SELECT * FROM tmp_AU 
+LEFT JOIN tmp_af using(codigoIps,numeroFactura)
+WHERE !(tmp_af.fechaInicio <= tmp_AU.fechaIngreso and tmp_AU.fechaSalida <= tmp_af.fechaFinal);
