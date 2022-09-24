@@ -67,7 +67,8 @@ WHERE tmp_us.identificacion is NULL;
 
 SELECT * FROM tmp_AN 
 LEFT JOIN tmp_af using(codigoIps,numeroFactura)
-WHERE !(tmp_AN.fechaNacimiento < tmp_af.fechaFinal);
+WHERE !(tmp_af.fechaInicio <= tmp_AN.fechaNacimiento and tmp_AN.fechaNacimiento <= tmp_af.fechaFinal);
+
 
 
 
