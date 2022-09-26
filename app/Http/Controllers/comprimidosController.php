@@ -68,7 +68,7 @@ class comprimidosController extends Controller
         $archivo = $request->file('archivo');
 
         //establecemos un nombre para guardar el archivo
-        $nombre = 'tmp_' . time();
+        $nombre = time() . rand();
 
         $extraerArchivo = ArchivosUtil::extraerArchivosComprimidos($archivo, $nombre);
 
