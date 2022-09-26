@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->command('Temporales:Eliminar')->daily();
     }
 
     /**
@@ -25,7 +26,8 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
+        $this->load(__DIR__ . '/Commands/EliminarTemporales');
 
         require base_path('routes/console.php');
     }
