@@ -40,7 +40,7 @@ WHERE tmp_us.identificacion is NULL;
 
 SELECT * FROM tmp_AH 
 LEFT JOIN tmp_af using(codigoIps,numeroFactura)
-WHERE !(tmp_af.fechaInicio <= tmp_AH.fechaingreso and tmp_AH.fechaegreso <= tmp_af.fechaFinal);
+WHERE !(tmp_af.fechaInicio <= tmp_AH.fechaingreso and tmp_AH.fechaingreso <= tmp_af.fechaFinal);
 
 
 /* VALIDACION DEL ARCHIVO DE RIPS AM */
