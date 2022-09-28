@@ -1,64 +1,72 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+<p align="center"><a href="https://sosalud.com.co" target="_blank"><img src="https://sosalud.com.co/wp-content/uploads/2020/11/Logo.png" width="400"></a></p>
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Sistema de información auditoría de cuentas médicas y concurrente
 
-## About Laravel
+Este **módulo** permite realizar **validaciones** a las **cuentas médicas** generadas en clínicas y hospitales al momento de realizar procedimientos médicos a un paciente, estas validaciones **detectan errores** dentro de estas cuentas médicas los cuales se le **notifica** a las entidades que remiten estas cuenta médica y de esta manera puedan corregir los errores antes de que un auditor valide la información de estas cuentas médicas.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+<br/>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Restricciones
 
-## Learning Laravel
+-   <p style="display:flex;" ><img src="https://laravel.com/img/logomark.min.svg" height="25" style="margin-right:8px" > Laravel 9</p>
+-   <p style="display:flex;" ><img src="https://cdn.svgporn.com/logos/php.svg" height="25" style="margin-right:8px" > PHP ^8.0.2</p>
+-   <p style="display:flex;" ><img src="https://cdn.svgporn.com/logos/mysql-icon.svg" height="25" style="margin-right:8px" > Gestor de base de datos MySQL</p>
+-   <p style="display:flex;" ><img src="https://cdn.svgporn.com/logos/apache.svg" width="40" height="25" style="margin-right:8px"  > Servidor Apache</p>
+-   <p style="display:flex;" ><img src="https://cdn.svgporn.com/logos/composer.svg" width="40" height="30" style="margin-right:8px"  >Composer</p>
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+<br/>
 
-## Laravel Sponsors
+## Instalación
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+-   <a href="https://github.com/desteban/sosalud" target="_blanck" >Clonar o descargar el proyecto</a>
+-   Instalar los paquetes y dependencias requeridos
 
-### Premium Partners
+    ```
+    composer install
+    ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+-   **Crear** el archivo `.env`, para esto puedes crearlo manualmente o copiar el de ejemplo el cual viene con el proyecto de esta manera
 
-## Contributing
+    ```
+    cp .env.example .env
+    ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+-   Generar **APP_KEY**
 
-## Code of Conduct
+    ```
+    php artisan key:generate
+    ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+-   **Configurar** las variables de entorno dentro del archivo **.env**
 
-## Security Vulnerabilities
+-   Dar **permisos** a los **directorios (linux)**
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+    -   Permiso a la carpeta del proyecto
+        ```
+        sudo chmod 775 -R .
+        ```
+    -   Carpeta de archivos temporales
 
-## License
+        Utilizaremos el siguiente comando para cambiar los permisos por defecto del directorio
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+        ```
+        sudo setfacl --default --modify u::rwx,g::rwx,o::rwx <directorio>
+        ```
+
+        Donde:
+
+        `r`: dar permiso de **lectura**
+
+        `w`: dar permiso de **escritura**
+
+        `x`: dar permiso de **ejecución**
+
+        ```
+        sudo setfacl --default --modify u::rwx,g::rwx,o::rwx public/TMPs/
+
+        sudo setfacl --default --modify u::rwx,g::rwx,o::rwx storage/app/comprimidos/
+        ```
