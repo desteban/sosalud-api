@@ -46,12 +46,16 @@ Este **módulo** permite realizar **validaciones** a las **cuentas médicas** ge
 -   Dar **permisos** a los **directorios (linux)**
 
     -   Permiso a la carpeta del proyecto
-        ```
-        sudo chmod 775 -R .
-        ```
-    -   Carpeta de archivos temporales
 
-        Utilizaremos el siguiente comando para cambiar los permisos por defecto del directorio
+        ```
+        sudo chmod 775 -R <directorio proyecto>
+        ```
+
+    -   cambiar propietario del directorio del proyecto
+        ```
+        sudo chown -R www-data:www-data <directorio proyecto>
+        ```
+    -   Cambiar permisos por defecto en las carpetas temporales
 
         ```
         sudo setfacl --default --modify u::rwx,g::rwx,o::rwx <directorio>
@@ -70,3 +74,49 @@ Este **módulo** permite realizar **validaciones** a las **cuentas médicas** ge
 
         sudo setfacl --default --modify u::rwx,g::rwx,o::rwx storage/app/comprimidos/
         ```
+
+---
+
+<br/>
+
+## Configuración del servidor apache
+
+### Linux
+
+-   Crear archivo de configuración de host virtual de apache para alojar nuestras aplicación de laravel
+
+```
+nano /etc/apache2/sites-available/Directorio_proyecto.conf
+```
+
+-   Agregamos las siguientes líneas
+
+```
+<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+	DocumentRoot /var/www/html/Directorio_proyecto/public
+	ServerName Directorio_proyecto
+	ServerAlias Directorio_proyecto
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+    <Directory /var/www/html>
+	  Options Indexes FollowSymLinks
+	  AllowOverride All
+	</Directory>
+
+</VirtualHost>
+```
+
+-   Posteriormente habilitaremos el módulo de reescritura de Apache y activaremos el host virtual Laravel
+
+```
+sudo a2enmod rewrite && a2ensite Directorio_proyecto.conf
+```
+
+-   Finalmente reiniciamos el servicio de apache con el siguiente comando
+
+```
+sudo systemctl restart apache2
+```
