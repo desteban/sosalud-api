@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\LogEstructura;
 use App\Models\Respuestas;
 use App\Models\TipoRIPS;
 use App\Util\ArchivosUtil;
 use App\Validador\EstructuraRips;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class comprimidosController extends Controller
 {
@@ -45,6 +47,10 @@ class comprimidosController extends Controller
             {
                 $this->guardarDB($nombreCarpeta);
             }
+
+            //generar log de errores si la validacion de esctructura falla
+            // return Excel::download(new LogEstructura($respuesta->data), 'log.csv');
+            return (new LogEstructura($respuesta->data))->download('Log.csv');
         }
 
 

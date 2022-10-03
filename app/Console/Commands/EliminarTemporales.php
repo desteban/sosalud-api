@@ -27,10 +27,18 @@ class EliminarTemporales extends Command
      */
     public function handle()
     {
-        //eliminar tablas temporales
-        DB::statement('CALL limpiarTablasTemporales();');
-
         //elimiar archivos temporales en el servidor
         ArchivosUtil::eliminarArchivosTemporales();
+
+        //eliminar tablas temporales
+        try
+        {
+
+            DB::statement('CALL limpiarTablasTemporales();');
+        }
+        catch (\Throwable $th)
+        {
+            //throw $th;
+        }
     }
 }
