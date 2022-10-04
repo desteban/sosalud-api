@@ -8,6 +8,7 @@ use App\Models\TipoRIPS;
 use App\Util\ArchivosUtil;
 use App\Validador\EstructuraRips;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 
 class comprimidosController extends Controller
@@ -26,9 +27,25 @@ class comprimidosController extends Controller
          * Validar la informacion de la peticion
          * * max es el peso en kilobytes 1Mb = 1024kb
          */
-        $request->validate([
+
+        $validacion = Validator::make($request->all(), [
             'archivo'   =>  ['required', 'mimes:rar,zip', 'max:5158']
         ]);
+
+        if ($validacion->fails())
+        {
+            $respuesta->cambiarRespuesta(
+                400,
+                'Mala peticion',
+                "recuerde que el archivo subido sea valido",
+                [
+                    'Archivo comprimido (rar o zip)',
+                    'Peso maximo de 5Mb'
+                ]
+            );
+
+            return response()->json($respuesta, $respuesta->codigoHttp);
+        }
 
         if ($request->hasFile('archivo'))
         {
