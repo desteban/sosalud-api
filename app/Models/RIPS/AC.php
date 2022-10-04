@@ -68,8 +68,9 @@ class AC extends RIPS implements IRips
     {
         $atributos = $this->obtenerColumnasDB(true);
 
-        if (sizeof($atributos) == sizeof($datos))
+        try
         {
+
             for ($i = 0; $i < sizeof($atributos); $i++)
             {
                 $datoGuardar = $datos[$i];
@@ -84,16 +85,34 @@ class AC extends RIPS implements IRips
                 }
             }
         }
+        catch (\Throwable $th)
+        {
+            //throw $th;
+        }
     }
 
-    public function obtenerDatos(): array
+    public function obtenerDatos(bool $string = false): array | string
     {
         $atributos = $this->obtenerColumnasDB(true);
         $salidaArray = array();
+        $salidaString = '';
 
         foreach ($atributos as $clave)
         {
-            $salidaArray["$clave"] = $this->{$clave};
+            if ($string)
+            {
+                $salidaString .= $this->{$clave} . ',';
+            }
+
+            if (!$string)
+            {
+                $salidaArray["$clave"] = $this->{$clave};
+            }
+        }
+
+        if ($string)
+        {
+            return substr($salidaString, 0, -1);
         }
 
         return $salidaArray;
@@ -139,12 +158,13 @@ class AC extends RIPS implements IRips
 
             $this->datosDefecto();
             $this->agregarDatos($datosArray);
-            array_push($values, $this->obtenerDatos(true));
+            array_push($values, $this->obtenerDatos());
         }
 
         try
         {
-            return DB::table($this->nombreTabla)->insert($values);
+            return DB::table($this->nombreTabla)->insertOrIgnore($values);
+            // $respuesta = DB::statement('INSERT IGNORE INTO ' . $this->nombreTabla . '(' . $this->obtenerColumnasDB() . ') VALUES (?)', $values);
         }
         catch (\Throwable $th)
         {

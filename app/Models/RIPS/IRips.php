@@ -24,7 +24,7 @@ interface IRips
     /**
      * @return string datos del objeto separados por comas
      */
-    public function obtenerDatos(): array;
+    public function obtenerDatos();
 
     /**
      * crea la tabla temporal para vlaidar el archivo rips
