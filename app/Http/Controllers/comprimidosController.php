@@ -66,8 +66,10 @@ class comprimidosController extends Controller
             }
 
             //generar log de errores si la validacion de esctructura falla
-            // return Excel::download(new LogEstructura($respuesta->data), 'log.csv');
-            return (new LogEstructura($respuesta->data))->download('Log.csv');
+            if ($respuesta->codigoHttp != 200)
+            {
+                return (new LogEstructura($respuesta->data))->download('Log.csv');
+            }
         }
 
 

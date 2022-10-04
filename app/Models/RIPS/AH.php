@@ -152,7 +152,7 @@ class AH extends RIPS implements IRips
 
         try
         {
-            return DB::table($this->nombreTabla)->insert($values);
+            return DB::table($this->nombreTabla)->insertOrIgnore($values);
         }
         catch (\Throwable $th)
         {
