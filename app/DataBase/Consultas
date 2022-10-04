@@ -1,3 +1,13 @@
+/* VALIDACION DEL ARCHIVO DE RIPS AF */
+
+SELECT * FROM tmp_af
+LEFT JOIN refIps ON refIps.codigo=tmp_af.codigoIps and refIps.tipoIdentificacion=tmp_af.tipoIdentificacion and refIps.identificacion=tmp_af.identificacion
+WHERE refIps.tipoIdentificacion is null;
+
+SELECT * FROM tmp_af
+LEFT JOIN refIps ON tmp_af.codigoIps=refIps.codigo
+WHERE refIps.codigo is NULL;
+
 /* VALIDACION DEL ARCHIVO DE RIPS AP */
 
 SELECT * FROM tmp_AP 
@@ -11,6 +21,60 @@ WHERE tmp_us.identificacion is NULL;
 SELECT * FROM tmp_AP 
 LEFT JOIN tmp_af using(codigoIps,numeroFactura)
 WHERE !(tmp_af.fechaInicio <= tmp_AP.fechaProcedimiento and tmp_AP.fechaProcedimiento <= tmp_af.fechaFinal);
+
+SELECT * FROM tmp_ap
+LEFT JOIN refCups ON refCups.codigo = tmp_ap.codigoProcedimiento
+WHERE refCups.descrip is null;
+
+SELECT * FROM tmp_ap			
+LEFT JOIN refCups ON refCups.codigo = tmp_ap.codigoProcedimiento 
+WHERE refCups.descrip is not null and refCups.AT != 'P' ;
+
+SELECT * FROM tmp_ap
+LEFT JOIN refCups ON refCups.codigo = tmp_ap.codigoProcedimiento
+LEFT JOIN ripsus on ripsus.tipoIdentificacion=tmp_ap.tipoIdentificacion and ripsus.identificacion=tmp_ap.identificacion
+WHERE (refCups.genero!= 'A' and refCups.genero!=ripsus.genero);
+
+SELECT * FROM tmp_ap
+LEFT JOIN refFinalidadProcedimiento ON tmp_ap.finalidadProcedimiento=refFinalidadProcedimiento.codigo
+WHERE refFinalidadProcedimiento.codigo is NULL;
+
+SELECT * FROM tmp_ap
+LEFT JOIN refPersonalAtiende ON tmp_ap.personalAtiende=refPersonalAtiende.codigo
+WHERE ('721001' <= tmp_ap.codigoProcedimiento and tmp_ap.codigoProcedimiento <= '740300') and refPersonalAtiende.codigo is NULL;
+
+SELECT * FROM tmp_ap
+LEFT JOIN refCie10 ON refCie10.codigo = tmp_ap.diagnostico
+WHERE tmp_ap.codigoProcedimiento <= '870000' and refCie10.descrip is NULL ;
+
+SELECT * FROM tmp_ap
+LEFT JOIN refCie10 ON refCie10.codigo = tmp_ap.diagnostico
+WHERE tmp_ap.diagnostico != '' and refCie10.descrip is NULL ;
+
+SELECT * FROM tmp_ap
+LEFT JOIN refCie10 ON refCie10.codigo=tmp_ap.diagnostico
+LEFT JOIN ripsUS on ripsUS.tipoIdentificacion=tmp_ap.tipoIdentificacion and ripsUS.identificacion=tmp_ap.identificacion
+WHERE (refCie10.genero!= '' and refCie10.genero!=ripsUS.genero);
+
+SELECT * FROM tmp_ap
+LEFT JOIN refCie10 ON tmp_ap.diagnostico1=refCie10.codigo
+WHERE refCie10.descrip is null and tmp_ap.diagnostico1!='';
+
+SELECT * FROM tmp_ap
+LEFT JOIN refCie10 ON refCie10.codigo = tmp_ap.diagnostico1
+LEFT JOIN ripsUS on ripsUS.tipoIdentificacion=tmp_ap.tipoIdentificacion and ripsUS.identificacion=tmp_ap.identificacion
+WHERE (refCie10.genero!= '' and refCie10.genero!=ripsUS.genero) and tmp_ap.diagnostico1!='';
+
+SELECT * FROM tmp_ap
+LEFT JOIN refCie10 ON refCie10.codigo = tmp_ap.diagnosticoComplicacion 
+WHERE tmp_ap.diagnosticoComplicacion!='' and refCie10.descrip is NULL;
+
+SELECT * FROM tmp_ap
+LEFT JOIN refCie10 ON refCie10.codigo=tmp_ap.diagnosticoComplicacion
+LEFT JOIN ripsUS on ripsUS.tipoIdentificacion=tmp_ap.tipoIdentificacion and ripsUS.identificacion=tmp_ap.identificacion
+WHERE (refCie10.genero!= '' and refCie10.genero!=ripsUS.genero);
+
+
 
 
 /* VALIDACION DEL ARCHIVO DE RIPS AC */
@@ -28,6 +92,8 @@ LEFT JOIN tmp_af using(codigoIps,numeroFactura)
 WHERE !(tmp_af.fechaInicio <= tmp_AC.fechaConsulta and tmp_AC.fechaConsulta <= tmp_af.fechaFinal);
 
 
+
+
 /* VALIDACION DEL ARCHIVO DE RIPS AH */
 
 SELECT * FROM tmp_AH 
@@ -42,6 +108,31 @@ SELECT * FROM tmp_AH
 LEFT JOIN tmp_af using(codigoIps,numeroFactura)
 WHERE !(tmp_af.fechaInicio <= tmp_AH.fechaingreso and tmp_AH.fechaingreso <= tmp_af.fechaFinal);
 
+SELECT * FROM tmp_ah
+LEFT JOIN refCausaExterna ON tmp_ah.codigoCausaExterna=refCausaExterna.codigo
+WHERE refCausaExterna.descrip is null and tmp_ah.codigoCausaExterna!='';
+
+SELECT * FROM tmp_ah
+LEFT JOIN refCie10 ON tmp_ah.diagnosticoIngreso=refCie10.codigo
+WHERE refCie10.descrip is null or tmp_ah.diagnosticoIngreso='';
+
+SELECT * FROM tmp_ah
+LEFT JOIN refCie10 ON tmp_ah.diagnosticoEgreso=refCie10.codigo
+WHERE refCie10.descrip is null or tmp_ah.diagnosticoEgreso='';	
+
+SELECT * FROM tmp_ah
+LEFT JOIN refCie10 ON tmp_ah.diagnostico2=refCie10.codigo
+WHERE refCie10.descrip is null and tmp_ah.diagnostico2!='';
+
+SELECT * FROM tmp_ah
+LEFT JOIN refCie10 ON tmp_ah.diagnostico3=refCie10.codigo
+WHERE refCie10.descrip is null and tmp_ah.diagnostico3!='';
+
+SELECT * FROM tmp_ah
+LEFT JOIN refCie10 ON tmp_ah.codigoComplicacion=refCie10.codigo
+WHERE refCie10.descrip is null and tmp_ah.codigoComplicacion!='';
+
+
 
 /* VALIDACION DEL ARCHIVO DE RIPS AM */
 
@@ -52,6 +143,10 @@ WHERE tmp_af.codigoIps is NULL;
 SELECT * FROM tmp_AM
 LEFT JOIN tmp_us ON tmp_us.tipoIdentificacion=tmp_AM.tipoIdentificacion and tmp_us.identificacion=tmp_AM.identificacion
 WHERE tmp_us.identificacion is NULL;
+
+SELECT * FROM tmp_am
+LEFT JOIN refCums ON refCums.codigo=tmp_am.codigoMedicamento
+WHERE refCums.codigo is null;
 
 
 
@@ -69,6 +164,14 @@ SELECT * FROM tmp_AN
 LEFT JOIN tmp_af using(codigoIps,numeroFactura)
 WHERE !(tmp_af.fechaInicio <= tmp_AN.fechaNacimiento and tmp_AN.fechaNacimiento <= tmp_af.fechaFinal);
 
+SELECT * FROM tmp_an
+LEFT JOIN refCie10 ON tmp_an.diagnostico=refCie10.codigo
+WHERE refCie10.descrip is null or tmp_an.diagnostico='';
+
+SELECT * FROM tmp_an
+LEFT JOIN refCie10 ON tmp_an.diagnosticoMuerte=refCie10.codigo
+WHERE tmp_an.diagnosticoMuerte!='' and refCie10.descrip is null;
+
 
 
 
@@ -81,6 +184,14 @@ WHERE tmp_af.codigoIps is NULL;
 SELECT * FROM tmp_AT
 LEFT JOIN tmp_us ON tmp_us.tipoIdentificacion=tmp_AT.tipoIdentificacion and tmp_us.identificacion=tmp_AT.identificacion
 WHERE tmp_us.identificacion is NULL;
+
+SELECT * FROM tmp_at
+LEFT JOIN refCups ON refCups.codigo=tmp_at.codigoServicio
+WHERE !( (ifnull(refCups.AT,'')=tmp_at.tipoServicio) or (tmp_at.tipoServicio='1' and refcups.AT is NULL) );
+
+SELECT * FROM tmp_at
+LEFT JOIN refCups on refCups.codigo = tmp_at.codigoServicio
+WHERE refCups.codigo is not null and refCups.lSup != 0 and  tmp_at.valorUnitario > refCups.lSup;
 
 
 
@@ -97,3 +208,32 @@ WHERE tmp_us.identificacion is NULL;
 SELECT * FROM tmp_AU 
 LEFT JOIN tmp_af using(codigoIps,numeroFactura)
 WHERE !(tmp_af.fechaInicio <= tmp_AU.fechaSalida and tmp_AU.fechaSalida <= tmp_af.fechaFinal);
+
+SELECT * FROM tmp_au
+LEFT JOIN refCausaExterna ON tmp_au.causaExterna=refCausaExterna.codigo
+WHERE refCausaExterna.descrip is null;
+
+SELECT * FROM tmp_au
+LEFT JOIN refCie10 ON tmp_au.diagnostico=refCie10.codigo
+WHERE refCie10.descrip is null;
+
+SELECT * FROM tmp_au
+LEFT JOIN refCie10 ON tmp_au.diagnostico1=refCie10.codigo
+WHERE tmp_au.diagnostico1!='' and refCie10.descrip is null;
+
+SELECT * FROM tmp_au
+LEFT JOIN refCie10 ON tmp_au.diagnostico2=refCie10.codigo
+WHERE tmp_au.diagnostico2!='' and refCie10.descrip is null;
+
+SELECT * FROM tmp_au
+LEFT JOIN refCie10 ON tmp_au.diagnostico3=refCie10.codigo
+WHERE tmp_au.diagnostico3!='' and refCie10.descrip is null;
+
+SELECT * FROM tmp_au
+LEFT JOIN refCie10 ON tmp_au.causaMuerte=refCie10.codigo
+WHERE tmp_au.estadoSalida='2' and (refCie10.descrip is null or tmp_au.causaMuerte='');
+
+
+SELECT * FROM tmp_au
+LEFT JOIN ripsAF using(codigoIps,numeroFactura)
+WHERE !(ripsAF.fechaInicio <= tmp_au.fechaSalida and tmp_au.fechaSalida <= ripsAF.fechaFinal);
