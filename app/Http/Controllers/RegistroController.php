@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\RegistroMailable;
 use App\Models\Respuestas;
 use App\Models\Usuarios;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class RegistroController extends Controller
@@ -41,12 +43,17 @@ class RegistroController extends Controller
         $usuario = [
             'name' => $request->input('name'),
             'email' => $request->input('email'),
-            'password' => "md5($request->input('email'))"
+            'password' => md5($request->input('email'))
         ];
 
         try
         {
             $usuarioDb = Usuarios::create($usuario);
+
+            $correo = new RegistroMailable($usuario['name'], $usuario['password']);
+
+            Mail::to($usuario['email'])->send($correo);
+
             return response()->json($respuesta, $respuesta->codigoHttp);
         }
         catch (\Throwable $th)

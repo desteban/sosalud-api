@@ -16,7 +16,7 @@
     <section class="container">
 
         <h1 class="title">Registro</h1>
-        <form action="{{ route('usuario.crear') }}" method="POST" class="form">
+        <form action="{{ route('usuario.crear') }}" method="POST" class="form box">
             @csrf
 
             @if ($errors->any())
