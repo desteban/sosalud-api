@@ -132,8 +132,7 @@ LEFT JOIN refCie10 ON refCie10.codigo=tmp_ac.diagnostico1
 LEFT JOIN ripsUS on ripsUS.tipoIdentificacion=tmp_ac.tipoIdentificacion and ripsUS.identificacion=tmp_ac.identificacion
 WHERE (refCie10.genero!= '' and refCie10.genero!=ripsUS.genero) and tmp_ac.diagnostico1!='';
 
-SELECT *
-FROM tmp_ac
+SELECT * FROM tmp_ac
 LEFT JOIN refCie10 ON refCie10.codigo=tmp_ac.diagnostico2
 WHERE refCie10.descrip IS NULL AND tmp_ac.diagnostico2!='';
 
@@ -247,7 +246,6 @@ WHERE tmp_an.diagnosticoMuerte!='' and refCie10.descrip is null;
 
 
 
-
 /* VALIDACION DEL ARCHIVO DE RIPS AT */
 
 SELECT * FROM tmp_AT 
@@ -305,7 +303,6 @@ WHERE tmp_au.diagnostico3!='' and refCie10.descrip is null;
 SELECT * FROM tmp_au
 LEFT JOIN refCie10 ON tmp_au.causaMuerte=refCie10.codigo
 WHERE tmp_au.estadoSalida='2' and (refCie10.descrip is null or tmp_au.causaMuerte='');
-
 
 SELECT * FROM tmp_au
 LEFT JOIN ripsAF using(codigoIps,numeroFactura)
