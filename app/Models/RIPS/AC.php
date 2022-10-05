@@ -71,6 +71,7 @@ class AC extends RIPS implements IRips
         try
         {
 
+
             for ($i = 0; $i < sizeof($atributos); $i++)
             {
                 $datoGuardar = $datos[$i];
@@ -96,6 +97,7 @@ class AC extends RIPS implements IRips
         $atributos = $this->obtenerColumnasDB(true);
         $salidaArray = array();
         $salidaString = '';
+        $salidaString = '';
 
         foreach ($atributos as $clave)
         {
@@ -106,7 +108,20 @@ class AC extends RIPS implements IRips
 
             if (!$string)
             {
-                $salidaArray["$clave"] = $this->{$clave};
+                if ($string)
+                {
+                    $salidaString .= $this->{$clave} . ',';
+                }
+
+                if (!$string)
+                {
+                    $salidaArray["$clave"] = $this->{$clave};
+                }
+            }
+
+            if ($string)
+            {
+                return substr($salidaString, 0, -1);
             }
         }
 
