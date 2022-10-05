@@ -14,9 +14,13 @@ use App\Http\Controllers\formularioController;
 |
 */
 
-Route::get('/', function () {
+Route::get('/', function ()
+{
     return view('formulario');
 });
 
 Route::post('/archivos', [formularioController::class, 'guardarArchivo'])->name('archivos.store');
-Route::get('fecha', [formularioController::class, 'validarFecha'])->name('fecha');
+Route::get('/registro', function ()
+{
+    return view('registro');
+});

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Archivos;
 use App\Http\Controllers\comprimidosController;
 use App\Http\Controllers\ExcelController;
+use App\Http\Controllers\RegistroController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,4 +24,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request)
 });
 
 Route::post('/comprimidos', [comprimidosController::class, 'crearRIPS'])->name('comprimidos.guardar');
-Route::get('/ips', [ExcelController::class, 'generarExcel'])->name('excel.generar');
+Route::post('registrar', [RegistroController::class, 'registrarUsuario'])->name('usuario.crear');

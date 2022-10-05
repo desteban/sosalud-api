@@ -8,30 +8,37 @@
     <title>Formulario</title>
 
     <link rel="stylesheet" href="{{ asset('css/normalize.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/estilos.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/bulma.min.css') }}">
 
 </head>
 
 <body>
-    <h1 class="titulo">Formulario</h1>
-    {{-- enctype="multipart/form-data" para poder enviar archivos --}}
-    <form action="{{ route('comprimidos.guardar') }}" method="POST" enctype="multipart/form-data">
-        @csrf
+    <section class="container">
 
-        @if ($errors->any())
-            <div class="error">
-                <p><strong>Algo ha salido mal</strong></p>
-                @foreach ($errors->all() as $error)
-                    <p> -- {{ $error }} -- </p>
-                @endforeach
+        <h1 class="title">Formulario</h1>
+        {{-- enctype="multipart/form-data" para poder enviar archivos --}}
+        <form action="{{ route('comprimidos.guardar') }}" method="POST" enctype="multipart/form-data" class="form">
+            @csrf
+
+            @if ($errors->any())
+                <div class="error">
+                    <p><strong>Algo ha salido mal</strong></p>
+                    @foreach ($errors->all() as $error)
+                        <p> -- {{ $error }} -- </p>
+                    @endforeach
+                </div>
+            @endif
+
+            <div class="field">
+
+                <label class="file-label" for="archivo">el archivo a subir no debe pesar mas de 5 megabytes(MB)
+                </label>
+                <input class="input" type="file" name="archivo" id="archivo" accept=".rar,.zip,.7z">
             </div>
-        @endif
 
-        <label for="archivo">el archivo a subir no debe pesar mas de 5 megabytes(MB) </label>
-        <input type="file" name="archivo" id="archivo" accept=".rar,.zip,.7z">
-
-        <button>Enviar</button>
-    </form>
+            <button class="button is-medium is-fullwidth is-info">Enviar</button>
+        </form>
+    </section>
 
 </body>
 
