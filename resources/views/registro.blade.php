@@ -19,6 +19,15 @@
         <form action="{{ route('usuario.crear') }}" method="POST" class="form">
             @csrf
 
+            @if ($errors->any())
+                <div class="error">
+                    <p><strong>Algo ha salido mal</strong></p>
+                    @foreach ($errors->all() as $error)
+                        <p> -- {{ $error }} -- </p>
+                    @endforeach
+                </div>
+            @endif
+
             <div>
                 <div class="field">
                     <label for="name" class="label">Nombre</label>
@@ -28,16 +37,9 @@
 
                 <div class="field">
                     <label class="label" for="email">Correo</label>
-                    <input class="input is-medium" type="text" name="email" id="email" autocomplete="OFF"
+                    <input class="input is-medium" type="text" name="email" id="email" autocomplete="ON"
                         placeholder="Correo">
                 </div>
-
-                <div class="field">
-                    <label class="label" for="password">Contraseña</label>
-                    <input class="input is-medium" type="password" name="password" id="password"
-                        placeholder="Contraseña">
-                </div>
-
                 <input type="submit" value="Registrar" class="button is-medium is-fullwidth is-info">
             </div>
 

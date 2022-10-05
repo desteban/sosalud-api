@@ -9,7 +9,6 @@ use App\Util\ArchivosUtil;
 use App\Validador\EstructuraRips;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Maatwebsite\Excel\Facades\Excel;
 
 class comprimidosController extends Controller
 {
