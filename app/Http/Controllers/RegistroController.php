@@ -16,7 +16,7 @@ class RegistroController extends Controller
 
     public function registrarUsuario(Request $request)
     {
-        $respuesta = new Respuestas();
+        $respuesta = new Respuestas(201, 'Creado', 'Usuario registrado exitosamente');
 
         $validacion = Validator::make($request->all(), [
             'name' => 'required',
@@ -25,7 +25,16 @@ class RegistroController extends Controller
 
         if ($validacion->fails())
         {
-            $respuesta->cambiarRespuesta(400, 'Mala peticion', 'Porfavor valide la informacion');
+            $erroresValidacion = $validacion->failed();
+            $errores = [];
+
+            if ($erroresValidacion['email']['Unique'])
+            {
+                array_push($errores, 'Correo ya registrado');
+            }
+
+
+            $respuesta->cambiarRespuesta(400, 'Mala peticion', 'Porfavor valide la informacion', $errores);
             return response()->json($respuesta, $respuesta->codigoHttp);
         }
 
@@ -34,8 +43,15 @@ class RegistroController extends Controller
             'email' => $request->input('email'),
             'password' => "md5($request->input('email'))"
         ];
-        $usuarioDb = Usuarios::create($usuario);
 
-        return response()->json($respuesta, $respuesta->codigoHttp);
+        try
+        {
+            $usuarioDb = Usuarios::create($usuario);
+            return response()->json($respuesta, $respuesta->codigoHttp);
+        }
+        catch (\Throwable $th)
+        {
+            $respuesta->cambiarRespuesta(500, 'Hubo un error en el servidor y la solicitud no pudo ser completada');
+        }
     }
 }
