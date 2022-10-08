@@ -22,6 +22,7 @@ class RegistroController extends Controller
 
         $validacion = Validator::make($request->all(), [
             'name' => 'required',
+            'nombreUsuario' => 'required',
             'email' => 'required|unique:usuarios,email'
         ]);
 
