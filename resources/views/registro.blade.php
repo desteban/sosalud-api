@@ -36,6 +36,12 @@
                 </div>
 
                 <div class="field">
+                    <label for="nombreUsuario" class="label">Nombre Usuario</label>
+                    <input class="input is-medium" type="text" name="nombreUsuario" id="nombreUsuario"
+                        autocomplete="OFF" placeholder="Nombre">
+                </div>
+
+                <div class="field">
                     <label class="label" for="email">Correo</label>
                     <input class="input is-medium" type="text" name="email" id="email" autocomplete="ON"
                         placeholder="Correo">

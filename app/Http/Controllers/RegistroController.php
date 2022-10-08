@@ -40,17 +40,15 @@ class RegistroController extends Controller
             return response()->json($respuesta, $respuesta->codigoHttp);
         }
 
-        $usuario = [
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'password' => md5($request->input('email'))
-        ];
+        $usuario = $request->all();
+        $usuario['password'] = md5($request->input('email'));
+        unset($usuario['_token']);
 
         try
         {
             $usuarioDb = Usuarios::create($usuario);
 
-            $correo = new RegistroMailable($usuario['name'], $usuario['password']);
+            $correo = new RegistroMailable($usuario['name'], $usuario['password'], $usuario['nombreUsuario']);
 
             Mail::to($usuario['email'])->send($correo);
 

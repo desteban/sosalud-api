@@ -12,6 +12,9 @@
 
     <h1>¡Hola {{ $data['nombre'] }}!</h1>
 
+    <p>Tu nombre de usuario es <span style="font-weight: bold; font-weight: 1.1rem">{{ $data['nombreUsuario'] }}</span>
+    </p>
+
     <p>Tu contraseña para ingresar al sistemas es: </p>
 
     <div style="background-color: #eff1fa; color:#3850b7; padding: 1.3rem .8rem; margin: 1.2rem 0px; font-size: 1.2rem">
