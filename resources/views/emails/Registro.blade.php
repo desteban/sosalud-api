@@ -5,9 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Welcome</title>
-
-    <link rel="stylesheet" href="http://159.223.194.40:8081/css/bulma.min.css">
+    <title>Registro</title>
 </head>
 
 <body>
@@ -16,7 +14,7 @@
 
     <p>Tu contraseña para ingresar al sistemas es: </p>
 
-    <div class="notification is-link is-light">
+    <div style="background-color: #eff1fa; color:#3850b7; padding: 1.3rem .8rem; margin: 1.2rem 0px; font-size: 1.2rem">
         <p>{{ $data['password'] }}</p>
     </div>
 
