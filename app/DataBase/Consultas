@@ -8,6 +8,8 @@ SELECT * FROM tmp_af
 LEFT JOIN refIps ON tmp_af.codigoIps=refIps.codigo
 WHERE refIps.codigo is NULL;
 
+
+
 /* VALIDACION DEL ARCHIVO DE RIPS AP */
 
 SELECT * FROM tmp_AP 
@@ -90,6 +92,76 @@ WHERE tmp_us.identificacion is NULL;
 SELECT * FROM tmp_AC 
 LEFT JOIN tmp_af using(codigoIps,numeroFactura)
 WHERE !(tmp_af.fechaInicio <= tmp_AC.fechaConsulta and tmp_AC.fechaConsulta <= tmp_af.fechaFinal);
+
+SELECT * FROM tmp_ac
+LEFT JOIN refCups ON refCups.codigo=tmp_ac.codigoConsulta
+WHERE refCups.descrip is null  or refCups.AT != 'C';
+
+SELECT * FROM tmp_ac
+LEFT JOIN refIps ON refIps.codigo=tmp_ac.codigoIps and refIps.serHab like '%356%' 
+WHERE tmp_ac.codigoConsulta in ('890202','890302') and refIps.descrip is null  ;
+
+SELECT * FROM tmp_ac
+LEFT JOIN refFinalidadConsulta ON refFinalidadConsulta.codigo=tmp_ac.finalidadConsulta
+WHERE refFinalidadConsulta.codigo is NULL;
+
+SELECT * FROM tmp_ac
+LEFT JOIN refFinalidadConsulta ON refFinalidadConsulta.codigo=tmp_ac.finalidadConsulta
+LEFT JOIN ripsUS on ripsUS.tipoIdentificacion=tmp_ac.tipoIdentificacion and ripsUS.identificacion=tmp_ac.identificacion
+WHERE (refFinalidadConsulta.genero!= '' and refFinalidadConsulta.genero!=ripsUS.genero);
+
+SELECT * FROM tmp_ac
+LEFT JOIN refCausaExterna ON refCausaExterna.codigo=tmp_ac.codigoCausaExterna
+WHERE refCausaExterna.descrip is null or tmp_ac.codigoCausaExterna='';
+
+SELECT * FROM tmp_ac
+LEFT JOIN refCie10 ON refCie10.codigo=tmp_ac.diagnosticoPrincipal
+WHERE refCie10.descrip is null or tmp_ac.diagnosticoPrincipal='';
+
+SELECT * FROM tmp_ac
+LEFT JOIN refCie10 ON refCie10.codigo=tmp_ac.diagnosticoPrincipal
+LEFT JOIN ripsUS on ripsUS.tipoIdentificacion=tmp_ac.tipoIdentificacion and ripsUS.identificacion=tmp_ac.identificacion
+WHERE (refCie10.genero!= '' and refCie10.genero!=ripsUS.genero);
+
+SELECT * FROM tmp_ac
+LEFT JOIN refCie10 ON refCie10.codigo=tmp_ac.diagnostico1
+WHERE refCie10.descrip is null and tmp_ac.diagnostico1!='';
+
+SELECT * FROM tmp_ac
+LEFT JOIN refCie10 ON refCie10.codigo=tmp_ac.diagnostico1
+LEFT JOIN ripsUS on ripsUS.tipoIdentificacion=tmp_ac.tipoIdentificacion and ripsUS.identificacion=tmp_ac.identificacion
+WHERE (refCie10.genero!= '' and refCie10.genero!=ripsUS.genero) and tmp_ac.diagnostico1!='';
+
+SELECT * FROM tmp_ac
+LEFT JOIN refCie10 ON refCie10.codigo=tmp_ac.diagnostico2
+WHERE refCie10.descrip IS NULL AND tmp_ac.diagnostico2!='';
+
+SELECT * FROM tmp_ac
+LEFT JOIN refCie10 ON refCie10.codigo=tmp_ac.diagnostico1
+WHERE refCie10.descrip is null and tmp_ac.diagnostico1!='';
+
+SELECT * FROM tmp_ac
+LEFT JOIN refCie10 ON refCie10.codigo=tmp_ac.diagnostico1
+LEFT JOIN ripsUS on ripsUS.tipoIdentificacion=tmp_ac.tipoIdentificacion and ripsUS.identificacion=tmp_ac.identificacion
+WHERE (refCie10.genero!= '' and refCie10.genero!=ripsUS.genero) and tmp_ac.diagnostico1!='';
+
+SELECT * FROM tmp_ac
+LEFT JOIN refCie10 ON refCie10.codigo=tmp_ac.diagnostico2
+WHERE refCie10.descrip is null and tmp_ac.diagnostico2!='';
+
+SELECT * FROM tmp_ac
+LEFT JOIN refCie10 ON refCie10.codigo=tmp_ac.diagnostico2
+LEFT JOIN ripsUS on ripsUS.tipoIdentificacion=tmp_ac.tipoIdentificacion and ripsUS.identificacion=tmp_ac.identificacion
+WHERE (refCie10.genero!= '' and refCie10.genero!=ripsUS.genero) and tmp_ac.diagnostico2!='';
+
+SELECT * FROM tmp_ac
+LEFT JOIN refCie10 ON refCie10.codigo=tmp_ac.diagnostico3
+WHERE refCie10.descrip is null and tmp_ac.diagnostico3!='';
+
+SELECT * FROM tmp_ac
+LEFT JOIN refCie10 ON refCie10.codigo=tmp_ac.diagnostico3
+LEFT JOIN ripsUS on ripsUS.tipoIdentificacion=tmp_ac.tipoIdentificacion and ripsUS.identificacion=tmp_ac.identificacion
+WHERE (refCie10.genero!= '' and refCie10.genero!=ripsUS.genero) and tmp_ac.diagnostico3!='';
 
 
 
@@ -174,7 +246,6 @@ WHERE tmp_an.diagnosticoMuerte!='' and refCie10.descrip is null;
 
 
 
-
 /* VALIDACION DEL ARCHIVO DE RIPS AT */
 
 SELECT * FROM tmp_AT 
@@ -232,7 +303,6 @@ WHERE tmp_au.diagnostico3!='' and refCie10.descrip is null;
 SELECT * FROM tmp_au
 LEFT JOIN refCie10 ON tmp_au.causaMuerte=refCie10.codigo
 WHERE tmp_au.estadoSalida='2' and (refCie10.descrip is null or tmp_au.causaMuerte='');
-
 
 SELECT * FROM tmp_au
 LEFT JOIN ripsAF using(codigoIps,numeroFactura)
