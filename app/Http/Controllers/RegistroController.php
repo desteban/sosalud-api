@@ -22,7 +22,7 @@ class RegistroController extends Controller
 
         $validacion = Validator::make($request->all(), [
             'name' => 'required',
-            'nombreUsuario' => 'required',
+            'nombreUsuario' => 'required|unique:usuarios,nombreUsuario',
             'email' => 'required|unique:usuarios,email'
         ]);
 
@@ -47,7 +47,7 @@ class RegistroController extends Controller
 
         try
         {
-            $usuarioDb = Usuarios::create($usuario);
+            Usuarios::create($usuario);
 
             $correo = new RegistroMailable($usuario['name'], $usuario['password'], $usuario['nombreUsuario']);
 

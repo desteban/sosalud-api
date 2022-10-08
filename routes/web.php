@@ -19,7 +19,6 @@ Route::get('/', function ()
     return view('formulario');
 });
 
-Route::post('/archivos', [formularioController::class, 'guardarArchivo'])->name('archivos.store');
 Route::get('/registro', function ()
 {
     return view('registro');
