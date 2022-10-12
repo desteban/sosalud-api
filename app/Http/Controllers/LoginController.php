@@ -29,7 +29,7 @@ class LoginController extends Controller
         `usuarios`.`email` = '$nombreUsuario' OR usuarios.`nombreUsuario` = '$nombreUsuario' LIMIT 1;");
 
         // notificar que las credenciales no son validas
-        if (sizeof($usuarioDB) == 0 || !Hash::check($request->input('password'), $usuarioDB[0]->password))
+        if (empty($usuarioDB) || !Hash::check($request->input('password'), $usuarioDB[0]->password))
         {
             $respuesta = new Respuestas(404, 'No se encontro el recurso solicitado', 'Credenciales invalidas');
             return response()->json($respuesta, $respuesta->codigoHttp);

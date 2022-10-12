@@ -153,7 +153,6 @@ class AF extends RIPS implements IRips
         }
         catch (\Throwable $th)
         {
-            dd($th);
             return false;
         }
     }
