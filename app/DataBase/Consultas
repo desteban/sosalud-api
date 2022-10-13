@@ -312,5 +312,20 @@ WHERE !(ripsAF.fechaInicio <= tmp_au.fechaSalida and tmp_au.fechaSalida <= ripsA
 /* VALIDACION DEL ARCHIVO DE RIPS US */
 
 SELECT * FROM tmp_US
+LEFT JOIN maestroIdentificaciones ON maestroIdentificaciones.tipoIdentificacion=tmp_US.tipoIdentificacion and maestroIdentificaciones.identificacion=tmp_US.identificacion
+WHERE maestroIdentificaciones.identificacion is NULL;
+
+
+SELECT * FROM tmp_US
 LEFT JOIN maestroAfiliados on maestroAfiliados.tipoIdentificacion=tmp_US.tipoIdentificacion and maestroAfiliados.identificacion=tmp_US.identificacion
 WHERE tmp_US.genero!=maestroAfiliados.genero;
+
+
+SELECT * FROM tmp_US
+LEFT JOIN municipios USING(codigoDepartamento,codigoMunicipio)
+WHERE municipios.codigoMunicipio is NULL;
+
+
+SELECT * FROM tmp_US
+LEFT JOIN refZona on refZona.codigo=tmp_US.zona
+WHERE refZona.codigo is NULL;
