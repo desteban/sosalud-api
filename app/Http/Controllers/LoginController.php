@@ -57,7 +57,10 @@ class LoginController extends Controller
             'expire' => date('Y/m/d H:i:s', $duracion)
         ]);
 
-        $respuesta = new Respuestas(200, 'succes', 'Todo bien', []);
+        $respuesta = new Respuestas(201, 'succes', 'Todo bien', [
+            'token' => $jwt,
+            'usuarios' => $usuario
+        ]);
         return response()->json($respuesta, $respuesta->codigoHttp);
     }
 
