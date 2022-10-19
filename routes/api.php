@@ -25,3 +25,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request)
 Route::post('/comprimidos', [comprimidosController::class, 'crearRIPS'])->name('comprimidos.guardar');
 Route::post('registrar', [RegistroController::class, 'registrarUsuario'])->name('usuario.crear');
 Route::post('/login', [LoginController::class, 'login'])->name('usuario.login');
+Route::post('/validar', [LoginController::class, 'validar']);

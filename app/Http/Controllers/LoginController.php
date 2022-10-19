@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 class LoginController extends Controller
 {
@@ -57,6 +58,22 @@ class LoginController extends Controller
             'token' => $jwt,
             'usuario' => $usuario
         ]);
+        return response()->json($respuesta, $respuesta->codigoHttp);
+    }
+
+    public function validar(Request $request)
+    {
+        $respuesta = new Respuestas();
+
+        $key = env('JWT_KEY');
+        $token = $request->header('token');
+        $decode = JWT::decode($token, new Key($key, 'HS256'));
+
+        $respuesta->data = [
+            'token' => $token,
+            'decode' => $decode
+        ];
+
         return response()->json($respuesta, $respuesta->codigoHttp);
     }
 }
