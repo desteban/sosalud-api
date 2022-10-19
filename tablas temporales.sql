@@ -234,8 +234,7 @@ email varchar(50) UNIQUE NOT NULL,
 nombreUsuario varchar(50) NOT NULL,
 email_verified_at DATETIME,
 password varchar(255) NOT NULL,
-rebember_token varchar(100) NOT NULL,
-change_token varchar(255),
+remember_token varchar(255),
 created_at timestamp,
 updated_at timestamp
 );

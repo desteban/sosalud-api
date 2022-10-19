@@ -48,7 +48,7 @@ class LoginController extends Controller
         $key = env('JWT_KEY');
         $token = array(
             'iat' => $time,
-            'exp' => $time + (60 * 60 * 48),
+            'exp' => $time + (60 * 60 * (24 * 3)),
             'data' => $usuario
         );
 

@@ -19,12 +19,12 @@ class RegistroMailable extends Mailable
      * @param password string generado para que sea su contraseña
      * @return void
      */
-    public function __construct(string $nombre, string $password, string $nombreUsuario)
+    public function __construct(string $nombre, string $nombreUsuario, string $token)
     {
         $this->subject('Te damos la bienvenida ' . $nombre);
         $this->data['nombre'] = $nombre;
-        $this->data['password'] = $password;
         $this->data['nombreUsuario'] = $nombreUsuario;
+        $this->data['token'] = env('APP_URL') . $token;
     }
 
     /**

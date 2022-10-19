@@ -21,7 +21,8 @@ class Usuarios extends Authenticatable
         'name',
         'email',
         'password',
-        'nombreUsuario'
+        'nombreUsuario',
+        'email_verified_at',
     ];
 
     /**
@@ -39,9 +40,7 @@ class Usuarios extends Authenticatable
      *
      * @var array<string, string>
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    protected $casts = [];
 
     public function setPasswordAttribute($value)
     {
