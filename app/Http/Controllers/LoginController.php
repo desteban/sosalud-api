@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
+use Firebase\JWT\JWT;
+
 class LoginController extends Controller
 {
     public function login(Request $request)
@@ -35,7 +37,26 @@ class LoginController extends Controller
             return response()->json($respuesta, $respuesta->codigoHttp);
         }
 
-        $respuesta = new Respuestas(200, 'succes', 'Todo bien');
+        $usuario = [
+            'id' => $usuarioDB[0]->id,
+            'nombreUsuario' => $usuarioDB[0]->nombreUsuario,
+            'email' => $usuarioDB[0]->email,
+        ];
+
+        $time = time();
+        $key = env('JWT_KEY');
+        $token = array(
+            'iat' => $time,
+            'exp' => $time + (60 * 60 * 48),
+            'data' => $usuario
+        );
+
+        $jwt = JWT::encode($token, $key, 'HS256');
+
+        $respuesta = new Respuestas(200, 'succes', 'Todo bien', [
+            'token' => $jwt,
+            'usuario' => $usuario
+        ]);
         return response()->json($respuesta, $respuesta->codigoHttp);
     }
 }
