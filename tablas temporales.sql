@@ -226,3 +226,25 @@ DELIMITER $$
 
     END $$
 DELIMITER
+
+CREATE TABLE IF NOT EXISTS usuarios(
+id INTEGER AUTO_INCREMENT PRIMARY KEY,
+name varchar(50) UNIQUE NOT NULL,
+email varchar(50) UNIQUE NOT NULL,
+nombreUsuario varchar(50) NOT NULL,
+email_verified_at DATETIME,
+password varchar(255) NOT NULL,
+remember_token varchar(255),
+created_at timestamp,
+updated_at timestamp
+);
+
+CREATE TABLE IF NOT EXISTS personal_access_tokens(
+    id INT NOT NULL AUTO_INCREMENT,
+    usuario_id INT NOT NULL,
+    token VARCHAR(255) not null,
+    expire TIMESTAMP NOT NULL,
+    creado TIMESTAMP not NULL,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+    PRIMARY KEY (id, usuario_id)
+);

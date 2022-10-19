@@ -3,10 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Respuestas;
+use App\Util\Token;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 
 class LoginController extends Controller
 {
@@ -35,7 +40,38 @@ class LoginController extends Controller
             return response()->json($respuesta, $respuesta->codigoHttp);
         }
 
-        $respuesta = new Respuestas(200, 'succes', 'Todo bien');
+        $usuario = [
+            'id' => $usuarioDB[0]->id,
+            'nombreUsuario' => $usuarioDB[0]->nombreUsuario,
+            'email' => $usuarioDB[0]->email,
+        ];
+
+        $duracionToken = env('TOKEN_DURACION');
+        $time = time();
+        $duracion = $time + (60 * 60 * (24 * $duracionToken));
+        $jwt = Token::crear(data: $usuario, creacion: $time, duracion: $duracion);
+        Token::guardarToken([
+            'token' => $jwt,
+            'usuario_id' => $usuario['id'],
+            'creado' => Carbon::now(),
+            'expire' => date('Y/m/d H:i:s', $duracion)
+        ]);
+
+        $respuesta = new Respuestas(200, 'succes', 'Todo bien', []);
+        return response()->json($respuesta, $respuesta->codigoHttp);
+    }
+
+    public function validar(Request $request)
+    {
+        $respuesta = new Respuestas();
+
+        $token = $request->header('token');
+        $decode = Token::decodificar($token);
+
+        $respuesta->data = [
+            'decode' => $decode
+        ];
+
         return response()->json($respuesta, $respuesta->codigoHttp);
     }
 }
