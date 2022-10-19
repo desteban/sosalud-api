@@ -24,7 +24,7 @@ class RegistroMailable extends Mailable
         $this->subject('Te damos la bienvenida ' . $nombre);
         $this->data['nombre'] = $nombre;
         $this->data['nombreUsuario'] = $nombreUsuario;
-        $this->data['token'] = env('APP_URL') . $token;
+        $this->data['token'] = env('APP_URL') . 'activar/' . $token;
     }
 
     /**

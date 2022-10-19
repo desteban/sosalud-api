@@ -18,7 +18,7 @@
     <p>Copia o da click en el enlace para activar tu cuenta</p>
 
     <div style="background-color: #eff1fa; color:#3850b7; padding: 1.3rem .8rem; margin: 1.2rem 0px; font-size: 1.2rem">
-        <p>{{ $data['token'] }}</p>
+        <p><a href="{{ $data['token'] }}">{{ $data['token'] }}</a></p>
     </div>
 
 

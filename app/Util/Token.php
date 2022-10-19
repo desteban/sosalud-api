@@ -4,6 +4,7 @@ namespace App\Util;
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use Illuminate\Support\Facades\DB;
 
 class Token
 {
@@ -12,13 +13,12 @@ class Token
      * @param data arreglo con la informacion del token
      * @return string JWT
      */
-    public static function crear(array $data = ['sub' => 0], int $diasDuracion = 4): string
+    public static function crear(array $data = ['sub' => 0], $creacion = 0, $duracion = 0): string
     {
-        $time = time();
         $key = env('JWT_KEY');
         $token = array(
-            'iat' => $time,
-            'exp' => $time + (60 * 60 * (24 * $diasDuracion)),
+            'iat' => $creacion,
+            'exp' => $duracion,
             'data' => $data
         );
 
@@ -33,5 +33,19 @@ class Token
     {
         $key = env('JWT_KEY');
         return JWT::decode($token, new Key($key, 'HS256'));
+    }
+
+    /**
+     * @param data ddebe cumplir con la estrucura de la tabla personal_access_tokens
+     * @return bool que define el exito de la operacion
+     */
+    public static function guardarToken(array $data = [])
+    {
+        if (empty($token))
+        {
+            return DB::table('personal_access_tokens')->insert($data);
+        }
+
+        return false;
     }
 }

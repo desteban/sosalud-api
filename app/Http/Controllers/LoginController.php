@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Respuestas;
 use App\Util\Token;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -33,7 +34,7 @@ class LoginController extends Controller
         `usuarios`.`email` = '$nombreUsuario' OR usuarios.`nombreUsuario` = '$nombreUsuario' LIMIT 1;");
 
         // notificar que las credenciales no son validas
-        if (sizeof($usuarioDB) == 0 || !Hash::check($request->input('password'), $usuarioDB[0]->password))
+        if (empty($usuarioDB) || !Hash::check($request->input('password'), $usuarioDB[0]->password))
         {
             $respuesta = new Respuestas(404, 'No se encontro el recurso solicitado', 'Credenciales invalidas');
             return response()->json($respuesta, $respuesta->codigoHttp);
@@ -45,12 +46,18 @@ class LoginController extends Controller
             'email' => $usuarioDB[0]->email,
         ];
 
-        $jwt = Token::crear($usuario);
-
-        $respuesta = new Respuestas(200, 'succes', 'Todo bien', [
+        $duracionToken = env('TOKEN_DURACION');
+        $time = time();
+        $duracion = $time + (60 * 60 * (24 * $duracionToken));
+        $jwt = Token::crear(data: $usuario, creacion: $time, duracion: $duracion);
+        Token::guardarToken([
             'token' => $jwt,
-            'usuario' => $usuario
+            'usuario_id' => $usuario['id'],
+            'creado' => Carbon::now(),
+            'expire' => date('Y/m/d H:i:s', $duracion)
         ]);
+
+        $respuesta = new Respuestas(200, 'succes', 'Todo bien', []);
         return response()->json($respuesta, $respuesta->codigoHttp);
     }
 
@@ -58,12 +65,10 @@ class LoginController extends Controller
     {
         $respuesta = new Respuestas();
 
-        $key = env('JWT_KEY');
         $token = $request->header('token');
-        $decode = JWT::decode($token, new Key($key, 'HS256'));
+        $decode = Token::decodificar($token);
 
         $respuesta->data = [
-            'token' => $token,
             'decode' => $decode
         ];
 
