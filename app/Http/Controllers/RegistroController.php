@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Mail\RegistroMailable;
 use App\Models\Respuestas;
 use App\Models\Usuarios;
-use App\Util\Token;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Respuestas;
+use App\Util\Token;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -44,15 +45,7 @@ class LoginController extends Controller
             'email' => $usuarioDB[0]->email,
         ];
 
-        $time = time();
-        $key = env('JWT_KEY');
-        $token = array(
-            'iat' => $time,
-            'exp' => $time + (60 * 60 * (24 * 3)),
-            'data' => $usuario
-        );
-
-        $jwt = JWT::encode($token, $key, 'HS256');
+        $jwt = Token::crear($usuario);
 
         $respuesta = new Respuestas(200, 'succes', 'Todo bien', [
             'token' => $jwt,
