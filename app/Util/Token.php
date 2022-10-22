@@ -27,16 +27,25 @@ class Token
 
     /**
      * @param token JWT
-     * @return ContenidoToken
+     * @return DecodificarToken regresa un arreglo vacio al no poder decodificar el token
      */
     public static function decodificar(string $token)
     {
         $key = env('JWT_KEY');
-        return JWT::decode($token, new Key($key, 'HS256'));
+
+        try
+        {
+
+            return JWT::decode($token, new Key($key, 'HS256'));
+        }
+        catch (\Throwable $th)
+        {
+            return [];
+        }
     }
 
     /**
-     * @param data ddebe cumplir con la estrucura de la tabla personal_access_tokens
+     * @param data debe cumplir con la estrucura de la tabla personal_access_tokens
      * @return bool que define el exito de la operacion
      */
     public static function guardarToken(array $data = [])
@@ -44,6 +53,24 @@ class Token
         if (empty($token))
         {
             return DB::table('personal_access_tokens')->insert($data);
+        }
+
+        return false;
+    }
+
+    public static function eliminarToken(string $token = '')
+    {
+        if (!empty($token))
+        {
+
+            try
+            {
+                return DB::statement('DELETE FROM personal_access_tokens WHERE token=?', bindings: [$token]);
+            }
+            catch (\Throwable $th)
+            {
+                return false;
+            }
         }
 
         return false;

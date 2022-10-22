@@ -17,12 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request)
-{
-    return $request->user();
-});
-
-Route::post('/comprimidos', [comprimidosController::class, 'crearRIPS'])->name('comprimidos.guardar');
+Route::post('/comprimidos', [comprimidosController::class, 'crearRIPS'])->name('comprimidos.guardar')
+    ->middleware('aut');
 Route::post('/registrar', [RegistroController::class, 'registrarUsuario'])->name('usuario.crear');
 Route::post('/login', [LoginController::class, 'login'])->name('usuario.login');
-Route::post('/validar', [LoginController::class, 'validar']);

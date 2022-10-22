@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
+use function PHPUnit\Framework\isEmpty;
 
 class LoginController extends Controller
 {
@@ -60,20 +59,6 @@ class LoginController extends Controller
             'token' => $jwt,
             'usuarios' => $usuario
         ]);
-        return response()->json($respuesta, $respuesta->codigoHttp);
-    }
-
-    public function validar(Request $request)
-    {
-        $respuesta = new Respuestas();
-
-        $token = $request->header('token');
-        $decode = Token::decodificar($token);
-
-        $respuesta->data = [
-            'decode' => $decode
-        ];
-
         return response()->json($respuesta, $respuesta->codigoHttp);
     }
 }
