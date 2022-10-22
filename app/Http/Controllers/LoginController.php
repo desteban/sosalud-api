@@ -17,14 +17,28 @@ class LoginController extends Controller
     public function login(Request $request)
     {
 
-        $validacion = Validator::make($request->all(), [
-            'nombreUsuario' => 'required',
-            'password' => 'required'
-        ]);
+        $validacion = Validator::make(
+            data: $request->all(),
+            rules: [
+                'nombreUsuario' => 'required|alpha_num',
+                'password' => 'required|alpha_num'
+            ],
+            messages: [
+                'nombreUsuario' => 'El nombre de usario es necesario',
+                'nombreUsuario.alpha_num' => 'El nombre de usuario debe ser alfanumérico',
+                'password.required' => 'La contraseña es necesaria',
+                'password.alpha_num' => 'La contraseña debe ser alfanumérico'
+            ]
+        );
 
         if ($validacion->fails())
         {
-            $respuesta = new Respuestas(400, '', 'Algo ha salido mal', $validacion->failed());
+            $respuesta = new Respuestas(
+                codigoHttp: 400,
+                titulo: '',
+                mensaje: '',
+                data: $validacion->getMessageBag()
+            );
             return response()->json($respuesta, $respuesta->codigoHttp);
         }
 

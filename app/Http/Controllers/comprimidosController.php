@@ -27,9 +27,17 @@ class comprimidosController extends Controller
          * * max es el peso en kilobytes 1Mb = 1024kb
          */
 
-        $validacion = Validator::make($request->all(), [
-            'archivo'   =>  ['required', 'mimes:rar,zip', 'max:5158']
-        ]);
+        $validacion = Validator::make(
+            data: $request->all(),
+            rules: [
+                'archivo'   =>  ['required', 'mimes:rar,zip', 'max:5158']
+            ],
+            messages: [
+                'archivo.required' => 'Es necesario seleccionar un archivo',
+                'archivo.mimes' => 'La extencion del archivo debe ser .rar o .zip',
+                'archivo.max' => 'El archivo debe pesar menos de 5Mb'
+            ]
+        );
 
         if ($validacion->fails())
         {
