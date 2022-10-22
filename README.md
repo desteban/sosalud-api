@@ -8,6 +8,14 @@ Este **módulo** permite realizar **validaciones** a las **cuentas médicas** ge
 
 <br/>
 
+## Documentacion de la API
+
+Para poder visualizar gráficamente la documetnacion de la API recomendamos utilizar swagger, para ello puedes copiar el archivo [`api.yaml`](/api.yaml) y utilizar el [editor de swagger](https://editor.swagger.io) o instalando una extencion en tu IDE o editor de código
+
+---
+
+<br/>
+
 ## Restricciones
 
 -   <p style="display:flex;" ><img src="https://laravel.com/img/logomark.min.svg" height="25" style="margin-right:8px" > Laravel 9</p>
