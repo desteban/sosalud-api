@@ -6,6 +6,7 @@ use App\Mail\RegistroMailable;
 use App\Models\Respuestas;
 use App\Models\Usuarios;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
@@ -74,19 +75,90 @@ class RegistroController extends Controller
         }
     }
 
-    public function cambioPassword(Request $reques)
+    public function cambioPassword(Request $request)
     {
         $validacion = Validator::make(
-            data: $reques->all(),
+            data: $request->all(),
             rules: [
-                'password' => 'required|min:8',
-                'confirm' => 'required|same:password'
+                'password' => 'required|alpha_num|min:6',
+                'confirm' => 'required|alpha_num|same:password',
+                'rememberToken' => 'required',
             ],
             messages: [
                 'password.required' => 'La contraseña es requerida',
-                'password.min' => 'La contraseña debe contar con almenos 8 caracteres',
-                'confirm.same' => 'Las contraseñas deben coincidir'
+                'password.min' => 'La contraseña debe contar con almenos 6 caracteres',
+                'confirm.required' => 'El campo de confirmacion de contraseña es necesario',
+                'confirm.same' => 'Las contraseñas deben coincidir',
+                'rememberToken.required' => 'No se ha encontrado al usuario'
             ]
         );
+
+        if (!$validacion->fails())
+        {
+            try
+            {
+                $password = bcrypt($request->input('password'));
+                $rememberToken = $request->input('rememberToken');
+                $fecha = now();
+                $usuario = DB::select(
+                    query: "SELECT * FROM usuarios WHERE remember_token=?",
+                    bindings: [$rememberToken]
+                );
+
+                if (!empty($usuario))
+                {
+                    $usuarioId = DB::select(
+                        query: 'SELECT id FROM usuarios WHERE remember_token=?',
+                        bindings: [$rememberToken]
+                    );
+
+                    //actualizar datos del usuario
+                    DB::update(
+                        query: "UPDATE usuarios 
+                                    SET password=?, email_verified_at=?, updated_at=?, remember_token=NULL
+                                    WHERE remember_token=?",
+                        bindings: [
+                            $password,
+                            $fecha,
+                            $fecha,
+                            $rememberToken,
+                        ]
+                    );
+
+                    //eliminar tokens del usuario
+                    DB::delete(
+                        query: "DELETE from personal_access_tokens WHERE usuario_id = ?",
+                        bindings: [
+                            $usuarioId[0]->id
+                        ]
+                    );
+
+                    $respuesta = new Respuestas(
+                        codigoHttp: 200,
+                        titulo: 'succes',
+                        mensaje: '',
+                    );
+                    return response()->json(data: $respuesta, status: $respuesta->codigoHttp);
+                }
+            }
+            catch (\Throwable $th)
+            {
+                $respuesta = new Respuestas(
+                    codigoHttp: 500,
+                    titulo: 'Internal Server Error',
+                    mensaje: 'Algo salio mal',
+                    data: $validacion->getMessageBag()
+                );
+                return response()->json(data: $respuesta, status: $respuesta->codigoHttp);
+            }
+        }
+
+        $respuesta = new Respuestas(
+            codigoHttp: 400,
+            titulo: 'Bad Request',
+            mensaje: 'Hemos encontrado algunos errores en los datos recibidos',
+            data: $validacion->getMessageBag()
+        );
+        return response()->json(data: $respuesta, status: $respuesta->codigoHttp);
     }
 }

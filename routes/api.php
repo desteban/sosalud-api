@@ -21,3 +21,4 @@ Route::post('/comprimidos', [comprimidosController::class, 'crearRIPS'])->name('
     ->middleware('aut');
 Route::post('/registrar', [RegistroController::class, 'registrarUsuario'])->name('usuario.crear');
 Route::post('/login', [LoginController::class, 'login'])->name('usuario.login');
+Route::post('/usuario/actualizar', [RegistroController::class, 'cambioPassword']);
