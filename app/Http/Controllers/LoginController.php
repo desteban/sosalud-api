@@ -42,8 +42,7 @@ class LoginController extends Controller
 
         $usuario = [
             'id' => $usuarioDB[0]->id,
-            'nombreUsuario' => $usuarioDB[0]->nombreUsuario,
-            'email' => $usuarioDB[0]->email,
+            'nombreUsuario' => $usuarioDB[0]->nombreUsuario
         ];
 
         $duracionToken = env('TOKEN_DURACION');

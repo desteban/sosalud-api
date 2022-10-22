@@ -10,6 +10,8 @@ servers:
 tags:
   - name: autenticacion
     description: Tareas de creación y autenticacion de usuarios
+  - name: validador
+    description: Rutas del validador de RIPS
 
 paths:
   /registrar:
@@ -31,6 +33,30 @@ paths:
           description: Usuario creado correctamente
         "400":
           description: Error en la informacion
+  /login:
+    post:
+      tags:
+        - autenticacion
+      summary: Permite iniciar sesión al usuario
+      description: Permite iniciar sesión al usuario
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Usuario"
+      responses:
+        "201":
+          description: Obtener credenciales del inicio de sesión
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Login"
+        "400":
+          description: Error en los datos enviados
+        "404":
+          description: Credenciales invalidas
 
 components:
   schemas:
@@ -46,6 +72,29 @@ components:
         email:
           type: string
           example: "email@example.com"
+
+    Usuario:
+      type: object
+      properties:
+        nombreUsuario:
+          type: string
+          example: "email@example.com | nombreUsuario"
+        password:
+          type: string
+
+    Login:
+      type: object
+      properties:
+        token:
+          type: string
+        usuario:
+          type: object
+          properties:
+            id:
+              type: integer
+            nombreUsuario:
+              type: string
+              example: "nombreUsuario"
 
   parameters:
     token:
