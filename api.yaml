@@ -1,0 +1,57 @@
+openapi: 3.0.3
+info:
+  title: Sosalud API
+  description: Esta API permite la auditoria de cuentas medicas
+  version: 1.0.0
+
+servers:
+  - url: http://159.223.194.40:8081/api
+
+tags:
+  - name: autenticacion
+    description: Tareas de creación y autenticacion de usuarios
+
+paths:
+  /registrar:
+    post:
+      tags:
+        - autenticacion
+      summary: Registrar usuarios nuevos
+      description: Registrar usuarios nuevos
+      operationId: crearUsuario
+      requestBody:
+        description: Crear un nuevo usuario
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CrearUsuario"
+        required: true
+      responses:
+        "201":
+          description: Usuario creado correctamente
+        "400":
+          description: Error en la informacion
+
+components:
+  schemas:
+    CrearUsuario:
+      type: object
+      properties:
+        nombre:
+          type: string
+          example: "Nombre"
+        nombreUsuario:
+          type: string
+          example: "nombreUsuario"
+        email:
+          type: string
+          example: "email@example.com"
+
+  parameters:
+    token:
+      name: token
+      in: header
+      description: Token para autenticar el usuario
+      required: true
+      schema:
+        type: string

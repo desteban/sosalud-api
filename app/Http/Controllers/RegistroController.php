@@ -21,7 +21,7 @@ class RegistroController extends Controller
         $respuesta = new Respuestas(201, 'Creado', 'Usuario registrado exitosamente');
 
         $validacion = Validator::make($request->all(), [
-            'name' => 'required',
+            'nombre' => 'required',
             'nombreUsuario' => 'required|unique:usuarios,nombreUsuario',
             'email' => 'required|unique:usuarios,email'
         ]);
