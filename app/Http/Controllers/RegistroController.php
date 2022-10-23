@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\RecuperacionMailable;
 use App\Mail\RegistroMailable;
 use App\Models\Respuestas;
 use App\Models\Usuarios;
+use App\Util\Token;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -12,11 +14,6 @@ use Illuminate\Support\Facades\Validator;
 
 class RegistroController extends Controller
 {
-    public function show()
-    {
-        return view('auth.register');
-    }
-
     public function registrarUsuario(Request $request)
     {
         $respuesta = new Respuestas(201, 'Creado', 'Usuario registrado exitosamente');
@@ -64,7 +61,6 @@ class RegistroController extends Controller
         try
         {
             $correo = new RegistroMailable($usuario->name, $usuario->nombreUsuario, $token);
-
             Mail::to($usuario['email'])->send($correo);
 
             return response()->json($respuesta, $respuesta->codigoHttp);
@@ -75,7 +71,7 @@ class RegistroController extends Controller
         }
     }
 
-    public function cambioPassword(Request $request)
+    public function recuperarPassword(Request $request)
     {
         $validacion = Validator::make(
             data: $request->all(),
@@ -157,6 +153,70 @@ class RegistroController extends Controller
             codigoHttp: 400,
             titulo: 'Bad Request',
             mensaje: 'Hemos encontrado algunos errores en los datos recibidos',
+            data: $validacion->getMessageBag()
+        );
+        return response()->json(data: $respuesta, status: $respuesta->codigoHttp);
+    }
+
+    public function pedirCambio(Request $request)
+    {
+        $validacion = Validator::make(
+            data: $request->all(),
+            rules: [
+                'email' => 'required|email'
+            ],
+            messages: [
+                'email.required' => 'El email es necesario',
+                'email.email' => 'Debes ingresar un email valido'
+            ]
+        );
+
+        if (!$validacion->fails())
+        {
+            $usuario = DB::select(
+                query: "SELECT id, email FROM usuarios WHERE email=?",
+                bindings: [
+                    $request->input('email')
+                ]
+            );
+
+            if (!empty($usuario))
+            {
+                $data = [
+                    'id' => $usuario[0]->id,
+                ];
+                $creacion = time();
+                $duracion = $creacion + (60 * 15 * 1);
+                $token = Token::crear(data: $data, creacion: $creacion, duracion: $duracion);
+
+                DB::statement(
+                    query: "UPDATE usuarios
+                    SET remember_token=? WHERE id=?",
+                    bindings: [
+                        $token,
+                        $usuario[0]->id,
+                    ]
+                );
+
+                $correo = new RecuperacionMailable(token: $token);
+                Mail::to($usuario[0]->email)->send($correo);
+
+                $respuesta = new Respuestas(
+                    codigoHttp: 200,
+                    titulo: '',
+                    mensaje: 'Token de cambio de contraseña generado',
+                    data: [
+                        'duracion' => $duracion
+                    ]
+                );
+                return response()->json(data: $respuesta, status: $respuesta->codigoHttp);
+            }
+        }
+
+        $respuesta = new Respuestas(
+            codigoHttp: 400,
+            titulo: 'Bad Request',
+            mensaje: 'Error en los datos enviados',
             data: $validacion->getMessageBag()
         );
         return response()->json(data: $respuesta, status: $respuesta->codigoHttp);
