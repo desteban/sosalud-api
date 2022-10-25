@@ -275,7 +275,7 @@ LEFT JOIN refCie10 ON tmp_ah.diagnostico3=refCie10.codigo
 WHERE refCie10.descrip is null and tmp_ah.diagnostico3!='';
 
 ******SELECT * FROM tmp_ah
-LEFT JOIN refCie10 as b ON tmp_ah.diagnostico3=refCie10.codigo
+LEFT JOIN refCie10 ON tmp_ah.diagnostico3=refCie10.codigo
 LEFT JOIN maestroIdentificaciones ON maestroIdentificaciones.tipoIdentificacion=tmp_ah.tipoIdentificacion and maestroIdentificaciones.identificacion=tmp_ah.identificacion
 LEFT JOIN maestroAfiliados ON maestroAfiliados.numeroCarnet = maestroIdentificaciones.numeroCarnet;
 WHERE not (refCie10.eMin <= greatest(0,$wEdad) and greatest(0,$wEdad) <= refCie10.eMax) and tmp_ah.diagnostico3!='' ;
