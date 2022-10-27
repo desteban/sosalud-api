@@ -33,8 +33,8 @@ class LoginController extends Controller
         {
             $respuesta = new Respuestas(
                 codigoHttp: 400,
-                titulo: '',
-                mensaje: '',
+                titulo: 'Bad Request',
+                mensaje: 'Se han presentado fallos en la información ',
                 data: $validacion->getMessageBag()
             );
             return response()->json($respuesta, $respuesta->codigoHttp);
