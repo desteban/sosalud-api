@@ -47,7 +47,7 @@ class LoginController extends Controller
         // notificar que las credenciales no son validas
         if (empty($usuarioDB) || !Hash::check($request->input('password'), $usuarioDB[0]->password))
         {
-            $respuesta = new Respuestas(404, 'No se encontro el recurso solicitado', 'Credenciales invalidas');
+            $respuesta = new Respuestas(404, 'Not Found', 'Credenciales invalidas');
             return response()->json($respuesta, $respuesta->codigoHttp);
         }
 

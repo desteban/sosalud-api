@@ -16,14 +16,14 @@ class RegistroController extends Controller
 {
     public function registrarUsuario(Request $request)
     {
-        $respuesta = new Respuestas(201, 'Creado', 'Usuario registrado exitosamente');
+        $respuesta = new Respuestas(201, 'Creado', 'Usuario registrado exitosamente', $request->all());
 
         $validacion = Validator::make(
             data: $request->all(),
             rules: [
-                'nombre' => 'required|alpha_num',
+                'nombre' => 'required',
                 'nombreUsuario' => 'required|unique:usuarios,nombreUsuario|alpha_num',
-                'email' => 'required|unique:usuarios,email',
+                'email' => 'required|unique:usuarios|email',
             ],
             messages: [
                 'nombre.required' => 'El nombre es necesario',
@@ -47,11 +47,10 @@ class RegistroController extends Controller
             return response()->json($respuesta, $respuesta->codigoHttp);
         }
 
-
         $token = md5($request->input('email'));
         $usuario = new Usuarios([
             'email' => $request->input('email'),
-            'name' => $request->input('name'),
+            'name' => $request->input('nombre'),
             'nombreUsuario' => $request->input('nombreUsuario'),
             'password' => $token,
         ]);
@@ -63,11 +62,12 @@ class RegistroController extends Controller
             $correo = new RegistroMailable($usuario->name, $usuario->nombreUsuario, $token);
             Mail::to($usuario['email'])->send($correo);
 
+            $respuesta->data = $usuario;
             return response()->json($respuesta, $respuesta->codigoHttp);
         }
         catch (\Throwable $th)
         {
-            $respuesta->cambiarRespuesta(500, 'Hubo un error en el servidor y la solicitud no pudo ser completada');
+            $respuesta->cambiarRespuesta(200, 'Hubo un error en el servidor y la solicitud no pudo ser completada');
         }
     }
 
