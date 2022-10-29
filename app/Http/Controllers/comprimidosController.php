@@ -30,25 +30,26 @@ class comprimidosController extends Controller
         $validacion = Validator::make(
             data: $request->all(),
             rules: [
-                'archivo'   =>  ['required', 'mimes:rar,zip', 'max:5158']
+                'archivo'   =>  ['required', 'mimes:rar,zip', 'max:5158'],
+                'tipoUsuario' => ['required'],
+                'tipoContrato' => ['required'],
             ],
             messages: [
                 'archivo.required' => 'Es necesario seleccionar un archivo',
                 'archivo.mimes' => 'La extencion del archivo debe ser .rar o .zip',
-                'archivo.max' => 'El archivo debe pesar menos de 5Mb'
+                'archivo.max' => 'El archivo debe pesar menos de 5Mb',
+                'tipoUsuario' => 'El tipo de usuario es obligatorio',
+                'tipoContrato' => 'El tipo de contrato es necesario',
             ]
         );
 
         if ($validacion->fails())
         {
             $respuesta->cambiarRespuesta(
-                400,
-                'Mala peticion',
-                "recuerde que el archivo subido sea valido",
-                [
-                    'Archivo comprimido (rar o zip)',
-                    'Peso maximo de 5Mb'
-                ]
+                codigoHttp: 400,
+                titulo: 'Mala peticion',
+                mensaje: "recuerde que el archivo subido sea valido",
+                data: $validacion->getMessageBag(),
             );
 
             return response()->json($respuesta, $respuesta->codigoHttp);
@@ -75,7 +76,7 @@ class comprimidosController extends Controller
             //generar log de errores si la validacion de esctructura falla
             if ($respuesta->codigoHttp != 200)
             {
-                return (new LogEstructura($respuesta->data))->download('Log.csv');
+                return (new LogEstructura($respuesta->data))->download('Log.xlsx');
             }
         }
 
