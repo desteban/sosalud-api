@@ -4,7 +4,6 @@ use App\Http\Controllers\comprimidosController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegistroController;
 use App\Models\Respuestas;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,8 +17,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/comprimidos', [comprimidosController::class, 'crearRIPS'])->name('comprimidos.guardar')
-    ->middleware('aut');
+Route::post('/comprimidos', [comprimidosController::class, 'crearRIPS'])->name('comprimidos.guardar');
+// ->middleware('aut');
 Route::post('/registrar', [RegistroController::class, 'registrarUsuario'])->name('usuario.crear');
 Route::post('/login', [LoginController::class, 'login'])->name('usuario.login');
 Route::put('/usuario/actualizar', [RegistroController::class, 'recuperarPassword']);

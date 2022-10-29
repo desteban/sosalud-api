@@ -37,4 +37,6 @@ interface IRips
      * @return bool el cual muestra el exito o fallo de guardar los datos en la base de datos
      */
     public function subirDB(array $datos = []);
+
+    public function auditar();
 }

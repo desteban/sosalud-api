@@ -208,4 +208,8 @@ class AC extends RIPS implements IRips
             '',
         ));
     }
+
+    public function auditar()
+    {
+    }
 }

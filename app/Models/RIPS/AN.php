@@ -165,4 +165,8 @@ class AN extends RIPS implements IRips
             '',
         ));
     }
+
+    public function auditar()
+    {
+    }
 }

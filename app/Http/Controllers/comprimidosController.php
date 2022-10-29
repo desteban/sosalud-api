@@ -8,6 +8,7 @@ use App\Models\TipoRIPS;
 use App\Util\ArchivosUtil;
 use App\Validador\EstructuraRips;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class comprimidosController extends Controller
@@ -31,8 +32,8 @@ class comprimidosController extends Controller
             data: $request->all(),
             rules: [
                 'archivo'   =>  ['required', 'mimes:rar,zip', 'max:5158'],
-                'tipoUsuario' => ['required'],
-                'tipoContrato' => ['required'],
+                // 'tipoUsuario' => ['required'],
+                // 'tipoContrato' => ['required'],
             ],
             messages: [
                 'archivo.required' => 'Es necesario seleccionar un archivo',
@@ -70,7 +71,10 @@ class comprimidosController extends Controller
 
             if ($respuesta->codigoHttp == 200)
             {
-                $this->guardarDB($nombreCarpeta);
+                $rips = $this->guardarDB($nombreCarpeta);
+
+                //realizar la validacion de contenido
+                $this->validadorContenido($rips);
             }
 
             //generar log de errores si la validacion de esctructura falla
@@ -113,15 +117,23 @@ class comprimidosController extends Controller
         return $respuesta;
     }
 
-    protected function guardarDB(string $nombreCarpeta)
+    protected function guardarDB(string $nombreCarpeta): array
     {
+        $listadoRips = [];
         $rutaAPP = env('APP_DIR');
         $contenidoCarpetaTemporal = ArchivosUtil::obtenerContenidoDirectorio("$rutaAPP/public/TMPs/$nombreCarpeta");
+
+        $queryLog = "CREATE TABLE IF NOT EXISTS tmp_logs_error_$nombreCarpeta(
+            contenido TEXT NOT NULL,
+            tipo VARCHAR(2) NOT NULL COMMENT 'El tipo de RIPS'
+        );";
+        DB::statement($queryLog, []);
 
         foreach ($contenidoCarpetaTemporal as $nombreArchivo)
         {
             $tipoRips = substr($nombreArchivo, 0, 2);
             $rips = TipoRIPS::escojerRips($tipoRips);
+            array_push($listadoRips, $rips);
 
             if (!is_null($rips))
             {
@@ -131,6 +143,8 @@ class comprimidosController extends Controller
                 $rips->subirDB($archivo);
             }
         }
+
+        return $listadoRips;
     }
 
     /**
@@ -168,5 +182,17 @@ class comprimidosController extends Controller
         }
 
         return $respuesta;
+    }
+
+    protected function validadorContenido(array $listadoRips = []): array
+    {
+        $errores = [];
+
+        foreach ($listadoRips as $rips)
+        {
+            $rips->auditar();
+        }
+
+        return $errores;
     }
 }

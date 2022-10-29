@@ -160,4 +160,8 @@ class AM extends RIPS implements IRips
             '',
         ));
     }
+
+    public function auditar()
+    {
+    }
 }

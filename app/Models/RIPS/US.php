@@ -161,4 +161,8 @@ class US extends RIPS implements IRips
 
         ));
     }
+
+    public function auditar()
+    {
+    }
 }

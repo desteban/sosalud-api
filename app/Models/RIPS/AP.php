@@ -170,4 +170,8 @@ class AP extends RIPS implements IRips
             0,
         ));
     }
+
+    public function auditar()
+    {
+    }
 }

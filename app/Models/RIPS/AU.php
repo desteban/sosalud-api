@@ -178,4 +178,8 @@ class AU extends RIPS implements IRips
 
         ));
     }
+
+    public function auditar()
+    {
+    }
 }
