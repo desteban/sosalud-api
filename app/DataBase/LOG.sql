@@ -23,16 +23,16 @@ INSERT INTO tmp_logs_error (contenido, tipo)
         'AF'
         FROM
         (
-        SELECT
-            tmp_AF.codigoIps,
-            tmp_AF.nr,
-            tmp_AF.tipoIdentificacion,
-            tmp_AF.identificacion
-        FROM tmp_AF
-            LEFT JOIN refIps ON refIps.codigo=tmp_Af.codigoIps and
-            refIps.tipoIdentificacion=tmp_AF.tipoIdentificacion and
-            refIps.identificacion=tmp_af.identificacion
-        WHERE refIps.tipoIdentificacion is null
+            SELECT
+                tmp_AF.codigoIps,
+                tmp_AF.nr,
+                tmp_AF.tipoIdentificacion,
+                tmp_AF.identificacion
+            FROM tmp_AF
+                LEFT JOIN refIps ON refIps.codigo=tmp_Af.codigoIps and
+                refIps.tipoIdentificacion=tmp_AF.tipoIdentificacion and
+                refIps.identificacion=tmp_af.identificacion
+            WHERE refIps.tipoIdentificacion is null
         ) 
         as error;
 
@@ -75,7 +75,7 @@ WHERE refRegimen.codigo IS NULL
 
 
 
-/* VALIDACION DEL ARCHIVO DE RIPS AP */
+/* VALIDACION DEL ARCHIVO DE RIPS AP ----------------------------------------------------------*/
 
 SELECT * FROM tmp_ap
 LEFT JOIN refCups ON refCups.codigo = tmp_ap.codigoProcedimiento

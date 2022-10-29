@@ -29,6 +29,7 @@ class AP extends RIPS implements IRips
     public float $valorProcedimiento = 0;
     protected int $id;
     protected string $nombreTabla = '';
+    protected string $logError = '';
 
     public static function obtenerColumnasDB(bool $array = false): string | array
     {
@@ -102,6 +103,7 @@ class AP extends RIPS implements IRips
     {
 
         $this->nombreTabla = 'tmp_AP_' . $nombreTabla;
+        $this->logError = $nombreTabla;
 
         return DB::statement("CREATE TABLE IF NOT EXISTS $this->nombreTabla (
             numeroFactura varchar(20) NOT NULL DEFAULT '',

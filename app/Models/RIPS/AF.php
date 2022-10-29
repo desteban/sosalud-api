@@ -185,51 +185,12 @@ class AF extends RIPS implements IRips
     public function auditar()
     {
         $tablaError = 'tmp_logs_error_' . $this->logsError;
-        $query = "INSERT INTO $tablaError (contenido, tipo)
-        select 
-            CONCAT(
-                'Error en la linea: ',
-                 nr,
-                  ' del archivo AF, el codigo ',
-                codigoIps,
-                ' no se relaciona con la identificación (',
-                tipoIdentificacion, ') ',
-                identificacion
-                ),
-            'AF'
-            FROM
-            (
-            SELECT
-                tmp_AF_$this->logsError.codigoIps,
-                tmp_AF_$this->logsError.nr,
-                tmp_AF_$this->logsError.tipoIdentificacion,
-                tmp_AF_$this->logsError.identificacion
-            FROM tmp_AF_$this->logsError
-                LEFT JOIN refIps ON refIps.codigo=tmp_AF_$this->logsError.codigoIps and
-                refIps.tipoIdentificacion=tmp_AF_$this->logsError.tipoIdentificacion and
-                refIps.identificacion=tmp_AF_$this->logsError.identificacion
-            WHERE refIps.tipoIdentificacion is null
-            ) 
-            as error;
-            
-        INSERT INTO $tablaError (contenido, tipo)
-        select 
-            CONCAT('El codigo ', codigoIps, ' no pertenece a una IPS registrada, error en la linea: ', nr, ' del archivo AF'),
-            'AF'
-        FROM
-        (
-        SELECT
-            tmp_AF_$this->logsError.codigoIps,
-            tmp_AF_$this->logsError.nr
-        FROM tmp_AF_$this->logsError
-            LEFT JOIN refIps ON tmp_AF_$this->logsError.codigoIps=refIps.codigo
-            WHERE refIps.codigo is NULL
-        ) as error;
 
-        INSERT INTO $tablaError (contenido, tipo)
+        /*
+INSERT INTO $tablaError (contenido, tipo)
         select 
             CONCAT('El codigo ', codigoEapb, ' no pertenece a una EAPB registrada, error en la linea: ', nr, ' del archivo AF'),
-            AF'
+            'AF'
         FROM
         (
         SELECT
@@ -239,10 +200,10 @@ class AF extends RIPS implements IRips
             refRegimen on refRegimen.codEapb = tmp_AF_$this->logsError.codigoEapb
             WHERE refRegimen.codigo IS NULL
         ) 
-        as error;";
+        as error;
+*/
 
-        DB::statement(query: "
-        INSERT INTO $tablaError (contenido, tipo)
+        DB::statement(query: "INSERT INTO $tablaError (contenido, tipo)
         select 
             CONCAT(
                 'Error en la linea: ',
@@ -268,5 +229,19 @@ class AF extends RIPS implements IRips
             WHERE refIps.tipoIdentificacion is null
             ) 
             as error;");
+
+        DB::statement(query: "INSERT INTO $tablaError (contenido, tipo)
+            select 
+                CONCAT('El codigo ', codigoIps, ' no pertenece a una IPS registrada, error en la linea: ', nr, ' del archivo AF'),
+                'AF'
+            FROM
+            (
+            SELECT
+                tmp_AF_$this->logsError.codigoIps,
+                tmp_AF_$this->logsError.nr
+            FROM tmp_AF_$this->logsError
+                LEFT JOIN refIps ON tmp_AF_$this->logsError.codigoIps=refIps.codigo
+                WHERE refIps.codigo is NULL
+            ) as error;");
     }
 }
