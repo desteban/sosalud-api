@@ -175,5 +175,104 @@ class AP extends RIPS implements IRips
 
     public function auditar()
     {
+        $tablaError = 'tmp_logs_error_' . $this->logError;
+
+        DB::statement(query: "INSERT INTO $tablaError (contenido, tipo)
+        select 
+            CONCAT('El codigo ', codigoProcedimiento, ' no corresponde a los CUPS registrados, error en la linea: ', nr, ' del archivo AP'),
+            'AP'
+            FROM
+            (
+            SELECT
+                tmp_AP_$this->logError.codigoProcedimiento,
+                tmp_AP_$this->logError.nr
+                FROM tmp_AP_$this->logError
+                LEFT JOIN refCups ON refCups.codigo = tmp_AP_$this->logError.codigoProcedimiento
+                WHERE refCups.descrip is null
+        ) as error;");
+
+        // DB::statement(query: "INSERT INTO $tablaError (contenido, tipo)
+        // select 
+        //     CONCAT('El codigo ', codigoProcedimiento, ' no corresponde a los CUPS registrados, error en la linea: ', nr, ' del archivo AP'),
+        //     'AP'
+        //     FROM
+        //     (
+        //     SELECT
+        //         tmp_AP_$this->logError.codigoProcedimiento,
+        //         tmp_AP_$this->logError.nr
+        //         FROM tmp_AP_$this->logError
+        //         LEFT JOIN refCups ON refCups.codigo = tmp_AP_$this->logError.codigoProcedimiento
+        //         WHERE refCups.descrip is not null and !(tmp_AP_$this->logError.fechaProcedimiento between refCups.fi and refCups.ff)
+        //     ) as error;");
+
+        DB::statement(query: "INSERT INTO $tablaError (contenido, tipo)
+        select 
+        CONCAT('El codigo ', codigoProcedimiento, ' no corresponde a los CUPS registrados, error en la linea: ', nr, ' del archivo AP'),
+        'AP'
+        FROM
+        (
+        SELECT
+            tmp_AP_$this->logError.codigoProcedimiento,
+            tmp_AP_$this->logError.nr
+            FROM tmp_AP_$this->logError
+        LEFT JOIN refCups ON refCups.codigo = tmp_AP_$this->logError.codigoProcedimiento 
+        WHERE refCups.descrip is not null and refCups.AT != 'P'
+        ) as error;");
+
+        //!sin datos en ripsUS
+        // DB::statement(query: "INSERT INTO $tablaError (contenido, tipo)
+        // select 
+        //     CONCAT('Error en la linea: ',
+        //          nr,
+        //           ' del archivo AP, el codigo ',
+        //         codigoProcedimiento,
+        //         ' no se relaciona con la identificación (',
+        //         tipoIdentificacion, ') ',
+        //         identificacion
+        //         ),
+        //     'AP'
+        //     FROM
+        //     (
+        //     SELECT
+        //         tmp_AP_$this->logError.codigoProcedimiento,
+        //         tmp_AP_$this->logError.tipoIdentificacion
+        //         tmp_AP_$this->logError.identificacion
+        //         tmp_AP_$this->logError.nr
+        //         FROM tmp_AP_$this->logError
+        //     LEFT JOIN refCups ON refCups.codigo = tmp_AP_$this->logError.codigoProcedimiento
+        //     LEFT JOIN ripsUS on ripsUS.tipoIdentificacion=tmp_AP_$this->logError.tipoIdentificacion 
+        //     and ripsUS.identificacion=tmp_AP_$this->logError.identificacion
+        //     WHERE (refCups.genero!= 'A' and refCups.genero!=ripsUS.genero)
+        //     ) as error;");
+
+        DB::statement(query: "INSERT INTO $tablaError (contenido, tipo)
+        select 
+            CONCAT('El codigo ', finalidadProcedimiento, ' no corresponde al procedimiento, error en la linea: ', nr, ' del archivo AP'),
+            'AP'
+            FROM
+            (
+            SELECT
+                tmp_AP_$this->logError.finalidadProcedimiento,
+                tmp_AP_$this->logError.nr
+                FROM tmp_AP_$this->logError
+            LEFT JOIN refFinalidadProcedimiento 
+            ON tmp_AP_$this->logError.finalidadProcedimiento=refFinalidadProcedimiento.codigo
+            WHERE refFinalidadProcedimiento.codigo is NULL
+            ) as error;");
+
+        DB::statement(query: "INSERT INTO $tablaError (contenido, tipo)
+        select 
+            CONCAT('El codigo ', personalAtiende, ' no coincide, error en la linea: ', nr, ' del archivo AP'),
+            'AP'
+            FROM
+            (
+            SELECT
+                tmp_AP_$this->logError.personalAtiende,
+                tmp_AP_$this->logError.nr
+                FROM tmp_AP_$this->logError
+            LEFT JOIN refPersonalAtiende ON tmp_AP_$this->logError.personalAtiende=refPersonalAtiende.codigo
+            WHERE ('721001' <= tmp_AP_$this->logError.codigoProcedimiento and tmp_AP_$this->logError.codigoProcedimiento <= '740300') 
+            and refPersonalAtiende.codigo is NULL
+            ) as error;");
     }
 }

@@ -75,7 +75,7 @@ WHERE refRegimen.codigo IS NULL
 
 
 
-/* VALIDACION DEL ARCHIVO DE RIPS AP ----------------------------------------------------------*/
+/* VALIDACION DEL ARCHIVO DE RIPS AP*/
 
 SELECT * FROM tmp_ap
 LEFT JOIN refCups ON refCups.codigo = tmp_ap.codigoProcedimiento
@@ -195,6 +195,8 @@ INSERT INTO tmp_logs_error (contenido, tipo)
 LEFT JOIN refPersonalAtiende ON tmp_ap.personalAtiende=refPersonalAtiende.codigo
 WHERE ('721001' <= tmp_ap.codigoProcedimiento and tmp_ap.codigoProcedimiento <= '740300') and refPersonalAtiende.codigo is NULL; // codigo de parto y no cesarea
 ) as error;
+
+/*----------------------------------------------------------------------------------------------*/
 
 SELECT * FROM tmp_ap
 LEFT JOIN refCie10 ON refCie10.codigo = tmp_ap.diagnostico
