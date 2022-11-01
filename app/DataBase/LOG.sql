@@ -196,7 +196,6 @@ LEFT JOIN refPersonalAtiende ON tmp_ap.personalAtiende=refPersonalAtiende.codigo
 WHERE ('721001' <= tmp_ap.codigoProcedimiento and tmp_ap.codigoProcedimiento <= '740300') and refPersonalAtiende.codigo is NULL; // codigo de parto y no cesarea
 ) as error;
 
-/*----------------------------------------------------------------------------------------------*/
 
 SELECT * FROM tmp_ap
 LEFT JOIN refCie10 ON refCie10.codigo = tmp_ap.diagnostico
@@ -257,7 +256,7 @@ LEFT JOIN maestroIdentificaciones ON maestroIdentificaciones.tipoIdentificacion=
 LEFT JOIN maestroAfiliados ON maestroAfiliados.numeroCarnet = maestroIdentificaciones.numeroCarnet
 WHERE !(refCie10.eMin <=  greatest(0,$wEdad) and greatest(0,$wEdad)  <= refCie10.eMax)",";
 ) as error;
-        
+
 SELECT * FROM tmp_ap
 LEFT JOIN refCie10 ON refCie10.codigo=tmp_ap.diagnostico
 LEFT JOIN ripsUS on ripsUS.tipoIdentificacion=tmp_ap.tipoIdentificacion and ripsUS.identificacion=tmp_ap.identificacion
@@ -287,6 +286,7 @@ LEFT JOIN ripsUS on ripsUS.tipoIdentificacion=tmp_ap.tipoIdentificacion and rips
 WHERE (refCie10.genero!= '' and refCie10.genero!=ripsUS.genero)
 ) as error;
 
+
 SELECT * FROM tmp_ap
 LEFT JOIN refCie10 ON tmp_ap.diagnostico1=refCie10.codigo
 WHERE refCie10.descrip is null and tmp_ap.diagnostico1!='';
@@ -304,6 +304,7 @@ INSERT INTO tmp_logs_error (contenido, tipo)
 LEFT JOIN refCie10 ON tmp_ap.diagnostico1=refCie10.codigo
 WHERE refCie10.descrip is null and tmp_ap.diagnostico1!=''
 ) as error;
+
 
 SELECT * FROM tmp_ap
 LEFT JOIN refCie10 ON refCie10.codigo = tmp_ap.diagnostico1
@@ -414,6 +415,7 @@ LEFT JOIN maestroAfiliados ON maestroAfiliados.numeroCarnet = maestroIdentificac
 WHERE !(refCie10.eMin <=  greatest(0,$wEdad) and greatest(0,$wEdad)  <= refCie10.eMax)
 ) as error;
 
+
 SELECT * FROM tmp_ap
 LEFT JOIN refCie10 ON refCie10.codigo=tmp_ap.diagnosticoComplicacion
 LEFT JOIN ripsUS on ripsUS.tipoIdentificacion=tmp_ap.tipoIdentificacion and ripsUS.identificacion=tmp_ap.identificacion
@@ -505,6 +507,7 @@ OR (maestroRedTarifas.id IS NOT NULL AND tmp_ap.valorProcedimiento > maestroRedT
 
 /* VALIDACION DEL ARCHIVO DE RIPS AC */
 
+/*----------------------------------------------------------------------------------------------*/
 SELECT * FROM tmp_ac
 LEFT JOIN refCups ON refCups.codigo=tmp_ac.codigoConsulta
 WHERE refCups.descrip is null  or refCups.AT != 'C';
@@ -522,6 +525,7 @@ INSERT INTO tmp_logs_error (contenido, tipo)
 LEFT JOIN refCups ON refCups.codigo=tmp_ac.codigoConsulta
 WHERE refCups.descrip is null  or refCups.AT != 'C'
 ) as error;
+/*----------------------------------------------------------------------------------------------*/
 
 SELECT * FROM tmp_ac
 LEFT JOIN refCups ON refCups.codigo = tmp_ac.codigoConsulta

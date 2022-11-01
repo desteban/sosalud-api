@@ -186,23 +186,6 @@ class AF extends RIPS implements IRips
     {
         $tablaError = 'tmp_logs_error_' . $this->logsError;
 
-        /*
-INSERT INTO $tablaError (contenido, tipo)
-        select 
-            CONCAT('El codigo ', codigoEapb, ' no pertenece a una EAPB registrada, error en la linea: ', nr, ' del archivo AF'),
-            'AF'
-        FROM
-        (
-        SELECT
-            tmp_AF_$this->logsError.codigoEapb,
-            tmp_AF_$this->logsError.nr
-        FROM tmp_AF_$this->logsError
-            refRegimen on refRegimen.codEapb = tmp_AF_$this->logsError.codigoEapb
-            WHERE refRegimen.codigo IS NULL
-        ) 
-        as error;
-*/
-
         DB::statement(query: "INSERT INTO $tablaError (contenido, tipo)
         select 
             CONCAT(
@@ -232,7 +215,8 @@ INSERT INTO $tablaError (contenido, tipo)
 
         DB::statement(query: "INSERT INTO $tablaError (contenido, tipo)
             select 
-                CONCAT('El codigo ', codigoIps, ' no pertenece a una IPS registrada, error en la linea: ', nr, ' del archivo AF'),
+                CONCAT('El codigo ', codigoIps, ' no pertenece a una IPS registrada,
+                error en la linea: ', nr, ' del archivo AF'),
                 'AF'
             FROM
             (

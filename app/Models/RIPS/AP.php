@@ -179,7 +179,8 @@ class AP extends RIPS implements IRips
 
         DB::statement(query: "INSERT INTO $tablaError (contenido, tipo)
         select 
-            CONCAT('El codigo ', codigoProcedimiento, ' no corresponde a los CUPS registrados, error en la linea: ', nr, ' del archivo AP'),
+            CONCAT('El codigo ', codigoProcedimiento, ' no corresponde a los CUPS registrados,
+            error en la linea: ', nr, ' del archivo AP'),
             'AP'
             FROM
             (
@@ -243,7 +244,8 @@ class AP extends RIPS implements IRips
                 tmp_AP_$this->logError.nr
                 FROM tmp_AP_$this->logError
             LEFT JOIN refCups ON refCups.codigo = tmp_AP_$this->logError.codigoProcedimiento
-            LEFT JOIN tmp_US_$this->logError on tmp_US_$this->logError.tipoIdentificacion=tmp_AP_$this->logError.tipoIdentificacion 
+            LEFT JOIN tmp_US_$this->logError 
+            on tmp_US_$this->logError.tipoIdentificacion=tmp_AP_$this->logError.tipoIdentificacion 
             and tmp_US_$this->logError.identificacion=tmp_AP_$this->logError.identificacion
             WHERE (refCups.genero!= 'A' and refCups.genero!=tmp_US_$this->logError.genero)
             ) as error;");
@@ -367,5 +369,197 @@ class AP extends RIPS implements IRips
                 WHERE (refCie10.genero!= '' and refCie10.genero!=tmp_US_$this->logError.genero)
                 ) as error;"
         );
+
+        DB::statement(
+            query: "INSERT INTO $tablaError (contenido, tipo)
+            select 
+                CONCAT('El codigo ', diagnostico1, ' no pertenece al diagnostico,
+                error en la linea: ', nr, ' del archivo AP'),
+                'AP'
+                FROM
+                (
+                SELECT
+                    tmp_AP_$this->logError.diagnostico1,
+                    tmp_AP_$this->logError.nr
+                    FROM tmp_AP_$this->logError
+                LEFT JOIN refCie10 ON tmp_AP_$this->logError.diagnostico1=refCie10.codigo
+                WHERE refCie10.descrip is null and tmp_AP_$this->logError.diagnostico1!=''
+                ) as error;"
+        );
+
+        //!que es wedad
+        // DB::statement(
+        //     query: "INSERT INTO $tablaError (contenido, tipo)
+        //     select 
+        //         CONCAT('Error en la linea: ', nr, ' del archivo AP, el diagnostico1 ',
+        //             diagnostico, ' no se relaciona con la identificación (',
+        //             tipoIdentificacion, ') ', identificacion ),
+        //         'AP'
+        //         FROM (
+        //             SELECT
+        //                 tmp_AP_$his->logError.diagnostico1,
+        //                 tmp_AP_$his->logError.tipoIdentificacion
+        //                 tmp_AP_$his->logError.identificacion
+        //                 tmp_AP_$his->logError.nr
+        //             FROM tmp_AP_$his->logError
+        //                 LEFT JOIN refCie10 ON refCie10.codigo = tmp_AP_$his->logError.diagnostico1
+        //                 LEFT JOIN maestroIdentificaciones ON
+        //                 maestroIdentificaciones.tipoIdentificacion=tmp_AP_$his->logError.tipoIdentificacion and 
+        //                 maestroIdentificaciones.identificacion=tmp_AP_$his->logError.identificacion
+        //                 LEFT JOIN maestroAfiliados ON 
+        //                 maestroAfiliados.numeroCarnet = maestroIdentificaciones.numeroCarnet
+        //             WHERE !(refCie10.eMin <=  greatest(0,$wEdad) and greatest(0,$wEdad)  <= refCie10.eMax) and 
+        //                  tmp_AP_$his->logError.diagnostico1!=''
+        //             ) as error;"
+        // );
+
+        //!revisar diagnostico
+        // DB::statement(
+        //     query: "INSERT INTO $tablaError (contenido, tipo)
+        //     select 
+        //         CONCAT('Error en la linea: ',
+        //              nr,
+        //               ' del archivo AP, el diagnostico2 ',
+        //             diagnostico,
+        //             ' no se relaciona con la identificación (',
+        //             tipoIdentificacion, ') ',
+        //             identificacion
+        //             ),
+        //         'AP'
+        //         FROM (
+        //             SELECT
+        //                 tmp_AP_$this->logError.diagnostico1,
+        //                 tmp_AP_$this->logError.tipoIdentificacion,
+        //                 tmp_AP_$this->logError.identificacion,
+        //                 tmp_AP_$this->logError.nr,
+        //             FROM tmp_AP_$this->logError
+        //                 LEFT JOIN refCie10 ON refCie10.codigo = tmp_AP_$this->logError.diagnostico1
+        //                 LEFT JOIN ripsUS on ripsUS.tipoIdentificacion=tmp_AP_$this->logError.tipoIdentificacion
+        //                 and ripsUS.identificacion=tmp_AP_$this->logError.identificacion
+        //             WHERE (refCie10.genero!= '' and refCie10.genero!=ripsUS.genero) and 
+        //                 tmp_AP_$this->logError.diagnostico1!=''
+        //             ) as error;"
+        // );
+
+        DB::statement(
+            query: "INSERT INTO $tablaError (contenido, tipo)
+            select 
+                CONCAT('El codigo ', diagnosticoComplicacion, ' no pertenece al diagnostico, 
+                error en la linea: ', nr, ' del archivo AP'),
+                'AP'
+                FROM (
+                    SELECT
+                        tmp_AP_$this->logError.diagnosticoComplicacion,
+                        tmp_AP_$this->logError.nr
+                    FROM tmp_AP_$this->logError
+                        LEFT JOIN refCie10 ON refCie10.codigo = tmp_AP_$this->logError.diagnosticoComplicacion 
+                    WHERE tmp_AP_$this->logError.diagnosticoComplicacion!='' and refCie10.descrip is null
+                ) as error;"
+        );
+
+        //!que es wEdad
+        // DB::statement(
+        //     query: "INSERT INTO $tablaError (contenido, tipo)
+        //     select 
+        //         CONCAT('Error en la linea: ',
+        //              nr, ' del archivo AP, el diagnostico ',
+        //             diagnosticoComplicacion,
+        //             ' no se relaciona con la identificación (',
+        //             tipoIdentificacion, ') ', identificacion
+        //             ),
+        //         'AP'
+        //         FROM (
+        //             SELECT
+        //                 tmp_AP_$this->logError.diagnosticoComplicacion,
+        //                 tmp_AP_$this->logError.tipoIdentificacion
+        //                 tmp_AP_$this->logError.identificacion
+        //                 tmp_AP_$this->logError.nr
+        //             FROM tmp_AP_$this->logError
+        //                 LEFT JOIN refCie10 ON refCie10.codigo = tmp_AP_$this->logError.diagnosticoComplicacion
+        //                 LEFT JOIN maestroIdentificaciones ON 
+        //                 maestroIdentificaciones.tipoIdentificacion=tmp_AP_$this->logError.tipoIdentificacion and 
+        //                 maestroIdentificaciones.identificacion=tmp_AP_$this->logError.identificacion
+        //                 LEFT JOIN maestroAfiliados 
+        //                 ON maestroAfiliados.numeroCarnet = maestroIdentificaciones.numeroCarnet
+        //             WHERE !(refCie10.eMin <=  greatest(0,$wEdad) and greatest(0,$wEdad)  <= refCie10.eMax)
+        //             ) as error;"
+        // );
+
+        DB::statement(
+            query: "INSERT INTO $tablaError (contenido, tipo)
+            select 
+                CONCAT('Error en la linea: ',
+                     nr,' del archivo AP, el diagnostico ',
+                    diagnosticoComplicacion, ' no se relaciona con la identificación (',
+                    tipoIdentificacion, ') ', identificacion
+                ),
+                'AP'
+                FROM (
+                    SELECT
+                        tmp_AP_$this->logError.diagnosticoComplicacion,
+                        tmp_AP_$this->logError.tipoIdentificacion,
+                        tmp_AP_$this->logError.identificacion,
+                        tmp_AP_$this->logError.nr
+                    FROM tmp_AP_$this->logError
+                        LEFT JOIN refCie10 ON refCie10.codigo=tmp_AP_$this->logError.diagnosticoComplicacion
+                        LEFT JOIN tmp_US_$this->logError ON 
+                        tmp_US_$this->logError.tipoIdentificacion=tmp_AP_$this->logError.tipoIdentificacion AND
+                        tmp_US_$this->logError.identificacion=tmp_AP_$this->logError.identificacion
+                    WHERE (refCie10.genero!= '' and refCie10.genero!=tmp_US_$this->logError.genero)
+                    ) 
+                    as error;"
+        );
+
+        //!revisar el mensaje (linea 452)
+        DB::statement(
+            query: "INSERT INTO $tablaError (contenido, tipo)
+            select 
+                CONCAT('El codigo ', codigoIps,
+                ' no pertenece a una IPS registrada, error en la linea: ', nr, ' del archivo AF'),
+                'AP'
+                FROM (
+                    SELECT
+                        tmp_AP_$this->logError.actoQuirurgico,
+                        tmp_AP_$this->logError.nr,
+                        tmp_AP_$this->logError.codigoIps
+                    FROM tmp_AP_$this->logError
+                    LEFT JOIN refActoQuirurgico ON
+                    refActoQuirurgico.codigo = tmp_AP_$this->logError.actoQuirurgico
+                    WHERE tmp_AP_$this->logError.actoQuirurgico !='' AND
+                    refActoQuirurgico.descrip IS NULL
+                    ) as error;"
+        );
+
+        //! la tabla maestroRedTarifas no existe
+        // DB::statement(
+        //     query: "INSERT INTO $tablaError (contenido, tipo)
+        //     select 
+        //         CONCAT('Error en la linea: ',
+        //              nr, ' del archivo AP, el codigo diagnostico ',
+        //             codigoIps, codigoProcedimiento,
+        //             ' no se relaciona con la identificación (',
+        //             tipoIdentificacion, ') ', identificacion
+        //             ),
+        //         'AP'
+        //         FROM (
+        //             SELECT
+        //                 tmp_AP_$this->logError.codigoIps,
+        //                 tmp_AP_$this->logError.codigoProcedimiento,
+        //                 tmp_AP_$this->logError.numeroFactura,
+        //                 tmp_AP_$this->logError.codigoProcedimiento,
+        //                 tmp_AP_$this->logError.nr
+        //             FROM tmp_AP_$this->logError
+        //                 LEFT JOIN refCups ON refCups.codigo = tmp_AP_$this->logError.codigoProcedimiento
+        //                 LEFT JOIN ripsAF ON ripsAF.codigoIps = tmp_AP_$this->logError.codigoIps AND
+        //                     ripsAF.numeroFactura = tmp_AP_$this->logError.numeroFactura
+        //                 LEFT JOIN maestroRedTarifas on maestroRedTarifas.idCtro = ripsAF.numeroContrato AND
+        //                     maestroRedTarifas.codigo = tmp_AP_$this->logError.codigoProcedimiento
+        //             WHERE (
+        //                 maestroRedTarifas.id IS NULL AND refCups.lInf != '' AND
+        //                 !(tmp_AP_$this->logError.valorProcedimiento BETWEEN refCups.lInf AND refCups.lSup) ) OR
+        //                 ( maestroRedTarifas.id IS NOT NULL AND
+        //                 tmp_AP_$this->logError.valorProcedimiento > maestroRedTarifas.valor )
+        //             ) as error;"
+        // );
     }
 }

@@ -6,15 +6,20 @@ use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 use Maatwebsite\Excel\Concerns\WithTitle;
 //FromCollection, WithCustomStartCell,
-class log implements WithTitle, WithMultipleSheets
+class log implements WithTitle, FromCollection
 {
+
+    function __construct(protected string $nombreTabla = '')
+    {
+    }
+
     /**
      * @return \Illuminate\Support\Collection
      */
-    public function collection()
-    {
-        return DB::table('refips')->get(['*']);
-    }
+    // public function collection()
+    // {
+    //     return DB::table('refips')->get(['*']);
+    // }
 
     public function startCell(): string
     {
@@ -35,6 +40,16 @@ class log implements WithTitle, WithMultipleSheets
 
     public function title(): string
     {
-        return 'IPS';
+        return 'Error contenido';
+    }
+
+    public function collection()
+    {
+        $datos = array_map(function ($texto)
+        {
+            return [$texto];
+        }, $this->log);
+
+        return collect($datos);
     }
 }

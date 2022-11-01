@@ -74,7 +74,10 @@ class comprimidosController extends Controller
                 $rips = $this->guardarDB($nombreCarpeta);
 
                 //realizar la validacion de contenido
-                $this->validadorContenido($rips);
+                $errorContenido = $this->validadorContenido($rips, $nombreCarpeta);
+                $respuesta->data = [
+                    'estadoContenido' => $errorContenido,
+                ];
             }
 
             //generar log de errores si la validacion de esctructura falla
@@ -184,7 +187,7 @@ class comprimidosController extends Controller
         return $respuesta;
     }
 
-    protected function validadorContenido(array $listadoRips = []): array
+    protected function validadorContenido(array $listadoRips = [], string $nombreCarpeta = ''): bool
     {
         $errores = [];
 
@@ -192,7 +195,8 @@ class comprimidosController extends Controller
         {
             $rips->auditar();
         }
+        $errores = DB::select(query: "SELECT * FROM tmp_logs_error_$nombreCarpeta");
 
-        return $errores;
+        return !empty($errores);
     }
 }
