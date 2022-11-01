@@ -507,7 +507,6 @@ OR (maestroRedTarifas.id IS NOT NULL AND tmp_ap.valorProcedimiento > maestroRedT
 
 /* VALIDACION DEL ARCHIVO DE RIPS AC */
 
-/*----------------------------------------------------------------------------------------------*/
 SELECT * FROM tmp_ac
 LEFT JOIN refCups ON refCups.codigo=tmp_ac.codigoConsulta
 WHERE refCups.descrip is null  or refCups.AT != 'C';
@@ -525,7 +524,6 @@ INSERT INTO tmp_logs_error (contenido, tipo)
 LEFT JOIN refCups ON refCups.codigo=tmp_ac.codigoConsulta
 WHERE refCups.descrip is null  or refCups.AT != 'C'
 ) as error;
-/*----------------------------------------------------------------------------------------------*/
 
 SELECT * FROM tmp_ac
 LEFT JOIN refCups ON refCups.codigo = tmp_ac.codigoConsulta
@@ -970,6 +968,7 @@ LEFT JOIN ripsUS on ripsUS.tipoIdentificacion=tmp_ac.tipoIdentificacion and rips
 WHERE (refCie10.genero!= '' and refCie10.genero!=ripsUS.genero) and tmp_ac.diagnostico3!=''
 ) as error;
 
+/*----------------------------------------------------------------------------------------------*/
 SELECT * FROM tmp_ac
 LEFT JOIN refCups ON refCups.codigo = tmp_ac.valorConsulta
 LEFT JOIN ripsAF as c ON ripsAF.codigoIps = tmp_ac.codigoIps and ripsAF.numeroFactura = tmp_ac.numeroFactura
@@ -994,6 +993,7 @@ LEFT JOIN ripsAF as c ON ripsAF.codigoIps = tmp_ac.codigoIps and ripsAF.numeroFa
 LEFT JOIN maestroRedTarifas on maestroRedTarifas.idCtro = ripsAF.numeroContrato and maestroRedTarifas.codigo = tmp_ac.codigoConsulta
 WHERE (maestroRedTarifas.id IS NULL AND refCups.lInf != '' and !(tmp_ac.valorConsulta between refCups.lInf and refCups.lSup)) OR (maestroRedTarifas.id IS NOT NULL AND tmp_ac.valorConsulta > maestroRedTarifas.valor)
 ) as error;
+/*----------------------------------------------------------------------------------------------*/
 
 
 

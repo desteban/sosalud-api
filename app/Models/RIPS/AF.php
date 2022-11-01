@@ -189,17 +189,13 @@ class AF extends RIPS implements IRips
         DB::statement(query: "INSERT INTO $tablaError (contenido, tipo)
         select 
             CONCAT(
-                'Error en la linea: ',
-                 nr,
-                  ' del archivo AF, el codigo ',
-                codigoIps,
+                'Error en la linea: ', nr,
+                ' del archivo AF, el codigo ', codigoIps,
                 ' no se relaciona con la identificación (',
-                tipoIdentificacion, ') ',
-                identificacion
+                tipoIdentificacion, ') ', identificacion
                 ),
             'AF'
-            FROM
-            (
+            FROM (
             SELECT
                 tmp_AF_$this->logsError.codigoIps,
                 tmp_AF_$this->logsError.nr,
@@ -211,21 +207,23 @@ class AF extends RIPS implements IRips
                 refIps.identificacion=tmp_AF_$this->logsError.identificacion
             WHERE refIps.tipoIdentificacion is null
             ) 
-            as error;");
+            as error;
+            ");
 
-        DB::statement(query: "INSERT INTO $tablaError (contenido, tipo)
-            select 
-                CONCAT('El codigo ', codigoIps, ' no pertenece a una IPS registrada,
-                error en la linea: ', nr, ' del archivo AF'),
-                'AF'
-            FROM
-            (
-            SELECT
-                tmp_AF_$this->logsError.codigoIps,
-                tmp_AF_$this->logsError.nr
-            FROM tmp_AF_$this->logsError
-                LEFT JOIN refIps ON tmp_AF_$this->logsError.codigoIps=refIps.codigo
-                WHERE refIps.codigo is NULL
-            ) as error;");
+        DB::statement(
+            query: "INSERT INTO $tablaError (contenido, tipo)
+                select 
+                    CONCAT('El codigo ', codigoIps, ' no pertenece a una IPS registrada,
+                    error en la linea: ', nr, ' del archivo AF'),
+                    'AF'
+                FROM (
+                SELECT
+                    tmp_AF_$this->logsError.codigoIps,
+                    tmp_AF_$this->logsError.nr
+                FROM tmp_AF_$this->logsError
+                    LEFT JOIN refIps ON tmp_AF_$this->logsError.codigoIps=refIps.codigo
+                    WHERE refIps.codigo is NULL
+                ) as error;"
+        );
     }
 }

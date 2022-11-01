@@ -248,3 +248,8 @@ CREATE TABLE IF NOT EXISTS personal_access_tokens(
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
     PRIMARY KEY (id, usuario_id)
 );
+
+CREATE TABLE IF NOT EXISTS tmp_logs_error_$nombreCarpeta(
+  contenido TEXT NOT NULL,
+  tipo VARCHAR(2) NOT NULL COMMENT 'El tipo de RIPS'
+);
