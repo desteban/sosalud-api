@@ -77,85 +77,82 @@ class RegistroController extends Controller
             data: $request->all(),
             rules: [
                 'password' => 'required|alpha_num|min:6',
-                'confirm' => 'required|alpha_num|same:password',
+                'confirmPassword' => 'required|alpha_num|same:password',
                 'rememberToken' => 'required',
             ],
             messages: [
                 'password.required' => 'La contraseña es requerida',
                 'password.min' => 'La contraseña debe contar con almenos 6 caracteres',
-                'confirm.required' => 'El campo de confirmacion de contraseña es necesario',
-                'confirm.same' => 'Las contraseñas deben coincidir',
+                'confirmPassword.required' => 'El campo de confirmacion de contraseña es necesario',
+                'confirmPassword.same' => 'Las contraseñas deben coincidir',
                 'rememberToken.required' => 'No se ha encontrado al usuario'
             ]
         );
 
-        if (!$validacion->fails())
+        if ($validacion->fails())
         {
-            try
+            $respuesta = new Respuestas(
+                codigoHttp: 400,
+                titulo: 'Bad Request',
+                mensaje: 'Valida los datos',
+                data: $validacion->getMessageBag()
+            );
+            return response()->json($respuesta, $respuesta->codigoHttp);
+        }
+
+        $rememberToken = $request->input('rememberToken');
+        $decode = Token::decodificar($rememberToken);
+        if (!empty($decode))
+        {
+            $usuario = DB::selectOne(
+                query: "SELECT id, email FROM usuarios WHERE remember_token=?",
+                bindings: [$rememberToken]
+            );
+
+            if (!empty($usuario))
             {
+
                 $password = bcrypt($request->input('password'));
-                $rememberToken = $request->input('rememberToken');
                 $fecha = now();
-                $usuario = DB::select(
-                    query: "SELECT * FROM usuarios WHERE remember_token=?",
-                    bindings: [$rememberToken]
-                );
 
-                if (!empty($usuario))
-                {
-                    $usuarioId = DB::select(
-                        query: 'SELECT id FROM usuarios WHERE remember_token=?',
-                        bindings: [$rememberToken]
-                    );
-
-                    //actualizar datos del usuario
-                    DB::update(
-                        query: "UPDATE usuarios 
+                DB::update(
+                    query: "UPDATE usuarios 
                                     SET password=?, email_verified_at=?, updated_at=?, remember_token=NULL
-                                    WHERE remember_token=?",
-                        bindings: [
-                            $password,
-                            $fecha,
-                            $fecha,
-                            $rememberToken,
-                        ]
-                    );
-
-                    //eliminar tokens del usuario
-                    DB::delete(
-                        query: "DELETE from personal_access_tokens WHERE usuario_id = ?",
-                        bindings: [
-                            $usuarioId[0]->id
-                        ]
-                    );
-
-                    $respuesta = new Respuestas(
-                        codigoHttp: 200,
-                        titulo: 'succes',
-                        mensaje: '',
-                    );
-                    return response()->json(data: $respuesta, status: $respuesta->codigoHttp);
-                }
-            }
-            catch (\Throwable $th)
-            {
-                $respuesta = new Respuestas(
-                    codigoHttp: 500,
-                    titulo: 'Internal Server Error',
-                    mensaje: 'Algo salio mal',
-                    data: $validacion->getMessageBag()
+                                    WHERE id=?",
+                    bindings: [
+                        $password,
+                        $fecha,
+                        $fecha,
+                        $usuario->id,
+                    ]
                 );
-                return response()->json(data: $respuesta, status: $respuesta->codigoHttp);
+
+                //eliminar tokens de acceso
+                DB::delete(
+                    query: "DELETE from personal_access_tokens WHERE usuario_id = ?",
+                    bindings: [
+                        $usuario->id
+                    ]
+                );
+
+                $respuesta = new Respuestas(
+                    codigoHttp: 200,
+                    titulo: 'succes',
+                    mensaje: 'Cuenta actualizada'
+                );
+                return response()->json($respuesta, $respuesta->codigoHttp);
             }
         }
 
         $respuesta = new Respuestas(
-            codigoHttp: 400,
-            titulo: 'Bad Request',
-            mensaje: 'Hemos encontrado algunos errores en los datos recibidos',
-            data: $validacion->getMessageBag()
+            codigoHttp: 404,
+            titulo: 'Not Found',
+            mensaje: 'Valida los datos',
+            data: [
+                'usuario' => 'No encontramos el usuario'
+            ]
         );
-        return response()->json(data: $respuesta, status: $respuesta->codigoHttp);
+        return response()->json($respuesta, $respuesta->codigoHttp);
     }
 
     public function pedirCambio(Request $request)
@@ -163,62 +160,61 @@ class RegistroController extends Controller
         $validacion = Validator::make(
             data: $request->all(),
             rules: [
-                'email' => 'required|email'
+                'nombreUsuario' => 'required'
             ],
             messages: [
-                'email.required' => 'El email es necesario',
-                'email.email' => 'Debes ingresar un email valido'
+                'nombreUsuario.required' => 'El nombre de usuario o email son necesarios',
             ]
         );
 
-        if (!$validacion->fails())
+        if ($validacion->fails())
         {
-            $usuario = DB::select(
-                query: "SELECT id, email FROM usuarios WHERE email=?",
+            $respuesta = new Respuestas(
+                codigoHttp: 400,
+                titulo: 'Bad Request',
+                mensaje: 'Error en los datos enviados',
+                data: $validacion->getMessageBag()
+            );
+            return response()->json(data: $respuesta, status: $respuesta->codigoHttp);
+        }
+
+        $nombreUsuario = $request->input('nombreUsuario');
+        $usuario = DB::selectOne(
+            query: 'SELECT id, email FROM usuarios WHERE email=? OR nombreUsuario=?',
+            bindings: [
+                $nombreUsuario,
+                $nombreUsuario
+            ]
+        );
+
+        if (!empty($usuario))
+        {
+            $data = [
+                'id' => $usuario->id,
+            ];
+            $creacion = time();
+            //15 minutos de duracion del token
+            $duracion = $creacion + (60 * 15 * 1);
+            $token = Token::crear(data: $data, creacion: $creacion, duracion: $duracion);
+
+            DB::statement(
+                query: "UPDATE usuarios
+                    SET remember_token=?, password=NULL WHERE id=?",
                 bindings: [
-                    $request->input('email')
+                    $token,
+                    $usuario->id,
                 ]
             );
 
-            if (!empty($usuario))
-            {
-                $data = [
-                    'id' => $usuario[0]->id,
-                ];
-                $creacion = time();
-                $duracion = $creacion + (60 * 15 * 1);
-                $token = Token::crear(data: $data, creacion: $creacion, duracion: $duracion);
-
-                DB::statement(
-                    query: "UPDATE usuarios
-                    SET remember_token=? WHERE id=?",
-                    bindings: [
-                        $token,
-                        $usuario[0]->id,
-                    ]
-                );
-
-                $correo = new RecuperacionMailable(token: $token);
-                Mail::to($usuario[0]->email)->send($correo);
-
-                $respuesta = new Respuestas(
-                    codigoHttp: 200,
-                    titulo: '',
-                    mensaje: 'Token de cambio de contraseña generado',
-                    data: [
-                        'duracion' => $duracion
-                    ]
-                );
-                return response()->json(data: $respuesta, status: $respuesta->codigoHttp);
-            }
+            $correo = new RecuperacionMailable(token: $token);
+            Mail::to($usuario->email)->send($correo);
         }
 
         $respuesta = new Respuestas(
-            codigoHttp: 400,
-            titulo: 'Bad Request',
-            mensaje: 'Error en los datos enviados',
-            data: $validacion->getMessageBag()
+            codigoHttp: 200,
+            titulo: 'SUCCES',
+            mensaje: 'Se ha enviado un correo a la cuenta asosiada'
         );
-        return response()->json(data: $respuesta, status: $respuesta->codigoHttp);
+        return response()->json($respuesta, $respuesta->codigoHttp);
     }
 }

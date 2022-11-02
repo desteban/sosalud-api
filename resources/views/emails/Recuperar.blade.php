@@ -8,7 +8,7 @@
     <title>Recuperacion</title>
 </head>
 
-<body>
+<body style="font-size: 20px">
 
     <h1>Recuperar cuenta</h1>
 

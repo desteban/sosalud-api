@@ -22,7 +22,7 @@ class RecuperacionMailable extends Mailable
     public function __construct(string $token)
     {
         $this->subject('Recuperación de contraseña ');
-        $this->data['token'] = env('APP_FRONT') . 'activar/' . $token;
+        $this->data['token'] = env('APP_FRONT') . $token;
     }
 
     /**
