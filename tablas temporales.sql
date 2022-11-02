@@ -226,12 +226,11 @@ DELIMITER $$
 
     END $$
 DELIMITER
-
 CREATE TABLE IF NOT EXISTS usuarios(
 id INTEGER AUTO_INCREMENT PRIMARY KEY,
-name varchar(50) UNIQUE NOT NULL,
+name varchar(50) NOT NULL,
 email varchar(50) UNIQUE NOT NULL,
-nombreUsuario varchar(50) NOT NULL,
+nombreUsuario varchar(50) UNIQUE NOT NULL,
 email_verified_at DATETIME,
 password varchar(255),
 remember_token varchar(255),

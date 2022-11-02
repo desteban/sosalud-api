@@ -21,8 +21,8 @@ Route::post('/comprimidos', [comprimidosController::class, 'crearRIPS'])->name('
     ->middleware('aut');
 Route::post('/registrar', [RegistroController::class, 'registrarUsuario'])->name('usuario.crear');
 Route::post('/login', [LoginController::class, 'login'])->name('usuario.login');
-Route::put('/usuario/actualizar', [RegistroController::class, 'recuperarPassword']);
-Route::put('/usuario', [RegistroController::class, 'pedirCambio']);
+Route::put('/usuario', [RegistroController::class, 'recuperarPassword']);
+Route::post('/usuario', [RegistroController::class, 'pedirCambio']);
 Route::get('/saludo', function ()
 {
     $respuesta = new Respuestas();

@@ -47,12 +47,13 @@ class RegistroController extends Controller
             return response()->json($respuesta, $respuesta->codigoHttp);
         }
 
-        $token = md5($request->input('email'));
+        $token = Token::crear(data: [
+            'email' => $request->input('email')
+        ]);
         $usuario = new Usuarios([
             'email' => $request->input('email'),
             'name' => $request->input('nombre'),
             'nombreUsuario' => $request->input('nombreUsuario'),
-            'password' => $token,
         ]);
         $usuario->remember_token = $token;
         $usuario->save();
@@ -100,56 +101,47 @@ class RegistroController extends Controller
             return response()->json($respuesta, $respuesta->codigoHttp);
         }
 
+        $password = $request->input('password');
         $rememberToken = $request->input('rememberToken');
         $decode = Token::decodificar($rememberToken);
-        if (!empty($decode))
+        $usuario = DB::selectOne(
+            query: "SELECT id, email, email_verified_at FROM usuarios WHERE remember_token=?",
+            bindings: [$rememberToken]
+        );
+
+        if (!empty($usuario))
         {
-            $usuario = DB::selectOne(
-                query: "SELECT id, email FROM usuarios WHERE remember_token=?",
-                bindings: [$rememberToken]
-            );
 
-            if (!empty($usuario))
+            //activar cuenta
+            if (empty($usuario->email_verified_at))
             {
-
-                $password = bcrypt($request->input('password'));
-                $fecha = now();
-
-                DB::update(
-                    query: "UPDATE usuarios 
-                                    SET password=?, email_verified_at=?, updated_at=?, remember_token=NULL
-                                    WHERE id=?",
-                    bindings: [
-                        $password,
-                        $fecha,
-                        $fecha,
-                        $usuario->id,
-                    ]
-                );
-
-                //eliminar tokens de acceso
-                DB::delete(
-                    query: "DELETE from personal_access_tokens WHERE usuario_id = ?",
-                    bindings: [
-                        $usuario->id
-                    ]
-                );
-
-                $respuesta = new Respuestas(
-                    codigoHttp: 200,
-                    titulo: 'succes',
-                    mensaje: 'Cuenta actualizada'
-                );
-                return response()->json($respuesta, $respuesta->codigoHttp);
+                $this->actualizarUsuario(password: $password, rememberToken: $rememberToken, usuario: $usuario);
             }
+
+            //actualizar contraseña
+            if (!empty($usuario->email_verified_at) && !empty($decode))
+            {
+                $this->actualizarUsuario(password: $password, rememberToken: $rememberToken, usuario: $usuario);
+            }
+
+            $this->actualizarUsuario(password: $password, rememberToken: $rememberToken, usuario: $usuario);
+
+            $respuesta = new Respuestas(
+                codigoHttp: 200,
+                titulo: 'succes',
+                mensaje: 'Cuenta actualizada'
+            );
+            return response()->json($respuesta, $respuesta->codigoHttp);
         }
+
+
 
         $respuesta = new Respuestas(
             codigoHttp: 404,
             titulo: 'Not Found',
             mensaje: 'Valida los datos',
             data: [
-                'usuario' => 'No encontramos el usuario'
+                'usuario' => 'No encontramos el usuario',
             ]
         );
         return response()->json($respuesta, $respuesta->codigoHttp);
@@ -216,5 +208,31 @@ class RegistroController extends Controller
             mensaje: 'Se ha enviado un correo a la cuenta asosiada'
         );
         return response()->json($respuesta, $respuesta->codigoHttp);
+    }
+
+    protected function actualizarUsuario(string $password, string $rememberToken, $usuario)
+    {
+        $passwordCrtypt = bcrypt($password);
+        $fecha = now();
+
+        DB::update(
+            query: "UPDATE usuarios 
+                                SET password=?, email_verified_at=?, updated_at=?, remember_token=NULL
+                                WHERE id=?",
+            bindings: [
+                $passwordCrtypt,
+                $fecha,
+                $fecha,
+                $usuario->id,
+            ]
+        );
+
+        //eliminar tokens de acceso
+        DB::delete(
+            query: "DELETE from personal_access_tokens WHERE usuario_id = ?",
+            bindings: [
+                $usuario->id
+            ]
+        );
     }
 }
