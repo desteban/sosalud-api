@@ -73,4 +73,79 @@ class LoginController extends Controller
         ]);
         return response()->json($respuesta, $respuesta->codigoHttp);
     }
+
+    public function verificarToken(Request $request)
+    {
+        $validador = Validator::make(
+            data: $request->all(),
+            rules: [
+                'token' => 'required',
+                'auth' => 'required|boolean',
+            ],
+            messages: [
+                'token.required' => 'El token es necesario',
+                'auth.required' => 'EL campo auth es necesario',
+                'auth.boolean' => 'El camo auth debe ser de tipo boolean',
+            ]
+        );
+
+        $token = $request->input('token');
+        $auth = $request->input('auth');
+        $decode = Token::decodificar($token);
+        if (empty($decode) || $validador->fails())
+        {
+            $respuesta = new Respuestas(
+                codigoHttp: 400,
+                titulo: 'bad request',
+                mensaje: 'Algo salio mal',
+                data: [
+                    'validacion' => $validador->getMessageBag(),
+                    'token' => 'token no valido',
+                ]
+            );
+            return response()->json(data: $respuesta, status: $respuesta->codigoHttp);
+        }
+
+        $respuesta = new Respuestas();
+        if ($auth)
+        {
+            $usuario = DB::selectOne(
+                query: 'SELECT id FROM usuarios WHERE remember_token=?',
+                bindings: [
+                    $token,
+                ],
+            );
+
+            if (empty($usuario))
+            {
+                $respuesta->cambiarRespuesta(
+                    codigoHttp: 404,
+                    titulo: 'not found',
+                    mensaje: 'No entramos el token de acceso',
+                );
+            }
+        }
+
+        if (!$auth)
+        {
+            $acceso = DB::selectOne(
+                query: 'SELECT * FROM personal_access_tokens WHERE token=? AND usuario_id=?',
+                bindings: [
+                    $token,
+                    $decode->data->id,
+                ]
+            );
+
+            if ($acceso)
+            {
+                $respuesta->cambiarRespuesta(
+                    codigoHttp: 404,
+                    titulo: 'not found',
+                    mensaje: 'No entramos el token de acceso',
+                );
+            }
+        }
+
+        return response()->json(data: $respuesta, status: $respuesta->codigoHttp);
+    }
 }

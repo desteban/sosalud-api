@@ -193,7 +193,7 @@ class RegistroController extends Controller
 
             DB::statement(
                 query: "UPDATE usuarios
-                    SET remember_token=?, password=NULL WHERE id=?",
+                    SET remember_token=? WHERE id=?",
                 bindings: [
                     $token,
                     $usuario->id,
@@ -206,7 +206,7 @@ class RegistroController extends Controller
 
         $respuesta = new Respuestas(
             codigoHttp: 200,
-            titulo: 'SUCCES',
+            titulo: 'succes',
             mensaje: 'Se ha enviado un correo a la cuenta asosiada'
         );
         return response()->json($respuesta, $respuesta->codigoHttp);

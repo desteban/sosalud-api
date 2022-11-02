@@ -23,6 +23,7 @@ Route::post('/registrar', [RegistroController::class, 'registrarUsuario'])->name
 Route::post('/login', [LoginController::class, 'login'])->name('usuario.login');
 Route::put('/usuario', [RegistroController::class, 'recuperarPassword']);
 Route::post('/usuario', [RegistroController::class, 'pedirCambio']);
+Route::post('/usuario/token', [LoginController::class, 'verificarToken']);
 Route::get('/saludo', function ()
 {
     $respuesta = new Respuestas();
