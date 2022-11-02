@@ -107,7 +107,7 @@ class LoginController extends Controller
         }
 
         $respuesta = new Respuestas();
-        if ($auth)
+        if (!$auth)
         {
             $usuario = DB::selectOne(
                 query: 'SELECT id FROM usuarios WHERE remember_token=?',
@@ -126,7 +126,7 @@ class LoginController extends Controller
             }
         }
 
-        if (!$auth)
+        if ($auth)
         {
             $acceso = DB::selectOne(
                 query: 'SELECT * FROM personal_access_tokens WHERE token=? AND usuario_id=?',
@@ -136,7 +136,7 @@ class LoginController extends Controller
                 ]
             );
 
-            if ($acceso)
+            if (empty($acceso))
             {
                 $respuesta->cambiarRespuesta(
                     codigoHttp: 404,
