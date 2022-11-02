@@ -8,7 +8,7 @@
     <title>Registro</title>
 </head>
 
-<body>
+<body style="font-size: 20px">
 
     <h1>¡Hola {{ $data['nombre'] }}!</h1>
 
