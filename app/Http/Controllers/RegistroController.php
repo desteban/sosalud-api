@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\CambioPasswordMailable;
 use App\Mail\RecuperacionMailable;
 use App\Mail\RegistroMailable;
 use App\Models\Respuestas;
@@ -124,7 +125,8 @@ class RegistroController extends Controller
                 $this->actualizarUsuario(password: $password, rememberToken: $rememberToken, usuario: $usuario);
             }
 
-            $this->actualizarUsuario(password: $password, rememberToken: $rememberToken, usuario: $usuario);
+            $correo = new CambioPasswordMailable();
+            Mail::to($usuario->email)->send($correo);
 
             $respuesta = new Respuestas(
                 codigoHttp: 200,
