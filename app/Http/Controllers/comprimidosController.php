@@ -69,21 +69,24 @@ class comprimidosController extends Controller
             $nombreCarpeta = $respuesta->data;
             $respuesta = $this->validarEstructura($nombreCarpeta);
 
-            if ($respuesta->codigoHttp == 200)
-            {
-                $rips = $this->guardarDB($nombreCarpeta);
-
-                //realizar la validacion de contenido
-                $errorContenido = $this->validadorContenido($rips, $nombreCarpeta);
-                $respuesta->data = [
-                    'estadoContenido' => $errorContenido,
-                ];
-            }
-
             //generar log de errores si la validacion de esctructura falla
             if ($respuesta->codigoHttp != 200)
             {
                 return (new LogEstructura($respuesta->data))->download('Log.xlsx');
+            }
+
+            $rips = $this->guardarDB($nombreCarpeta);
+
+            //realizar la validacion de contenido
+            $errorContenido = $this->validadorContenido($rips, $nombreCarpeta);
+            $respuesta->data = [
+                'estadoContenido' => $errorContenido,
+            ];
+
+            if ($errorContenido)
+            {
+                //ganerar excel con el error
+
             }
         }
 
