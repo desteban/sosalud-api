@@ -92,7 +92,8 @@ class LoginController extends Controller
         $token = $request->input('token');
         $auth = $request->input('auth');
         $decode = Token::decodificar($token);
-        if (empty($decode) || $validador->fails())
+
+        if ($validador->fails())
         {
             $respuesta = new Respuestas(
                 codigoHttp: 400,
@@ -109,6 +110,7 @@ class LoginController extends Controller
         $respuesta = new Respuestas();
         if (!$auth)
         {
+
             $usuario = DB::selectOne(
                 query: 'SELECT id FROM usuarios WHERE remember_token=?',
                 bindings: [

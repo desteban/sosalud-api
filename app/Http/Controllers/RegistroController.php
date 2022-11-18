@@ -48,9 +48,11 @@ class RegistroController extends Controller
             return response()->json($respuesta, $respuesta->codigoHttp);
         }
 
-        $token = Token::crear(data: [
-            'email' => $request->input('email')
-        ]);
+        $token = Token::crear(
+            data: [
+                'email' => $request->input('email')
+            ]
+        );
         $usuario = new Usuarios([
             'email' => $request->input('email'),
             'name' => $request->input('nombre'),

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\ErrorExport;
 use App\Exports\LogEstructura;
 use App\Exports\RipsExport;
 use App\Models\Respuestas;
