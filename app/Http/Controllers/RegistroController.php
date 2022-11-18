@@ -238,5 +238,8 @@ class RegistroController extends Controller
                 $usuario->id
             ]
         );
+
+        $respuesta = new Respuestas();
+        return response()->json($respuesta, $respuesta->codigoHttp);
     }
 }
