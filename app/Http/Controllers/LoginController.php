@@ -18,8 +18,8 @@ class LoginController extends Controller
         $validacion = Validator::make(
             data: $request->all(),
             rules: [
-                'nombreUsuario' => 'required|alpha_num',
-                'password' => 'required|alpha_num'
+                'nombreUsuario' => 'required',
+                'password' => 'required'
             ],
             messages: [
                 'nombreUsuario' => 'El nombre de usario es necesario',
