@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ErrorExport;
 use App\Exports\LogEstructura;
+use App\Exports\RipsExport;
 use App\Models\Respuestas;
 use App\Models\TipoRIPS;
 use App\Util\ArchivosUtil;
@@ -10,6 +12,7 @@ use App\Validador\EstructuraRips;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
 
 class comprimidosController extends Controller
 {
@@ -79,14 +82,33 @@ class comprimidosController extends Controller
 
             //realizar la validacion de contenido
             $errorContenido = $this->validadorContenido($rips, $nombreCarpeta);
-            $respuesta->data = [
-                'estadoContenido' => $errorContenido,
-            ];
 
             if ($errorContenido)
             {
-                //ganerar excel con el error
+                //generar excel con los errores
+                // return (new RipsExport('asd'))->download('nombre.xlsx');
+                return Excel::download(new RipsExport($nombreCarpeta), 'error.xlsx');
+                /*
+                DB::select("
+                    SELECT tipo
+                    FROM tmp_logs_error_$nombreCarpeta
+                    GROUP BY tipo;
+                    ")
 
+                [{"tipo":"AC"},{"tipo":"AF"}]
+
+                DB::select(
+                        "
+                    SELECT *
+                    FROM tmp_logs_error_$nombreCarpeta
+                    WHERE tipo = ?;
+                    ",
+                        [
+                            'AC'
+                        ]
+                    )
+                    [{contenido:'', tipo:''}]
+                */
             }
         }
 

@@ -3,26 +3,34 @@
 namespace App\Exports;
 
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithTitle;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
 
-class RipsExport implements FromCollection, WithTitle
+class RipsExport implements WithMultipleSheets, ShouldAutoSize
 {
 
-    public function __construct(protected int $hoja)
+    public function __construct(protected string $codRips)
     {
     }
 
     /**
-     * @return \Illuminate\Support\Collection
+     * @return array
      */
-    public function collection()
+    public function sheets(): array
     {
-        return DB::table('refips')->get(['*']);
-    }
+        $hojas = array();
+        $tipoRipsError = DB::select("
+        SELECT tipo
+        FROM tmp_logs_error_$this->codRips
+        GROUP BY tipo;
+        ");
 
-    public function title(): string
-    {
-        return 'Hoja-' . $this->hoja;
+        foreach ($tipoRipsError as $item)
+        {
+            $error = new ErrorExport($this->codRips, $item->tipo);
+            array_push($hojas, $error);
+        }
+
+        return $hojas;
     }
 }
