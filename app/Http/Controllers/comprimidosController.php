@@ -86,29 +86,7 @@ class comprimidosController extends Controller
             if ($errorContenido)
             {
                 //generar excel con los errores
-                // return (new RipsExport('asd'))->download('nombre.xlsx');
                 return Excel::download(new RipsExport($nombreCarpeta), 'error.xlsx');
-                /*
-                DB::select("
-                    SELECT tipo
-                    FROM tmp_logs_error_$nombreCarpeta
-                    GROUP BY tipo;
-                    ")
-
-                [{"tipo":"AC"},{"tipo":"AF"}]
-
-                DB::select(
-                        "
-                    SELECT *
-                    FROM tmp_logs_error_$nombreCarpeta
-                    WHERE tipo = ?;
-                    ",
-                        [
-                            'AC'
-                        ]
-                    )
-                    [{contenido:'', tipo:''}]
-                */
             }
         }
 
