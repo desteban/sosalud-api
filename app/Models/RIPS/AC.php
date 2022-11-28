@@ -234,25 +234,6 @@ class AC extends RIPS implements IRips
         );
 
         //!fi & ff refcups 532
-        // DB::statement(
-        //     query: "INSERT INTO $tablaError (contenido, tipo)
-        //     select 
-        //     CONCAT(
-        //         'El codigo ', codigoConsulta,
-        //         ' no pertenece al codigo de laconsulta, error en la linea: ',
-        //         nr, ' del archivo AC'
-        //         ),
-        //         'AC'
-        //         FROM (
-        //             SELECT
-        //                 tmp_AC_$this->nombreTabla.codigoConsulta,
-        //                 tmp_AC_$this->nombreTabla.nr
-        //             FROM tmp_AC_$this->nombreTabla
-        //             LEFT JOIN refCups ON refCups.codigo = tmp_AC_$this->nombreTabla.codigoConsulta
-        //             WHERE refCups.descrip is not null and
-        //             !(tmp_AC_$this->nombreTabla.fechaConsulta between refCups.fi and refCups.ff)
-        //         ) as error;"
-        // );
 
         //551
         DB::statement(
@@ -329,34 +310,6 @@ class AC extends RIPS implements IRips
         );
 
         //!wEdad 618
-        // DB::statement(
-        //     query: "INSERT INTO $tablaError (contenido, tipo)
-        //     select 
-        //         CONCAT(
-        //             'Error en la linea: ', nr,
-        //             ' del archivo AP, el diagnostico ', finalidadConsulta,
-        //             ' no se relaciona con la identificación (',
-        //             tipoIdentificacion, ') ', identificacion
-        //             ),
-        //         'AC'
-        //         FROM (
-        //         SELECT
-        //             tmp_AC_$this->nombreTabla.finalidadConsulta,
-        //             tmp_AC_$this->nombreTabla.tipoIdentificacion,
-        //             tmp_AC_$this->nombreTabla.identificacion
-        //             tmp_AC_$this->nombreTabla.nr
-        //         FROM tmp_AC_$this->nombreTabla
-        //             LEFT JOIN refFinalidadConsulta 
-        //             ON refFinalidadConsulta.codigo=tmp_AC_$this->nombreTabla.finalidadConsulta
-        //             LEFT JOIN maestroIdentificaciones 
-        //             ON maestroIdentificaciones.tipoIdentificacion=tmp_AC_$this->nombreTabla.tipoIdentificacion and
-        //             maestroIdentificaciones.identificacion=tmp_AC_$this->nombreTabla.identificacion
-        //             LEFT JOIN maestroAfiliados 
-        //             ON maestroAfiliados.numeroCarnet = maestroIdentificaciones.numeroCarnet
-        //         WHERE not (refFinalidadConsulta.eMin <= greatest(0,$wEdad) and
-        //         greatest(0,$wEdad) <= refFinalidadConsulta.eMax)
-        //         ) as error;"
-        // );
 
         //647
         DB::statement(
@@ -397,30 +350,6 @@ class AC extends RIPS implements IRips
         );
 
         //!wEdad 685
-        // DB::statement(
-        //     query: "INSERT INTO $tablaError (contenido, tipo)
-        //     select 
-        //         CONCAT(
-        //             'Error en la linea: ', nr, ' del archivo AP, el diagnostico ',
-        //             diagnosticoPrincipal, ' no se relaciona con la identificación (',
-        //             tipoIdentificacion, ') ', identificacion
-        //             ),
-        //         'AC'
-        //         FROM (
-        //         SELECT
-        //             tmp_AC_$this->nombreTabla.diagnosticoPrincipal,
-        //             tmp_AC_$this->nombreTabla.tipoIdentificacion,
-        //             tmp_AC_$this->nombreTabla.identificacion
-        //             tmp_AC_$this->nombreTabla.nr
-        //         FROM tmp_AC_$this->nombreTabla
-        //             LEFT JOIN refCie10 ON refCie10.codigo=tmp_AC_$this->nombreTabla.diagnosticoPrincipal
-        //             LEFT JOIN maestroIdentificaciones 
-        //             ON maestroIdentificaciones.tipoIdentificacion=tmp_AC_$this->nombreTabla.tipoIdentificacion 
-        //             and maestroIdentificaciones.identificacion=tmp_AC_$this->nombreTabla.identificacion
-        //             LEFT JOIN maestroAfiliados  ON maestroAfiliados.numeroCarnet = maestroIdentificaciones.numeroCarnet
-        //         WHERE not (refCie10.eMin <= greatest(0,$wEdad) and greatest(0,$wEdad) <= refCie10.eMax)
-        //         ) as error;"
-        // );
 
         //715
         DB::statement(
@@ -469,32 +398,6 @@ class AC extends RIPS implements IRips
         );
 
         //! wEdad 763
-        // DB::statement(
-        //     query:"INSERT INTO $tablaError (contenido, tipo)
-        //     select 
-        //         CONCAT('Error en la linea: ',
-        //              nr, ' del archivo AC, el diagnostico ', diagnosti1,
-        //             ' no se relaciona con la identificación (',
-        //             tipoIdentificacion, ') ',identificacion
-        //             ), 'AC'
-        //         FROM
-        //         (
-        //         SELECT
-        //             tmp_AC_$this->nombreTabla.diagnostico1,
-        //             tmp_AC_$this->nombreTabla.tipoIdentificacion,
-        //             tmp_AC_$this->nombreTabla.identificacion,
-        //             tmp_AC_$this->nombreTabla.nr
-        //         FROM tmp_AC_$this->nombreTabla
-        //             LEFT JOIN refCie10 as b ON refCie10.codigo=tmp_AC_$this->nombreTabla.diagnostico1
-        //             LEFT JOIN maestroIdentificaciones 
-        //             ON maestroIdentificaciones.tipoIdentificacion=tmp_AC_$this->nombreTabla.tipoIdentificacion 
-        //             and maestroIdentificaciones.identificacion=tmp_AC_$this->nombreTabla.identificacion
-        //             LEFT JOIN maestroAfiliados 
-        //             ON maestroAfiliados.numeroCarnet = maestroIdentificaciones.numeroCarnet
-        //         WHERE not (refCie10.eMin <=  greatest(0,$wEdad) and greatest(0,$wEdad)  <= refCie10.eMax) 
-        //         and tmp_AC_$this->nombreTabla.diagnostico1!=''
-        //         ) as error;"
-        // );
 
         //793
         DB::statement(
@@ -542,32 +445,6 @@ class AC extends RIPS implements IRips
         );
 
         //! wEdad 841
-        // DB::statement(
-        //     query:"INSERT INTO $tablaError (contenido, tipo)
-        //     select 
-        //         CONCAT(
-        //             'Error en la linea: ', nr,
-        //               ' del archivo AC, el diagnostico ', diagnostico2,
-        //             ' no se relaciona con la identificación (',
-        //             tipoIdentificacion, ') ',identificacion
-        //             ), 'AC'
-        //         FROM
-        //         (
-        //         SELECT
-        //             tmp_AC_$this->nombreTabla.diagnostico2,
-        //             tmp_AC_$this->nombreTabla.tipoIdentificacion
-        //             tmp_AC_$this->nombreTabla.identificacion
-        //             tmp_AC_$this->nombreTabla.nr
-        //         FROM tmp_AC_$this->nombreTabla
-        //             LEFT JOIN refCie10 ON refCie10.codigo=tmp_AC_$this->nombreTabla.diagnostico2
-        //             LEFT JOIN maestroIdentificaciones 
-        //             ON maestroIdentificaciones.tipoIdentificacion=tmp_AC_$this->nombreTabla.tipoIdentificacion 
-        //             and maestroIdentificaciones.identificacion=tmp_AC_$this->nombreTabla.identificacion
-        //             LEFT JOIN maestroAfiliados ON maestroAfiliados.numeroCarnet = maestroIdentificaciones.numeroCarnet
-        //         WHERE not (refCie10.eMin <=  greatest(0,$wEdad) 
-        //         and greatest(0,$wEdad)  <= refCie10.eMax) and tmp_AC_$this->nombreTabla.diagnostico2!=''
-        //         ) as error;"
-        // );
 
         //871
         DB::statement(
@@ -614,31 +491,6 @@ class AC extends RIPS implements IRips
         );
 
         //!wEdad 919
-        // DB::statement(
-        //     query: "INSERT INTO $tablaError (contenido, tipo)
-        //     select 
-        //         CONCAT('Error en la linea: ', nr,
-        //               ' del archivo AC, el diagnostico ', diagnostico3,
-        //             ' no se relaciona con la identificación (',
-        //             tipoIdentificacion, ') ',identificacion
-        //             ),'AC'
-        //         FROM
-        //         (
-        //         SELECT
-        //             tmp_AC_$this->nombreTabla.diagnostico3,
-        //             tmp_AC_$this->nombreTabla.tipoIdentificacion,
-        //             tmp_AC_$this->nombreTabla.identificacion,
-        //             tmp_AC_$this->nombreTabla.nr
-        //         FROM tmp_AC_$this->nombreTabla
-        //         LEFT JOIN refCie10 as b ON refCie10.codigo=tmp_AC_$this->nombreTabla.diagnostico3
-        //         LEFT JOIN maestroIdentificaciones 
-        //         ON maestroIdentificaciones.tipoIdentificacion=tmp_AC_$this->nombreTabla.tipoIdentificacion 
-        //         and maestroIdentificaciones.identificacion=tmp_AC_$this->nombreTabla.identificacion
-        //         LEFT JOIN maestroAfiliados ON maestroAfiliados.numeroCarnet = maestroIdentificaciones.numeroCarnet
-        //         WHERE not (refCie10.eMin <=  greatest(0,$wEdad) and greatest(0,$wEdad)  <= refCie10.eMax) 
-        //         and tmp_AC_$this->nombreTabla.diagnostico3!=''
-        //         ) as error;"
-        // );
 
         //948
         DB::statement(
@@ -664,33 +516,6 @@ class AC extends RIPS implements IRips
                 and tmp_AC_$this->nombreTabla.diagnostico3!=''
                 ) as error;"
         );
-
         //!maestroRedTarifas no existe 978
-        // DB::statement(
-        //     query: "INSERT INTO $tablaError (contenido, tipo)
-        //     select 
-        //         CONCAT('El codigo ', codigoIps,
-        //         ' no pertenece a una IPS registrada, error en la linea: ', nr,
-        //         ' del archivo AF'), 'AF'
-        //         FROM (
-        //         SELECT
-        //             tmp_AC_$this->nombreTabla.codigoIps,
-        //             tmp_AC_$this->nombreTabla.valorConsulta,
-        //             tmp_AC_$this->nombreTabla.numeroFactura,
-        //             tmp_AC_$this->nombreTabla.codigoConsulta,
-        //             tmp_AC_$this->nombreTabla.nr
-        //         FROM tmp_AC_$this->nombreTabla
-        //             LEFT JOIN refCups ON refCups.codigo = tmp_AC_$this->nombreTabla.valorConsulta
-        //             LEFT JOIN tmp_AF_$this->nombreTabla as c 
-        //             ON tmp_AF_$this->nombreTabla.codigoIps = tmp_AC_$this->nombreTabla.codigoIps 
-        //             and tmp_AF_$this->nombreTabla.numeroFactura = tmp_AC_$this->nombreTabla.numeroFactura
-        //             LEFT JOIN maestroRedTarifas on maestroRedTarifas.idCtro = tmp_AF_$this->nombreTabla.numeroContrato 
-        //             and maestroRedTarifas.codigo = tmp_AC_$this->nombreTabla.codigoConsulta
-        //         WHERE (maestroRedTarifas.id IS NULL AND refCups.lInf != '' 
-        //         and !(tmp_AC_$this->nombreTabla.valorConsulta between refCups.lInf and refCups.lSup)) 
-        //         OR (maestroRedTarifas.id IS NOT NULL 
-        //         AND tmp_AC_$this->nombreTabla.valorConsulta > maestroRedTarifas.valor)
-        //         ) as error;"
-        // );
     }
 }

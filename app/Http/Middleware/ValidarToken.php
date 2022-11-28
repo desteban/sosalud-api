@@ -34,11 +34,11 @@ class ValidarToken
             }
         }
 
-        Token::eliminarToken($token);
         $respuesta = new Respuestas(
             codigoHttp: 401,
             titulo: 'Unauthorized',
-            mensaje: 'token invalido'
+            mensaje: 'token invalido',
+            data: []
         );
         return response()->json($respuesta, $respuesta->codigoHttp);
     }

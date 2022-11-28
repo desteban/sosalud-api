@@ -187,7 +187,7 @@ class AF extends RIPS implements IRips
         $tablaError = 'tmp_logs_error_' . $this->logsError;
 
         DB::statement(query: "INSERT INTO $tablaError (contenido, tipo)
-        select 
+        SELECT 
             CONCAT(
                 'Error en la linea: ', nr,
                 ' del archivo AF, el codigo ', codigoIps,
@@ -212,7 +212,7 @@ class AF extends RIPS implements IRips
 
         DB::statement(
             query: "INSERT INTO $tablaError (contenido, tipo)
-                select 
+            SELECT
                     CONCAT('El codigo ', codigoIps, ' no pertenece a una IPS registrada,
                     error en la linea: ', nr, ' del archivo AF'),
                     'AF'

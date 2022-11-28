@@ -80,8 +80,8 @@ class RegistroController extends Controller
         $validacion = Validator::make(
             data: $request->all(),
             rules: [
-                'password' => 'required|alpha_num|min:6',
-                'confirmPassword' => 'required|alpha_num|same:password',
+                'password' => 'required|min:6',
+                'confirmPassword' => 'required|same:password',
                 'rememberToken' => 'required',
             ],
             messages: [
